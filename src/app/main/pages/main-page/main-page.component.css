@@ -1,0 +1,66 @@
+.main-content {
+  display: flex;
+  gap: 20px;
+}
+
+.news, .calendar {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+}
+
+.news-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.news-item h4 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.calendar-view {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calendar-wrapper {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.calendar-day {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.calendar-day.past {
+  background-color: #e9ecef;
+  color: #999;
+}
+
+.calendar-day.current {
+  background-color: #ff9f43;
+  color: #fff;
+}
+
+.calendar-day.future {
+  background-color: #fff;
+  color: #333;
+}
+
+.calendar-day.holiday {
+  background-color: #007bff;
+  color: #fff;
+}

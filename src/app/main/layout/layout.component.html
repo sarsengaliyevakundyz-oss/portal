@@ -1,0 +1,45 @@
+<div class="container">
+  <!-- Header Section -->
+  <div class="top-header">
+    <div class="nav-logo">
+      <img src="logo.png" alt="QazStat">
+    </div>
+    <nav class="nav-menu">
+      <a routerLink="/" [class.active]="isExactMatch('/')">Главная</a>
+      <a routerLink="/systems" routerLinkActive="active">Системы</a>
+      <a routerLink="/documentation" routerLinkActive="active">Документация</a>
+      <a routerLink="/profile" routerLinkActive="active">Личный кабинет</a>
+    </nav>
+    <div class="user-actions">
+      <div class="user-actions">
+        <div class="lang-switch" (document:click)="closeLanguageList($event)">
+          <button class="lang-switch-button" (click)="toggleLanguageList($event)" [ngClass]="{'open': isLanguageListVisible}">
+            {{ currentLanguage }}
+            <img src="lang_switch_arrow.png" alt="Arrow" class="arrow-icon">
+          </button>
+          <div class="language-list" *ngIf="isLanguageListVisible">
+            <ul>
+              <li *ngIf="currentLanguage !== 'Қаз'" (click)="changeLanguage('kz')">Қаз</li>
+              <li *ngIf="currentLanguage !== 'Рус'" (click)="changeLanguage('ru')">Рус</li>
+              <li *ngIf="currentLanguage !== 'Eng'" (click)="changeLanguage('en')">Eng</li>
+            </ul>
+          </div>
+        </div>
+        <button class="profile-btn">Профиль</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <router-outlet></router-outlet>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-info">
+      <img src="bitrix_logo.png" alt="Bitrix">
+      <p>bitrix.stat.gov.kz</p>
+      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
+    </div>
+  </footer>
+</div>
