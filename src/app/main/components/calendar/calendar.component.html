@@ -14,14 +14,19 @@
       <span class="year" (click)="selectNextYear()" *ngIf="currentYear+1!=selectedYear">{{ selectedYear+1 }}</span>
     </div>
     <div class="region-selector">
-<!--      <nz-select-->
-<!--        [(ngModel)]="selectedRegion"-->
-<!--        nzSuffixIcon="caret-down"-->
-<!--        class="custom-select"-->
-<!--      >-->
-<!--        <nz-option nzValue="1" nzLabel="Регион"></nz-option>-->
-<!--        <nz-option nzValue="2" nzLabel="Корреспондент"></nz-option>-->
-<!--      </nz-select>-->
+      <nz-select
+        [(ngModel)]="selectedRegion"
+        [nzSuffixIcon]="arrowTemplate"
+        class="custom-select"
+      >
+        <nz-option *ngIf="selectedRegion!=1" nzValue="1" nzLabel="Регион"></nz-option>
+        <nz-option *ngIf="selectedRegion!=2" nzValue="2" nzLabel="Корреспондент"></nz-option>
+        <nz-option  [nzValue]="1" nzLabel="Регион" nzHide></nz-option>
+
+      </nz-select>
+      <ng-template #arrowTemplate>
+        <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
+      </ng-template>
     </div>
   </div>
 

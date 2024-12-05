@@ -13,7 +13,9 @@ import {BrowserModule} from '@angular/platform-browser';
   imports: [
     NgForOf,
     FormsModule,
-    NgIf
+    NgIf,
+    NzSelectComponent,
+    NzOptionComponent
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],

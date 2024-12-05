@@ -51,17 +51,38 @@
   color: #007BFF;
 }
 .current-year {
-  /*font-weight: bold;*/
   color: #2B2E35;
 }
 .region-selector {
-  align-self: flex-end;
-  font-size: 24px;
+  margin-left: auto;
+  font-size: 14px;
 }
-.custom-select .ant-select-selector {
+
+.custom-select {
+  width: 150px;
+  text-align: right;
+  margin-right: 15px;
+}
+
+::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector{
   border: none !important;
   box-shadow: none !important;
 }
-.custom-select .ant-select-arrow {
-  color: #0056b3 !important; /* Синий цвет для стрелочки */
+::ng-deep .ant-select-dropdown .ant-select-item-option-content {
+  text-align: right;
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: none !important;
+}
+::ng-deep .ant-select-dropdown .ant-select-item-option-content:hover {
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ant-select-dropdown {
+  background: transparent !important;
+  box-shadow: none !important;
+  margin-top: 0px !important;
+}
+::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled){
+  background-color: transparent !important;
 }
