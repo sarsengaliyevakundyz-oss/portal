@@ -1,6 +1,6 @@
 <div class="container">
   <!-- Header Section -->
-  <div class="top-header">
+  <div class="top-header" style="max-width: 1200px; margin: 0 auto;">
     <div class="nav-logo">
       <img src="logo.png" alt="QazStat">
     </div>
@@ -12,27 +12,16 @@
     </nav>
     <div class="user-actions">
       <div class="user-actions">
-        <div class="lang-switch" (document:click)="closeLanguageList($event)">
-          <button class="lang-switch-button" (click)="toggleLanguageList($event)" [ngClass]="{'open': isLanguageListVisible}">
-            {{ currentLanguage }}
-            <img src="lang_switch_arrow.png" alt="Arrow" class="arrow-icon">
-          </button>
-          <div class="language-list" *ngIf="isLanguageListVisible">
-            <ul>
-              <li *ngIf="currentLanguage !== 'Қаз'" (click)="changeLanguage('kz')">Қаз</li>
-              <li *ngIf="currentLanguage !== 'Рус'" (click)="changeLanguage('ru')">Рус</li>
-              <li *ngIf="currentLanguage !== 'Eng'" (click)="changeLanguage('en')">Eng</li>
-            </ul>
-          </div>
-        </div>
-        <button class="profile-btn">Профиль</button>
+        <app-lang-switcher></app-lang-switcher>
+        <a routerLink="/profile" routerLinkActive="active" class="profile-btn"><img style="margin-right: 7px" src="profile.png">Профиль</a>
       </div>
-
     </div>
   </div>
 
+  <div class="content" style="max-width: 1200px; margin: 0 auto;">
+    <router-outlet></router-outlet>
+  </div>
   <!-- Main Content -->
-  <router-outlet></router-outlet>
 
   <!-- Footer Section -->
   <footer class="footer">

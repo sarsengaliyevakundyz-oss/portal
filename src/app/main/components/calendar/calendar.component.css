@@ -1,0 +1,67 @@
+.calendar-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.navigation {
+  display: flex;
+  /*justify-content: space-between;*/
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+}
+.month-selector img {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #007BFF;
+  transition: filter 0.3s ease;
+}
+.month-selector img:hover {
+  filter: brightness(0.7) saturate(2) hue-rotate(-30deg);
+}
+
+.month-label {
+  width: 60px;
+  text-align: center;
+  display: inline-block;
+}
+
+.year-selector {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  margin-left: 10px;
+  width: 100px;
+}
+.year {
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: #2B2E35;
+  opacity: 45%;
+}
+.year:hover {
+  color: #007BFF;
+}
+.current-year {
+  /*font-weight: bold;*/
+  color: #2B2E35;
+}
+.region-selector {
+  align-self: flex-end;
+  font-size: 24px;
+}
+.custom-select .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+}
+.custom-select .ant-select-arrow {
+  color: #0056b3 !important; /* Синий цвет для стрелочки */
+}

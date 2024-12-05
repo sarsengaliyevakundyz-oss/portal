@@ -1,0 +1,33 @@
+<div class="calendar-container">
+  <h1>Календарь</h1>
+
+  <!-- Навигация -->
+  <div class="navigation">
+    <div class="month-selector">
+      <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">
+      <span class="month-label">{{ selectedMonthName }}</span>
+      <img (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">
+    </div>
+    <div class="year-selector">
+      <span class="year" (click)="selectPreviousYear()">{{ selectedYear-1 }}</span>
+      <span class="current-year">{{ selectedYear }}</span>
+      <span class="year" (click)="selectNextYear()" *ngIf="currentYear+1!=selectedYear">{{ selectedYear+1 }}</span>
+    </div>
+    <div class="region-selector">
+<!--      <nz-select-->
+<!--        [(ngModel)]="selectedRegion"-->
+<!--        nzSuffixIcon="caret-down"-->
+<!--        class="custom-select"-->
+<!--      >-->
+<!--        <nz-option nzValue="1" nzLabel="Регион"></nz-option>-->
+<!--        <nz-option nzValue="2" nzLabel="Корреспондент"></nz-option>-->
+<!--      </nz-select>-->
+    </div>
+  </div>
+
+  <!-- Календарь -->
+  <div class="calendar-grid">
+
+  </div>
+
+</div>

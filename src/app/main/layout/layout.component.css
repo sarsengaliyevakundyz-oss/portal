@@ -1,16 +1,16 @@
-
 .container {
-  max-width: 1200px;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
+    width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
 
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
+  width: 100%;
 }
 
 .nav-logo {
@@ -51,6 +51,7 @@
   height: 2px;
   background-color: #007bff;
 }
+
 .user-actions {
   display: flex;
   align-items: center;
@@ -61,77 +62,6 @@
 .user-action {
   position: relative;
 }
-.lang-switch {
-  position: relative; /* Для размещения выпадающего списка под кнопкой */
-  display: inline-block;
-}
-
-.lang-switch-button {
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  border: 1px solid #007bff;
-  border-radius: 20px;
-  color: #007bff;
-  padding: 8px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.lang-switch-button .arrow-icon {
-  width: 12px;
-  height: auto;
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-}
-
-.lang-switch-button.open .arrow-icon {
-  transform: rotate(180deg); /* Поворот стрелки при открытии списка */
-}
-
-.lang-switch-button:hover {
-  background-color: #007bff;
-  color: white;
-}
-
-.lang-switch-button:hover .arrow-icon {
-  filter: brightness(0) invert(1); /* Иконка становится белой при наведении */
-}
-
-.language-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #ffffff;
-  border: 1px solid #007bff;
-  border-radius: 8px;
-  width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  margin-top: 5px;
-}
-
-.language-list ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.language-list li {
-  padding: 10px;
-  cursor: pointer;
-  color: #007bff;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.language-list li:hover {
-  background-color: #007bff;
-  color: white;
-}
-
-
 
 .profile-btn {
   background-color: #007bff;
@@ -142,20 +72,21 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .profile-btn:hover {
   background-color: #0056b3;
 }
 
-
 .footer {
-  margin-top: 20px;
   padding: 20px;
   background-color: #007bff;
   color: #fff;
   text-align: center;
   border-radius: 8px;
+  max-width: 1200px;
+  margin: 20px auto 0;
 }
 
 .footer-info {
