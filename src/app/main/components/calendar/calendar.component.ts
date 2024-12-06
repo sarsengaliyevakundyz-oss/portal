@@ -21,7 +21,7 @@ import {BrowserModule} from '@angular/platform-browser';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit{
   months = [
     'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
     'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
@@ -104,7 +104,7 @@ export class CalendarComponent {
     }
 
     // Заполнение следующего месяца
-    const remainingDays = 42 - this.days.length; // 42 ячейки для 6 недель
+    const remainingDays = (this.days.length >35 ? 42:35) - this.days.length; // 42 ячейки для 6 недель
     for (let i = 1; i <= remainingDays; i++) {
       this.days.push({
         date: i,
