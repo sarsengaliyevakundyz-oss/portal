@@ -67,6 +67,7 @@
 ::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector{
   border: none !important;
   box-shadow: none !important;
+  background-color: transparent !important;
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content {
   text-align: right;
@@ -85,4 +86,51 @@
 }
 ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled){
   background-color: transparent !important;
+}
+
+.calendar-grid {
+  margin-top: 20px;
+}
+
+.week-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.day {
+  width: calc(100% / 7);
+  text-align: center;
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-item {
+  width: calc(100% / 7);
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.past-day {
+  background-color: #f0f0f0;
+  color: #B7B7B7;
+}
+
+.current-day {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.holiday {
+  background-color: #007bff;
+  color: #ffffff;
 }

@@ -31,8 +31,28 @@
   </div>
 
   <!-- Календарь -->
+  <!-- Календарь -->
   <div class="calendar-grid">
-
+    <div class="week-header">
+      <div class="day">Пн</div>
+      <div class="day">Вт</div>
+      <div class="day">Ср</div>
+      <div class="day">Чт</div>
+      <div class="day">Пт</div>
+      <div class="day">Сб</div>
+      <div class="day">Вс</div>
+    </div>
+    <div class="days">
+      <div *ngFor="let day of days"
+           class="day-item"
+           [ngClass]="{
+             'past-day': day.isPast,
+             'current-day': day.isCurrent,
+             'holiday': day.isHoliday
+           }">
+        {{ day.date }}
+      </div>
+    </div>
   </div>
 
 </div>
