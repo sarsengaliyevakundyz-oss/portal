@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {CommonModule, NgForOf, NgIf} from '@angular/common';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {FormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {BrowserModule} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-calendar',
