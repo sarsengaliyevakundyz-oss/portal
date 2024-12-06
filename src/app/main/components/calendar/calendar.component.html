@@ -31,7 +31,6 @@
   </div>
 
   <!-- Календарь -->
-  <!-- Календарь -->
   <div class="calendar-grid">
     <div class="week-header">
       <div class="day">Пн</div>
@@ -51,6 +50,21 @@
              'holiday': day.isHoliday
            }">
         {{ day.date }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="event-list">
+    <div *ngFor="let holiday of holidays" class="event-item">
+      <div class="event-date">
+        <span class="event-day">{{ holiday.date.getDate() }}</span>
+        <span class="event-month">{{ months[holiday.date.getMonth()] | slice:0:3 }}</span>
+      </div>
+      <div class="event-details">
+        <p><strong>Отрасль:</strong> "{{ holiday.name }}"</p>
+        <p>Форма: {{ holiday.formName }}</p>
+        <p>Отчётный период: {{ holiday.periodName }}</p>
       </div>
     </div>
   </div>

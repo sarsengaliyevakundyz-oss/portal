@@ -33,7 +33,20 @@ export class CalendarComponent implements OnInit{
   currentYear = new Date().getFullYear();
   selectedRegion = 1;
 
-  holidays = [1, 9, 14]; // Пример дат праздников
+  holidays = [
+    {
+      date: new Date('2024-12-01'),
+      name: 'Статистика уровня жизни',
+      formName: 'D 004 (квартальная)',
+      periodName: '3 квартал 2024 г.'
+    },
+    {
+      date: new Date('2024-12-11'),
+      name: 'Статистика уровня жизни',
+      formName: 'D 008 (пять раз в год)',
+      periodName: '3 квартал 2024 г.'
+    }
+  ];
   days: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean }[] = [];
 
   ngOnInit(): void {
@@ -92,9 +105,10 @@ export class CalendarComponent implements OnInit{
     }
 
     // Заполнение текущего месяца
+    const holidays = this.holidays.map(z=>z.date.getDate());
     for (let i = 1; i <= daysInMonth; i++) {
       const isPast = new Date(this.selectedYear, this.selectedMonthIndex, i) < new Date();
-      const isHoliday = this.holidays.includes(i);
+      const isHoliday = holidays.includes(i);
       this.days.push({
         date: i,
         isPast: isPast,
