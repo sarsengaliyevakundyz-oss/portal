@@ -23,6 +23,12 @@
   </div>
   <!-- Main Content -->
 
+  <div class="system-links-container">
+    <a *ngFor="let system of systems" [href]="system.link" class="system-link">
+      <img [src]="system.logo" [alt]="system.name" />
+      <span>{{ system.name }}</span>
+    </a>
+  </div>
   <!-- Footer Section -->
   <footer class="footer">
     <div class="footer-info">

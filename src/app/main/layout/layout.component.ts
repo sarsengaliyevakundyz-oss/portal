@@ -24,6 +24,13 @@ export class LayoutComponent {
     return this.router.url === path;
   }
 
+  systems = [
+    { name: '', link: '/', logo: 'systems/halyk_sanagy.svg' },
+    { name: '', link: 'https://taldau.stat.gov.kz/', logo: 'systems/taldau.svg' },
+    { name: '', link: '/', logo: 'systems/mics.svg' },
+    { name: 'Кабинет респондента', link: '/', logo: 'systems/kabinet.svg' },
+  ];
+
 
   // Метод для выбора язык
 }
