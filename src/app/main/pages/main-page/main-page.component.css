@@ -4,38 +4,23 @@
 }
 
 .news {
-  background-color: #fff;
+  /*background-color: #fff;*/
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   flex: 1;
-
+  backdrop-filter: blur(10px);
 }
 
-.news-item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.news-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.news-item h4 {
-  margin: 0;
-  font-size: 20px;
-}
 
 
 .calendar {
-  background-color: rgba(255, 255, 255, 0.8);
+  /*background-color: rgba(238, 243, 247, 0.8);*/
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   flex: 1;
+  backdrop-filter: blur(10px);
 }
  /**/
 .support-container {
