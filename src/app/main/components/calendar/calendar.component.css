@@ -7,7 +7,6 @@
   display: flex;
   /*justify-content: space-between;*/
   align-items: center;
-  margin-bottom: 16px;
 }
 
 .month-selector {
@@ -89,8 +88,12 @@
 }
 
 .calendar-grid {
-  margin-top: 20px;
-  background-color: #FFFFFF;
+  margin-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .week-header {
