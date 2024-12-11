@@ -31,6 +31,4 @@ export class LayoutComponent {
     { name: 'Кабинет респондента', link: '/', logo: 'systems/kabinet.svg' },
   ];
 
-
-  // Метод для выбора язык
 }

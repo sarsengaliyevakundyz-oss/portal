@@ -21,7 +21,6 @@
   <div class="content" style="max-width: 1200px; margin: 0 auto;">
     <router-outlet></router-outlet>
   </div>
-  <!-- Main Content -->
 
   <div class="system-links-container">
     <a *ngFor="let system of systems" [href]="system.link" class="system-link">
@@ -29,12 +28,43 @@
       <span>{{ system.name }}</span>
     </a>
   </div>
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="footer-info">
-      <img src="bitrix_logo.png" alt="Bitrix">
-      <p>bitrix.stat.gov.kz</p>
-      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
+
+</div>
+
+<div class="footer">
+  <div class="footer-content">
+    <div class="footer-column">
+      <h4>Город Астана</h4>
+      <p>Республика Казахстан, 010000, Казахстан, Левый берег р. Ишим,</p>
+      <p>Проспект Мангилик ел, 8 Дом Министерств, 4 подъезд</p>
     </div>
-  </footer>
+    <div class="footer-column">
+      <h4>Пресс-служба</h4>
+      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
+      <p>+7 7172 74 90 02</p>
+    </div>
+    <div class="footer-column">
+      <h4>Информационная служба</h4>
+      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
+      <p>+7 7172 74 90 10</p>
+      <p>+7 7172 74 90 11</p>
+    </div>
+    <div class="footer-column">
+      <h4>Канцелярия</h4>
+      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
+      <p>+7 7172 74 95 47</p>
+      <p>Факс: +7 7172 74 94 94</p>
+    </div>
+  </div>
+  <div class="footer-socials">
+    <div class="footer-socials-content">
+      <span>Все права защищены</span>
+      <div>
+        <a href="#" title="Facebook"><img src="socials/facebook.png"></a>
+        <a href="#" title="Twitter"><img src="socials/twitter.png"></a>
+        <a href="#" title="YouTube"><img src="socials/youtube.png"></a>
+        <a href="#" title="Instagram"><img src="socials/instagram.png"></a>
+      </div>
+    </div>
+  </div>
 </div>
