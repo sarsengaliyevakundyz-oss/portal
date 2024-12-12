@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap'); /* You can add global styles to this file, and also import other style files */
+@import url('fonts.css?family=Nunito+Sans:wght@400;600;700&display=swap'); /* You can add global styles to this file, and also import other style files */
 @import "ng-zorro-antd/ng-zorro-antd.min.css";
 
-body{
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column; /* Разместить элементы по вертикали */
   background: url('/background_image.png') no-repeat center center fixed;
   background-size: cover;
-  color: #333;
-  display: flex;
-  justify-content: center;
   font-family: 'Nunito Sans', sans-serif;
+  color: #333;
 }
