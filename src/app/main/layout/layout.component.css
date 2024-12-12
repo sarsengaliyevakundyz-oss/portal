@@ -1,17 +1,22 @@
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 !important;
+.container{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* гарантируем высоту экрана */
+  width: 100vw; /* при необходимости */
 }
 
 .top-header {
+  position: fixed; /* Зафиксировать вверху */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999; /* Чтобы быть выше контента */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .nav-logo {
@@ -28,13 +33,14 @@
   display: flex;
   align-items: center;
   gap: 30px;
+  text-transform: uppercase;
 }
 
 .nav-menu a {
   text-decoration: none;
   color: #333;
   font-size: 14px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   padding-bottom: 5px;
   position: relative;
 }
@@ -68,10 +74,10 @@
   background-color: #007bff;
   color: #fff;
   border: none;
-  padding: 8px 20px;
+  padding: 8px 15px;
   border-radius: 20px;
   font-size: 14px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   cursor: pointer;
   text-decoration: none;
 }
@@ -80,13 +86,19 @@
   background-color: #0056b3;
 }
 
+.content{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 70px; /* Отступ равный высоте header */
+  flex: 1; /* Заставим контент занимать оставшееся пространство */
+}
 
 /*footer*/
 .footer {
   width: 100%;
   text-align: center;
-  padding: 10px 0;
-  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 
