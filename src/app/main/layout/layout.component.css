@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* гарантируем высоту экрана */
-  width: 100vw; /* при необходимости */
+  width: 100%; /* при необходимости */
 }
 
 .top-header {
@@ -14,7 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 10px 0px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -34,6 +34,7 @@
   align-items: center;
   gap: 30px;
   text-transform: uppercase;
+  padding-left: 10%;
 }
 
 .nav-menu a {
@@ -43,6 +44,8 @@
   /*font-weight: 500;*/
   padding-bottom: 5px;
   position: relative;
+  background-color: rgba(255, 255, 255, 0.4);
+
 }
 
 .nav-menu a.active {

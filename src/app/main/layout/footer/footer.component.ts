@@ -12,9 +12,9 @@ import {NgForOf} from '@angular/common';
 })
 export class FooterComponent {
   systems = [
-    { name: '', link: '/', logo: 'systems/halyk_sanagy.svg' },
-    { name: '', link: 'https://taldau.stat.gov.kz/', logo: 'systems/taldau.svg' },
-    { name: '', link: '/', logo: 'systems/mics.svg' },
-    { name: 'Кабинет респондента', link: '/', logo: 'systems/kabinet.svg' },
+    { name: '', link: '/', logo: 'systems/footer/halyk_sanagy.svg' },
+    { name: '', link: 'https://taldau.stat.gov.kz/', logo: 'systems/footer/taldau.svg' },
+    { name: '', link: '/', logo: 'systems/footer/mics.svg' },
+    { name: 'Кабинет респондента', link: '/', logo: 'systems/footer/kabinet.svg' },
   ];
 }
