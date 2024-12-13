@@ -19,7 +19,8 @@ import {FormsModule} from '@angular/forms';
     NzSelectComponent,
     NzButtonComponent,
     NzIconDirective,
-    FormsModule
+    FormsModule,
+
   ],
   exports:[
 

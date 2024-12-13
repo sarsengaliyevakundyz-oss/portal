@@ -1,0 +1,107 @@
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
+import {RoleEnum, UserTokenInfo} from '../models/user.model';
+import {jwtDecode} from 'jwt-decode';
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CurrentUserService {
+
+  private currentUser!:UserTokenInfo;
+  private permissions: RoleEnum[] = [];
+  private authResponseKey = 'authResponse';
+  constructor(private router: Router) {
+  }
+
+
+
+  // Method to get the current authenticated user's details
+  getCurrentUser(): UserTokenInfo | null {
+    if (!this.currentUser){
+      // @ts-ignore
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      if(!userInfo){
+        this.logout()
+      }
+      else{
+        this.setUser(userInfo.accessToken);
+      }
+    };
+    return this.currentUser;
+  }
+
+  getPermissions(): RoleEnum[]{
+    return this.permissions;
+  }
+
+  // Method to check if the user is authenticated
+  isAuthenticated(): boolean {
+    if (!this.currentUser){
+      // @ts-ignore
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      if(!userInfo){
+        return false;
+      }
+      else{
+        this.setUser(userInfo.accessToken);
+      }
+    };
+
+    const decodedToken: any = jwtDecode(this.currentUser.accessToken);
+    const expiry = decodedToken.exp * 1000;
+    return Date.now() < expiry;
+  }
+
+
+  logout() {
+    // remove user from local storage to log user out
+    localStorage.removeItem(this.authResponseKey);
+    window.location.href = 'http://172.16.0.182:9999/ssofrontinternal/';
+  }
+
+  checkPermissions(...permissions: RoleEnum[]): boolean {
+    return permissions.some(permission => this.permissions.includes(permission));
+  }
+
+
+  setUser(token: string): void {
+    try {
+      const decodedToken: any = jwtDecode(token);
+      if(!this.isExpired(token)){
+        this.currentUser = {accessToken: token, family_name: decodedToken.family_name, given_name: decodedToken.given_name,
+          full_name: decodedToken.name, email: decodedToken.email, preferred_username: decodedToken.preferred_username } as UserTokenInfo;
+        localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
+      }
+      else{
+        this.logout();
+      }
+    } catch (error) {
+      localStorage.removeItem(this.authResponseKey);
+      this.logout();
+    }
+  }
+
+
+  isExpired(token: string): boolean {
+    const payload = jwtDecode(token);
+
+    // exp is in seconds since the epoch
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp! < currentTime;
+  }
+
+  minutesToExpire(): number {
+    const payload = jwtDecode(this.currentUser.accessToken);
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    // time until expiration in seconds
+    const timeUntilExpire = payload.exp! - currentTime;
+
+    // convert seconds to minutes
+    return Math.floor(timeUntilExpire / 60);
+  }
+}
