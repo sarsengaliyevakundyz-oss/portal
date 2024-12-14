@@ -3,5 +3,10 @@
     "target": "http://172.16.18.182:9999",
     "secure": false,
     "changeOrigin": true
+  },
+  "/realms": {
+    "target": "http://172.16.18.47:8282",
+    "secure": false,
+    "changeOrigin": true
   }
 }

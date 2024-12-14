@@ -28,7 +28,7 @@ export class CurrentUserService {
         this.logout()
       }
       else{
-        this.setUser(userInfo.accessToken);
+        this.setUser(userInfo.accessToken, userInfo.refreshToken);
       }
     };
     return this.currentUser;
@@ -47,7 +47,7 @@ export class CurrentUserService {
         return false;
       }
       else{
-        this.setUser(userInfo.accessToken);
+        this.setUser(userInfo.accessToken, userInfo.refreshToken);
       }
     };
 
@@ -68,12 +68,12 @@ export class CurrentUserService {
   }
 
 
-  setUser(token: string): void {
+  setUser(token: string, refresh: string): void {
     try {
       const decodedToken: any = jwtDecode(token);
       if(!this.isExpired(token)){
         this.currentUser = {accessToken: token, family_name: decodedToken.family_name, given_name: decodedToken.given_name,
-          full_name: decodedToken.name, email: decodedToken.email, preferred_username: decodedToken.preferred_username } as UserTokenInfo;
+          full_name: decodedToken.name, email: decodedToken.email, preferred_username: decodedToken.preferred_username, refreshToken: refresh } as UserTokenInfo;
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
       else{
@@ -102,6 +102,7 @@ export class CurrentUserService {
     const timeUntilExpire = payload.exp! - currentTime;
 
     // convert seconds to minutes
+    console.log(timeUntilExpire / 60)
     return Math.floor(timeUntilExpire / 60);
   }
 }

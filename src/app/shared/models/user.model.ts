@@ -1,5 +1,6 @@
 export interface UserTokenInfo {
   accessToken: string;
+  refreshToken: string;
   given_name: string;
   family_name: string;
   full_name: string;

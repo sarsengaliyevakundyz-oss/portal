@@ -8,7 +8,7 @@ import {formatDate} from '@angular/common';
   providedIn: 'root'
 })
 export class BaseApi {
-  apiUrl = '/internalportal';
+  apiUrl = '';
 
   constructor(private http: HttpClient) {
   }

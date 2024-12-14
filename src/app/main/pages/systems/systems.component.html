@@ -4,7 +4,7 @@
       {{ item.name }}
     </div>
     <div class="item-icon">
-      <img [src]="'/systems' + item.pathImg + '.png'" alt="{{ item.name }}">
+      <img [src]="'/systems' + item.pathImg + '.png'" alt="{{ item.name }}" (error)="onImgError($event)">
     </div>
   </a>
 </div>

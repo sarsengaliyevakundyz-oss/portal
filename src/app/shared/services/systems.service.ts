@@ -11,11 +11,11 @@ import {ResultModel} from '../models/result.model';
 export class SystemsService extends BaseApi {
 
   getList(): Observable<ResultModel<SystemModel[]>> {
-    return this.getData<ResultModel<SystemModel[]>>(this.apiUrl + '/systems/parent', null);
+    return this.getData<ResultModel<SystemModel[]>>(this.apiUrl + '/internalportal/systems/parent', null);
   }
 
   getSystemInfo(id: string): Observable<ResultModel<SystemChildInfoModel>> {
-    return this.getData<ResultModel<SystemChildInfoModel>>(this.apiUrl + '/systems/child', {parentId:id});
+    return this.getData<ResultModel<SystemChildInfoModel>>(this.apiUrl + '/internalportal/systems/child', {parentId:id});
   }
 
 }
