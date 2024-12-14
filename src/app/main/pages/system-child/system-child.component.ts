@@ -30,8 +30,13 @@ export class SystemChildComponent implements OnInit{
 
   openModule(module: SystemChildModel) {
     if(module.url.includes('?'))
-      window.open(module.url + '&token' + this.token, '_blank')
+      window.open(module.url + '&token=' + this.token, '_blank')
     else
-      window.open(module.url + '?token' + this.token, '_blank')
+      window.open(module.url + '?token=' + this.token, '_blank')
+  }
+
+  onImgError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = '/default_user.png';
   }
 }

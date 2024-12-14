@@ -5,3 +5,28 @@
     <p class="card-subtitle">{{ system.codeName }}</p>
   </a>
 </div>
+
+
+<div class="system-info-container">
+  <div class="info-block">
+    <h2>ИНФО</h2>
+    <!-- Выводим описание. Предполагается, что оно может быть в формате HTML (список), поэтому innerHTML -->
+    <div class="info-description" [innerHTML]="info.systemInfo.description"></div>
+  </div>
+
+  <div class="kurators-block">
+    <h2>КУРАТОРЫ</h2>
+    <!-- Карточка куратора -->
+    <div class="kurator-card">
+<!--      <div class="kurator-avatar">-->
+<!--        <img [src]="'/systems' + info.systemInfo.pathImg || '/default.png'" [alt]="info.systemInfo.kurator" (error)="onImgError($event)">-->
+<!--      </div>-->
+      <div class="kurator-info">
+        <div class="kurator-name">{{ info.systemInfo.kurator }}</div>
+        <div class="kurator-department">{{ info.systemInfo.kurator }}</div>
+      </div>
+    </div>
+
+    <!-- Позже вы добавите сюда блок технической поддержки -->
+  </div>
+</div>
