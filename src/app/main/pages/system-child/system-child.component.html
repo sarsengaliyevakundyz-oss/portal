@@ -1,0 +1,7 @@
+<h1>{{info.systemInfo.name}}</h1>
+<div class="cards-container">
+  <a class="card" *ngFor="let system of info.children" (click)="openModule(system)">
+    <h3 class="card-title">{{ system.name }}</h3>
+    <p class="card-subtitle">{{ system.codeName }}</p>
+  </a>
+</div>

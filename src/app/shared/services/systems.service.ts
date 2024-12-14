@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BaseApi} from './base-api';
-import {SystemModel} from '../models/system.model';
+import {SystemChildInfoModel, SystemModel} from '../models/system.model';
+import {ResultModel} from '../models/result.model';
 
 
 @Injectable({
@@ -9,12 +10,12 @@ import {SystemModel} from '../models/system.model';
 })
 export class SystemsService extends BaseApi {
 
-  getList(): Observable<SystemModel[]> {
-    return this.getData<SystemModel[]>(this.apiUrl + '/systems/parent', null);
+  getList(): Observable<ResultModel<SystemModel[]>> {
+    return this.getData<ResultModel<SystemModel[]>>(this.apiUrl + '/systems/parent', null);
   }
 
-  getSystemInfo(id: number): Observable<SystemModel[]> {
-    return this.getData<SystemModel[]>(this.apiUrl + '/systems/child', {parentId:id});
+  getSystemInfo(id: string): Observable<ResultModel<SystemChildInfoModel>> {
+    return this.getData<ResultModel<SystemChildInfoModel>>(this.apiUrl + '/systems/child', {parentId:id});
   }
 
 }

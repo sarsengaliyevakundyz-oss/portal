@@ -1,6 +1,6 @@
 {
-  "/api": {
-    "target": "http://localhost:5002",
+  "/internalportal": {
+    "target": "http://172.16.18.182:9999",
     "secure": false,
     "changeOrigin": true
   }

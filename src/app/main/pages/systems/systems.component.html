@@ -1,10 +1,10 @@
 <div class="items-container">
   <a class="item" *ngFor="let item of items" [routerLink]="['/systems', item.id]">
     <div class="item-title">
-      {{ item.title }}
+      {{ item.name }}
     </div>
     <div class="item-icon">
-      <img [src]="item.icon" alt="{{ item.title }}">
+      <img [src]="'/systems' + item.pathImg + '.png'" alt="{{ item.name }}">
     </div>
   </a>
 </div>
