@@ -60,7 +60,7 @@ export class CurrentUserService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    window.location.href = 'http://172.16.18.182:9999/ssofrontinternal/';
+    window.location.href = 'http://172.16.18.182:9999/ssofrontinternal/?ref=vipnew';
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
