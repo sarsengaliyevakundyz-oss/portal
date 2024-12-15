@@ -22,6 +22,6 @@ COPY --from=build /app/dist/srzhf-catalog-new-front/browser /usr/share/nginx/htm
  
 # RUN ls -l /usr/share/nginx/html
  
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
  
 EXPOSE 80
