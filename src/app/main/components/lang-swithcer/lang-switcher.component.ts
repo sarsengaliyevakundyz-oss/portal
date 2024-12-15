@@ -21,7 +21,6 @@ export class LangSwitcherComponent{
     this.currentLanguage = this.translate.currentLang ?? localStorage.getItem("vip_lang") ?? Lang.Kz;
     this.translate.setDefaultLang(this.currentLanguage);
     this.translate.currentLang =this.currentLanguage;
-    console.log(this.translate.currentLang)
   }
 
   toggleLanguageList(event: Event): void {

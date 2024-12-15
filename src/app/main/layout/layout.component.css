@@ -15,7 +15,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 0px;
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
 }
 
@@ -90,7 +90,7 @@
 }
 
 .content{
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   padding-top: 70px; /* Отступ равный высоте header */
   flex: 1; /* Заставим контент занимать оставшееся пространство */
