@@ -4,13 +4,15 @@ import {ActivatedRoute} from '@angular/router';
 import {SystemChildInfoModel, SystemChildModel} from '../../../shared/models/system.model';
 import {NgForOf} from '@angular/common';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
+import {SharedModule} from "../../../shared/shared.module";
 
 @Component({
   selector: 'app-system-child',
   standalone: true,
-  imports: [
-    NgForOf
-  ],
+    imports: [
+        NgForOf,
+        SharedModule
+    ],
   templateUrl: './system-child.component.html',
   styleUrl: './system-child.component.css'
 })

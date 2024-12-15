@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NewsItem} from '../../../shared/models/news';
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [
-    NgIf,
-    DatePipe,
-    NgForOf
-  ],
+    imports: [
+        NgIf,
+        DatePipe,
+        NgForOf,
+        TranslatePipe
+    ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.css'
 })

@@ -102,7 +102,6 @@ export class CurrentUserService {
     const timeUntilExpire = payload.exp! - currentTime;
 
     // convert seconds to minutes
-    console.log(timeUntilExpire / 60)
     return Math.floor(timeUntilExpire / 60);
   }
 }

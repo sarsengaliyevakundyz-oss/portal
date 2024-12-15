@@ -3,13 +3,15 @@ import {NgForOf} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {SystemsService} from '../../../shared/services/systems.service';
 import {SystemModel} from '../../../shared/models/system.model';
+import {SharedModule} from '../../../shared/shared.module';
 
 @Component({
   selector: 'app-systems',
   standalone: true,
   imports: [
     NgForOf,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   templateUrl: './systems.component.html',
   styleUrl: './systems.component.css'

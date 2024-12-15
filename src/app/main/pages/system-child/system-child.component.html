@@ -1,8 +1,8 @@
-<h1>{{info.systemInfo.name}}</h1>
+<h1>{{info.systemInfo.name | nameTranslate}}</h1>
 <div class="cards-container">
   <a class="card" *ngFor="let system of info.children" (click)="openModule(system)">
-    <h3 class="card-title">{{ system.name }}</h3>
-    <p class="card-subtitle">{{ system.codeName }}</p>
+    <h3 class="card-title">{{ system.name | nameTranslate }}</h3>
+<!--    <p class="card-subtitle">{{ system.codeName }}</p>-->
   </a>
 </div>
 
@@ -11,19 +11,19 @@
   <div class="info-block">
     <h2>ИНФО</h2>
     <!-- Выводим описание. Предполагается, что оно может быть в формате HTML (список), поэтому innerHTML -->
-    <div class="info-description" [innerHTML]="info.systemInfo.description"></div>
+    <div class="info-description" [innerHTML]="info.systemInfo.description | nameTranslate"></div>
   </div>
 
   <div class="kurators-block">
     <h2>КУРАТОРЫ</h2>
     <!-- Карточка куратора -->
-    <div class="kurator-card">
+    <div class="kurator-card" *ngFor="let kurator of info.systemInfo.kurator">
 <!--      <div class="kurator-avatar">-->
 <!--        <img [src]="'/systems' + info.systemInfo.pathImg || '/default.png'" [alt]="info.systemInfo.kurator" (error)="onImgError($event)">-->
 <!--      </div>-->
       <div class="kurator-info">
-        <div class="kurator-name">{{ info.systemInfo.kurator }}</div>
-        <div class="kurator-department">{{ info.systemInfo.kurator }}</div>
+        <div class="kurator-name">{{ kurator.name | nameTranslate }}</div>
+        <div class="kurator-department">{{ kurator.department | nameTranslate }}</div>
       </div>
     </div>
 
