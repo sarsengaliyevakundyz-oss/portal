@@ -23,5 +23,5 @@ FROM 172.16.18.94:5000/nginx-1.21.3
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build-env /app/default.conf /etc/nginx/conf.d/
 COPY --from=build-env /app/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build-env /app/dist/nsi-front/browser/ /usr/share/nginx/html
+COPY --from=build-env /app/dist/vip/browser/ /usr/share/nginx/html
 EXPOSE 80
