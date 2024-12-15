@@ -15,7 +15,7 @@ export interface SystemChildModel {
   codeName: string
   name: ITranslateName
   img: string
-  url: string
+  url: ITranslateName
 }
 
 

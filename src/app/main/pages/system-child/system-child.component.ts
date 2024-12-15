@@ -5,6 +5,8 @@ import {SystemChildInfoModel, SystemChildModel} from '../../../shared/models/sys
 import {NgForOf} from '@angular/common';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
 import {SharedModule} from "../../../shared/shared.module";
+import {TranslateService} from '@ngx-translate/core';
+import {ITranslateName} from '../../../shared/pipes/name-translate.pipe';
 
 @Component({
   selector: 'app-system-child',
@@ -20,7 +22,8 @@ export class SystemChildComponent implements OnInit{
   id: string = '';
   info: SystemChildInfoModel = {} as SystemChildInfoModel;
   token: string | undefined = '';
-  constructor(private service: SystemsService, private route: ActivatedRoute, private currentUser: CurrentUserService) {
+  constructor(private service: SystemsService, private route: ActivatedRoute, private currentUser: CurrentUserService,
+              private translate: TranslateService) {
   }
   ngOnInit(): void {
     this.token = this.currentUser.getCurrentUser()?.accessToken;
@@ -31,10 +34,11 @@ export class SystemChildComponent implements OnInit{
   }
 
   openModule(module: SystemChildModel) {
-    if(module.url.includes('?'))
-      window.open(module.url + '&token=' + this.token, '_blank')
+    const url = module.url[this.translate.currentLang as keyof ITranslateName];
+    if (url?.includes('?'))
+      window.open(url + '&token=' + this.token, '_blank')
     else
-      window.open(module.url + '?token=' + this.token, '_blank')
+      window.open(url + '?token=' + this.token, '_blank')
   }
 
   onImgError(event: Event) {
