@@ -6,7 +6,7 @@ export interface SystemModel {
   name: ITranslateName
   description: ITranslateName
   kurator: KuratorModel[]
-  pathImg: string
+  pathImg: ITranslateName
 }
 
 

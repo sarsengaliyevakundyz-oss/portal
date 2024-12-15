@@ -29,7 +29,7 @@ export class CalendarComponent implements OnInit{
   currentYear = new Date().getFullYear();
   selectedRegion = 1;
 
-  holidays = [
+  events = [
     {
       date: new Date('2024-12-01'),
       name: 'Статистика уровня жизни',
@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit{
       periodName: '3 квартал 2024 г.'
     }
   ];
-  days: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean }[] = [];
+  days: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean, isNextMonth: boolean }[] = [];
 
   ngOnInit(): void {
     this.generateCalendar();
@@ -96,20 +96,22 @@ export class CalendarComponent implements OnInit{
         date: daysInPrevMonth - i + 1,
         isPast: true,
         isCurrent: false,
-        isHoliday: false
+        isHoliday: false,
+        isNextMonth: false
       });
     }
 
     // Заполнение текущего месяца
-    const holidays = this.holidays.map(z=>z.date.getDate());
+    const events = this.events.map(z=>z.date.getDate());
     for (let i = 1; i <= daysInMonth; i++) {
       const isPast = new Date(this.selectedYear, this.selectedMonthIndex, i) < new Date();
-      const isHoliday = holidays.includes(i);
+      const isHoliday = events.includes(i);
       this.days.push({
         date: i,
         isPast: isPast,
         isCurrent: !isPast,
-        isHoliday: isHoliday
+        isHoliday: isHoliday,
+        isNextMonth: false
       });
     }
 
@@ -118,9 +120,10 @@ export class CalendarComponent implements OnInit{
     for (let i = 1; i <= remainingDays; i++) {
       this.days.push({
         date: i,
-        isPast: true,
+        isPast: false,
         isCurrent: false,
-        isHoliday: false
+        isHoliday: false,
+        isNextMonth: true
       });
     }
   }

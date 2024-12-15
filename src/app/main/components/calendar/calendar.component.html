@@ -47,7 +47,8 @@
            [ngClass]="{
              'past-day': day.isPast,
              'current-day': day.isCurrent,
-             'holiday': day.isHoliday
+             'holiday': day.isHoliday,
+             'next-month-day': day.isNextMonth
            }">
         {{ day.date }}
       </div>
@@ -56,7 +57,7 @@
 
 
   <div class="event-list">
-    <div *ngFor="let holiday of holidays" class="event-item">
+    <div *ngFor="let holiday of events" class="event-item">
       <div class="event-date">
         <span class="event-day">{{ holiday.date.getDate() }}</span>
         <span class="event-month">{{ months[holiday.date.getMonth()] | slice:0:3 }}</span>

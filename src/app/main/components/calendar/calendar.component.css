@@ -143,6 +143,11 @@
   background-color: #1F82E5;
   color: #ffffff;
 }
+
+.next-month-day {
+  /*background-color: #f5f5f5;*/
+  color: #B7B7B7;
+}
 .event-list {
   margin-top: 20px;
 }
