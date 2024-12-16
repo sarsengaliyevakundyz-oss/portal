@@ -19,11 +19,11 @@ import {JwtInterceptor} from './Intercaptors/jwt.interceptor';
       useClass: JwtInterceptor,
       multi: true
     },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: LangParamInterceptor,
-    //   multi: true
-    // }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LangParamInterceptor,
+      multi: true
+    }
   ],
   exports:[
 

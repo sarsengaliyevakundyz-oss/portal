@@ -9,9 +9,9 @@
       <img (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">
     </div>
     <div class="year-selector">
-      <span class="year" (click)="selectPreviousYear()">{{ selectedYear-1 }}</span>
-      <span class="current-year">{{ selectedYear }}</span>
-      <span class="year" (click)="selectNextYear()" *ngIf="currentYear+1!=selectedYear && selectedMonthIndex==11">{{ selectedYear+1 }}</span>
+      <span class="year" (click)="selectPreviousYear()">{{ query.year-1 }}</span>
+      <span class="current-year">{{ query.year }}</span>
+      <span class="year" (click)="selectNextYear()" *ngIf="currentYear+1!=query.year && query.month==11">{{ query.year+1 }}</span>
     </div>
     <div class="region-selector">
       <nz-select
@@ -19,8 +19,8 @@
         [nzSuffixIcon]="arrowTemplate"
         class="custom-select"
       >
-        <nz-option *ngIf="selectedRegion!=1" nzValue="1" nzLabel="Регион"></nz-option>
-        <nz-option *ngIf="selectedRegion!=2" nzValue="2" nzLabel="Корреспондент"></nz-option>
+        <nz-option *ngIf="selectedRegion!=1" [nzValue]=CalendarTypeEnum.Region nzLabel="Регион"></nz-option>
+        <nz-option *ngIf="selectedRegion!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Корреспондент"></nz-option>
         <nz-option  [nzValue]="1" nzLabel="Регион" nzHide></nz-option>
 
       </nz-select>
@@ -32,40 +32,46 @@
 
   <!-- Календарь -->
   <div class="calendar-grid">
-    <div class="week-header">
-      <div class="day">Пн</div>
-      <div class="day">Вт</div>
-      <div class="day">Ср</div>
-      <div class="day">Чт</div>
-      <div class="day">Пт</div>
-      <div class="day">Сб</div>
-      <div class="day">Вс</div>
+    <div *ngIf="isLoading" class="loading-overlay">
+      Loading...
     </div>
-    <div class="days">
-      <div *ngFor="let day of days"
-           class="day-item"
-           [ngClass]="{
+    <div *ngIf="!isLoading">
+      <div class="week-header">
+        <div class="day">{{ 'week.mon' | translate }}</div>
+        <div class="day">{{ 'week.tue' | translate }}</div>
+        <div class="day">{{ 'week.wed' | translate }}</div>
+        <div class="day">{{ 'week.thu' | translate }}</div>
+        <div class="day">{{ 'week.fri' | translate }}</div>
+        <div class="day">{{ 'week.sat' | translate }}</div>
+        <div class="day">{{ 'week.sun' | translate }}</div>
+      </div>
+      <div class="days">
+        <div *ngFor="let day of days"
+             class="day-item"
+             [ngClass]="{
              'past-day': day.isPast,
              'current-day': day.isCurrent,
              'holiday': day.isHoliday,
              'next-month-day': day.isNextMonth
            }">
-        {{ day.date }}
+          {{ day.date }}
+        </div>
       </div>
     </div>
   </div>
 
 
+
   <div class="event-list">
     <div *ngFor="let holiday of events" class="event-item">
       <div class="event-date">
-        <span class="event-day">{{ holiday.date.getDate() }}</span>
-        <span class="event-month">{{ months[holiday.date.getMonth()] | slice:0:3 }}</span>
+        <span class="event-day">{{ holiday.dateEnd.getDate() }}</span>
+        <span class="event-month">{{ months[holiday.dateEnd.getMonth()] | slice:0:3 }}</span>
       </div>
       <div class="event-details">
-        <p><strong>Отрасль:</strong> "{{ holiday.name }}"</p>
+        <p><strong>Отрасль:</strong> "{{ holiday.sectorName }}"</p>
         <p>Форма: {{ holiday.formName }}</p>
-        <p>Отчётный период: {{ holiday.periodName }}</p>
+        <p>Отчётный период: {{ holiday.periodKindlistName }}</p>
       </div>
     </div>
   </div>

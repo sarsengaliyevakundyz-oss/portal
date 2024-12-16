@@ -10,7 +10,7 @@ export class LangParamInterceptor implements HttpInterceptor {
     const isTranslateRequest = req.method === 'GET';
 
     if (isTranslateRequest) {
-      const lang = 'kz'; // or dynamically get from a service or settings
+      const lang = localStorage.getItem("vip_lang")
 
       let newUrl = req.url;
       if (newUrl.includes('?')) {
