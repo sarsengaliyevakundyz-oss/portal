@@ -5,6 +5,8 @@ import {FormsModule} from '@angular/forms';
 import {CalendarModel, CalendarQuery, CalendarTypeEnum} from '../../../shared/models/calendar.model';
 import {CalendarService} from '../../../shared/services/calendar.service';
 import {TranslatePipe} from '@ngx-translate/core';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {NzTableComponent} from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-calendar',
@@ -16,8 +18,11 @@ import {TranslatePipe} from '@ngx-translate/core';
     NzSelectComponent,
     NzOptionComponent,
     CommonModule,
-    TranslatePipe
+    TranslatePipe,
+    NzModalComponent,
+    NzTableComponent
   ],
+  providers: [NzModalService], // Add the provider here,
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
 })
@@ -33,24 +38,11 @@ export class CalendarComponent implements OnInit{
 
   query: CalendarQuery = {type: CalendarTypeEnum.Region, year: new Date().getFullYear(), month:new Date().getMonth()} as CalendarQuery;
 
-  // events = [
-  //   {
-  //     date: new Date('2024-12-01'),
-  //     name: 'Статистика уровня жизни',
-  //     formName: 'D 004 (квартальная)',
-  //     periodName: '3 квартал 2024 г.'
-  //   },
-  //   {
-  //     date: new Date('2024-12-11'),
-  //     name: 'Статистика уровня жизни',
-  //     formName: 'D 008 (пять раз в год)',
-  //     periodName: '3 квартал 2024 г.'
-  //   }
-  // ];
   allEvents: CalendarModel[] = [];
   nextEvents: CalendarModel[] = [];
   calendarDays: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean, isNextMonth: boolean }[] = [];
   isLoading: boolean = false;
+  isShowAllEvents: boolean =false;
 
 
   constructor(private service: CalendarService) {
@@ -95,6 +87,7 @@ export class CalendarComponent implements OnInit{
   }
 
   generateCalendar(): void {
+    this.allEvents = []; this.nextEvents = [];
     // const query = {
     //   ...this.query, // Create a shallow copy of the object
     //   month: this.query.month++ // Increment month safely
@@ -104,7 +97,8 @@ export class CalendarComponent implements OnInit{
       this.allEvents = res.result.map(item => ({
         ...item, // Spread all other properties
         dateEnd: new Date(item.dateEnd) // Convert dateEnd string to Date object
-      }));
+      }))
+        .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate());
       const today = new Date();
       this.nextEvents = this.allEvents
         .filter(z => {
@@ -113,8 +107,7 @@ export class CalendarComponent implements OnInit{
             z.dateEnd.getMonth() === today.getMonth() &&
             z.dateEnd.getDate() >= today.getDate()
           );
-        })
-        .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate()); // Sort by dateEnd in ascending order
+        });
       this.printCalendar();
     })
   }

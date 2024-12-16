@@ -33,6 +33,7 @@ export class LangSwitcherComponent{
     this.currentLanguage = language;
     localStorage.setItem("vip_lang", language);
     this.isLanguageListVisible = false; // Закрываем список после выбора языка
+    location.reload()
   }
 
   @HostListener('document:click', ['$event'])

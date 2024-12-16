@@ -70,18 +70,18 @@
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content {
   text-align: right;
-  background: rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
   box-shadow: none !important;
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
   box-shadow: none !important;
 }
 
 ::ng-deep .ant-select-dropdown {
   background: transparent !important;
   box-shadow: none !important;
-  margin-top: -10px !important;
+  margin-top: -18px !important;
 }
 ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled){
   background-color: transparent !important;
@@ -187,4 +187,25 @@
 }
 .event-details p {
   margin: 0;
+}
+
+.event-list-more {
+  text-align: right; /* Center the button horizontally */
+  margin-top: 0px; /* Add some spacing above the button */
+  padding-right: 10px;
+}
+
+.event-list-more button {
+  background: none; /* Remove button background */
+  border: none; /* Remove button border */
+  color: #007bff; /* Customize text color (blue as an example) */
+  font-size: 14px; /* Adjust font size */
+  cursor: pointer; /* Add pointer cursor for better UX */
+  padding: 0; /* Remove default padding */
+  text-decoration: none; /* Remove underline */
+}
+
+.event-list-more button:hover {
+  text-decoration: underline; /* Add underline effect on hover */
+  color: #0056b3; /* Slightly darker color on hover */
 }

@@ -75,6 +75,45 @@
         <p>Отчётный период: {{ event.periodKindlistName }}</p>
       </div>
     </div>
+    <div class="event-list-more">
+      <button *ngIf="allEvents.length>0" (click)="isShowAllEvents=true">{{'action.more' | translate}}...</button>
+    </div>
   </div>
 
 </div>
+
+
+<nz-modal
+  [(nzVisible)]="isShowAllEvents"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="isShowAllEvents=false"
+  nzWidth = 1000px
+>
+  <ng-template #modalTitle></ng-template>
+
+  <ng-template #modalContent>
+    <nz-table #basicTable [nzData]="nextEvents">
+      <thead>
+      <tr>
+        <th width="100px">Дата</th>
+        <th>Отрасль</th>
+        <th>Форма</th>
+        <th>период</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data.dateEnd | date : 'dd-MM-yyyy'}}</td>
+        <td>{{data.sectorName}}</td>
+        <td>{{data.formName}}</td>
+        <td>{{data.periodKindlistName}}</td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+
+  <ng-template #modalFooter>
+  </ng-template>
+</nz-modal>
