@@ -69,14 +69,18 @@ export class CurrentUserService {
 
 
   setUser(token: string, refresh: string): void {
+    console.log(token)
+    console.log(refresh)
     try {
       const decodedToken: any = jwtDecode(token);
+      console.log('decoded', decodedToken)
       if(!this.isExpired(token)){
         this.currentUser = {accessToken: token, family_name: decodedToken.family_name, given_name: decodedToken.given_name,
           full_name: decodedToken.name, email: decodedToken.email, preferred_username: decodedToken.preferred_username, refreshToken: refresh } as UserTokenInfo;
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
       else{
+        console.log('token expired')
         this.logout();
       }
     } catch (error) {
