@@ -19,12 +19,12 @@ body {
 }
 
 body.home-background {
-  background: #eef3f7 url('/background_image.png') no-repeat fixed center center;
+  background: #eef3f7 url('background_image.png') no-repeat fixed center center;
   background-size: cover;
 }
 
 /* Класс для других страниц (можете задать другие параметры, чтобы фоновая картинка была частичной) */
 body.partial-background {
-  background: #eef3f7 url('/background_image.png') no-repeat fixed left center;
+  background: #eef3f7 url('background_image.png') no-repeat fixed left center;
   background-size: 130% auto; /* Увеличиваем картинку примерно в 2 раза, можно регулировать значение */
 }
