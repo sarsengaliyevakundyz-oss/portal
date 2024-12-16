@@ -70,18 +70,18 @@
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content {
   text-align: right;
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
   box-shadow: none !important;
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content:hover {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
   box-shadow: none !important;
 }
 
 ::ng-deep .ant-select-dropdown {
   background: transparent !important;
   box-shadow: none !important;
-  margin-top: 0px !important;
+  margin-top: -10px !important;
 }
 ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled){
   background-color: transparent !important;
@@ -135,7 +135,7 @@
 }
 
 .current-day {
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
   color: #000000;
 }
 

@@ -29,8 +29,6 @@ export class CalendarComponent implements OnInit{
 
   // currentMonthIndex = new Date().getMonth();
   currentYear = new Date().getFullYear();
-  selectedRegion = 1;
-
   CalendarTypeEnum = CalendarTypeEnum;
 
   query: CalendarQuery = {type: CalendarTypeEnum.Region, year: new Date().getFullYear(), month:new Date().getMonth()} as CalendarQuery;
@@ -49,8 +47,9 @@ export class CalendarComponent implements OnInit{
   //     periodName: '3 квартал 2024 г.'
   //   }
   // ];
-  events: CalendarModel[] = [];
-  days: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean, isNextMonth: boolean }[] = [];
+  allEvents: CalendarModel[] = [];
+  nextEvents: CalendarModel[] = [];
+  calendarDays: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean, isNextMonth: boolean }[] = [];
   isLoading: boolean = false;
 
 
@@ -102,25 +101,38 @@ export class CalendarComponent implements OnInit{
     // };
     this.isLoading = true;
     this.service.getList(this.query).subscribe(res=>{
-      this.events = res.result.map(item => ({
+      this.allEvents = res.result.map(item => ({
         ...item, // Spread all other properties
         dateEnd: new Date(item.dateEnd) // Convert dateEnd string to Date object
       }));
+      const today = new Date();
+      this.nextEvents = this.allEvents
+        .filter(z => {
+          return (
+            z.dateEnd.getFullYear() === today.getFullYear() &&
+            z.dateEnd.getMonth() === today.getMonth() &&
+            z.dateEnd.getDate() >= today.getDate()
+          );
+        })
+        .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate()); // Sort by dateEnd in ascending order
       this.printCalendar();
     })
   }
 
   private printCalendar() {
     this.isLoading = true;
-    this.days = [];
+    this.calendarDays = [];
     const firstDayOfMonth = new Date(this.query.year, this.query.month, 1).getDay();
     const daysInMonth = new Date(this.query.year, this.query.month + 1, 0).getDate();
     const daysInPrevMonth = new Date(this.query.year, this.query.month, 0).getDate();
 
     // Заполнение предыдущего месяца
     let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+    const today = new Date();
+    const nextDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1); // Normalize to start of the day
+    console.log(nextDay)
     for (let i = startDay; i > 0; i--) {
-      this.days.push({
+      this.calendarDays.push({
         date: daysInPrevMonth - i + 1,
         isPast: true,
         isCurrent: false,
@@ -130,11 +142,12 @@ export class CalendarComponent implements OnInit{
     }
 
     // Заполнение текущего месяца
-    const events = this.events.map(z=>z.dateEnd.getDate());
+    const events = this.allEvents.map(z=>z.dateEnd.getDate());
+
     for (let i = 1; i <= daysInMonth; i++) {
-      const isPast = new Date(this.query.year, this.query.month, i) < new Date();
+      const isPast = new Date(this.query.year, this.query.month, i) < nextDay;
       const isHoliday = events.includes(i);
-      this.days.push({
+      this.calendarDays.push({
         date: i,
         isPast: isPast,
         isCurrent: !isPast,
@@ -144,9 +157,9 @@ export class CalendarComponent implements OnInit{
     }
 
     // Заполнение следующего месяца
-    const remainingDays = (this.days.length >35 ? 42:35) - this.days.length; // 35-42 ячейки для 6 недель
+    const remainingDays = (this.calendarDays.length >35 ? 42:35) - this.calendarDays.length; // 35-42 ячейки для 6 недель
     for (let i = 1; i <= remainingDays; i++) {
-      this.days.push({
+      this.calendarDays.push({
         date: i,
         isPast: false,
         isCurrent: false,

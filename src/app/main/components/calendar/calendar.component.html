@@ -15,12 +15,13 @@
     </div>
     <div class="region-selector">
       <nz-select
-        [(ngModel)]="selectedRegion"
+        [(ngModel)]="query.type"
         [nzSuffixIcon]="arrowTemplate"
         class="custom-select"
+        (ngModelChange)="generateCalendar()"
       >
-        <nz-option *ngIf="selectedRegion!=1" [nzValue]=CalendarTypeEnum.Region nzLabel="Регион"></nz-option>
-        <nz-option *ngIf="selectedRegion!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Корреспондент"></nz-option>
+        <nz-option *ngIf="query.type!=1" [nzValue]=CalendarTypeEnum.Region nzLabel="Регион"></nz-option>
+        <nz-option *ngIf="query.type!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Корреспондент"></nz-option>
         <nz-option  [nzValue]="1" nzLabel="Регион" nzHide></nz-option>
 
       </nz-select>
@@ -46,7 +47,7 @@
         <div class="day">{{ 'week.sun' | translate }}</div>
       </div>
       <div class="days">
-        <div *ngFor="let day of days"
+        <div *ngFor="let day of calendarDays"
              class="day-item"
              [ngClass]="{
              'past-day': day.isPast,
@@ -63,15 +64,15 @@
 
 
   <div class="event-list">
-    <div *ngFor="let holiday of events" class="event-item">
+    <div *ngFor="let event of nextEvents | slice:0:2" class="event-item">
       <div class="event-date">
-        <span class="event-day">{{ holiday.dateEnd.getDate() }}</span>
-        <span class="event-month">{{ months[holiday.dateEnd.getMonth()] | slice:0:3 }}</span>
+        <span class="event-day">{{ event.dateEnd.getDate() }}</span>
+        <span class="event-month">{{ months[event.dateEnd.getMonth()] | slice:0:3 }}</span>
       </div>
       <div class="event-details">
-        <p><strong>Отрасль:</strong> "{{ holiday.sectorName }}"</p>
-        <p>Форма: {{ holiday.formName }}</p>
-        <p>Отчётный период: {{ holiday.periodKindlistName }}</p>
+        <p><strong>Отрасль:</strong> "{{ event.sectorName }}"</p>
+        <p>Форма: {{ event.formName }}</p>
+        <p>Отчётный период: {{ event.periodKindlistName }}</p>
       </div>
     </div>
   </div>
