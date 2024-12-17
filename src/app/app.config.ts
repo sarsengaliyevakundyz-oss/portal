@@ -9,7 +9,7 @@ import { CoreModule } from './core/core.module';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import {registerLocaleData} from '@angular/common';
+import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import ru from '@angular/common/locales/ru';
 
 // Factory function for the loader
@@ -34,6 +34,8 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient]
         }
       })
-    )
+    ),
+    // Add HashLocationStrategy to use # in routing
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };

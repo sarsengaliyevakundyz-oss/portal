@@ -21,12 +21,10 @@ import {ITranslateName} from '../../../shared/pipes/name-translate.pipe';
 export class SystemChildComponent implements OnInit{
   id: string = '';
   info: SystemChildInfoModel = {} as SystemChildInfoModel;
-  token: string | undefined = '';
   constructor(private service: SystemsService, private route: ActivatedRoute, private currentUser: CurrentUserService,
               private translate: TranslateService) {
   }
   ngOnInit(): void {
-    this.token = this.currentUser.getCurrentUser()?.accessToken;
     this.id = this.route.snapshot.paramMap.get('id') as string;
     this.service.getSystemInfo(this.id).subscribe(res=>{
       this.info = res.result;
@@ -35,10 +33,11 @@ export class SystemChildComponent implements OnInit{
 
   openModule(module: SystemChildModel) {
     const url = module.url[this.translate.currentLang as keyof ITranslateName];
+    const accessUrl = 'access_token=' + this.currentUser.getCurrentUser()?.accessToken + '&refresh_token=' + this.currentUser.getCurrentUser()?.refreshToken
     if (url?.includes('?'))
-      window.open(url + '&token=' + this.token, '_blank')
+      window.open(url + '&' + accessUrl, '_blank')
     else
-      window.open(url + '?token=' + this.token, '_blank')
+      window.open(url + '?' +accessUrl, '_blank')
   }
 
   onImgError(event: Event) {
