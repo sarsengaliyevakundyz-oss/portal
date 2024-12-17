@@ -35,6 +35,6 @@ export class SystemsComponent implements  OnInit{
 
   onImgError(event: Event) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = '/systems/default_system.png';
+    imgElement.src = 'systems/default_system.png';
   }
 }
