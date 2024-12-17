@@ -15,7 +15,7 @@ import ru from '@angular/common/locales/ru';
 // Factory function for the loader
 registerLocaleData(ru);
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, 'i18n/', '.json');
+  return new TranslateHttpLoader(http, 'internalportal/locale/', '.json');
 }
 
 export const appConfig: ApplicationConfig = {
