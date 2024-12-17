@@ -67,7 +67,7 @@
     <div *ngFor="let event of nextEvents | slice:0:3" class="event-item">
       <div class="event-date">
         <span class="event-day">{{ event.dateEnd.getDate() }}</span>
-        <span class="event-month">{{ months[event.dateEnd.getMonth()] | slice:0:3 }}</span>
+        <span class="event-month">{{ selectedMonthName | translate | slice:0:3 }}</span>
       </div>
       <div class="event-details">
         <p><strong>Отрасль:</strong> "{{ event.sectorName }}"</p>

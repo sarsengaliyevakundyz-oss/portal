@@ -28,8 +28,9 @@ import {NzTableComponent} from 'ng-zorro-antd/table';
 })
 export class CalendarComponent implements OnInit{
   months = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    'Month.January', 'Month.February', 'Month.March', 'Month.April',
+    'Month.May', 'Month.June', 'Month.July', 'Month.August',
+    'Month.September', 'Month.October', 'Month.November', 'Month.December'
   ];
 
   // currentMonthIndex = new Date().getMonth();
