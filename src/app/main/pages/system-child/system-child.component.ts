@@ -7,6 +7,7 @@ import {CurrentUserService} from '../../../shared/services/current-user.service'
 import {SharedModule} from "../../../shared/shared.module";
 import {TranslateService} from '@ngx-translate/core';
 import {ITranslateName} from '../../../shared/pipes/name-translate.pipe';
+import {UmamiService} from '../../../core/services/Umami.service';
 
 @Component({
   selector: 'app-system-child',
@@ -22,7 +23,7 @@ export class SystemChildComponent implements OnInit{
   id: string = '';
   info: SystemChildInfoModel = {} as SystemChildInfoModel;
   constructor(private service: SystemsService, private route: ActivatedRoute, private currentUser: CurrentUserService,
-              private translate: TranslateService) {
+              private translate: TranslateService, private umami: UmamiService) {
   }
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') as string;
@@ -32,6 +33,9 @@ export class SystemChildComponent implements OnInit{
   }
 
   openModule(module: SystemChildModel) {
+    console.log(module)
+    console.log(this.info.systemInfo)
+    this.umami.trackButtonClick(module.name.ru, this.info.systemInfo.name.ru, this.currentUser.getCurrentUser()?.full_name)
     const url = module.url[this.translate.currentLang as keyof ITranslateName];
     let accessUrl = 'access_token=' + this.currentUser.getCurrentUser()?.accessToken + '&refresh_token=' + this.currentUser.getCurrentUser()?.refreshToken
       // + '&lang=' + lang == "kz" ? "kk" : lang
