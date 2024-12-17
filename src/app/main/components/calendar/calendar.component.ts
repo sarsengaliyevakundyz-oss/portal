@@ -94,12 +94,14 @@ export class CalendarComponent implements OnInit{
     // };
     this.isLoading = true;
     this.service.getList(this.query).subscribe(res=>{
+      const today = new Date();
+
       this.allEvents = res.result.map(item => ({
         ...item, // Spread all other properties
         dateEnd: new Date(item.dateEnd) // Convert dateEnd string to Date object
       }))
+        .filter(z=>z.dateEnd.getMonth() === this.query.month)
         .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate());
-      const today = new Date();
       this.nextEvents = this.allEvents
         .filter(z => {
           return (

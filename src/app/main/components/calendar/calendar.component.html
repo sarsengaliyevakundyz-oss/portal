@@ -64,7 +64,7 @@
 
 
   <div class="event-list">
-    <div *ngFor="let event of nextEvents | slice:0:2" class="event-item">
+    <div *ngFor="let event of nextEvents | slice:0:3" class="event-item">
       <div class="event-date">
         <span class="event-day">{{ event.dateEnd.getDate() }}</span>
         <span class="event-month">{{ months[event.dateEnd.getMonth()] | slice:0:3 }}</span>
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="event-list-more">
-      <button *ngIf="allEvents.length>0" (click)="isShowAllEvents=true">{{'action.more' | translate}}...</button>
+      <button *ngIf="nextEvents.length>3" (click)="isShowAllEvents=true">{{'action.more' | translate}}...</button>
     </div>
   </div>
 
