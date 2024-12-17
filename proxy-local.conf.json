@@ -9,9 +9,9 @@
     "secure": false,
     "changeOrigin": true
   },
-  "/api/collect": {
-    "target": "http://172.16.18.233:3000",
-    "secure": false,
-    "changeOrigin": true
-  }
+//  "/api/collect": {
+//    "target": "http://172.16.18.233:3000",
+//    "secure": false,
+//    "changeOrigin": true
+//  }
 }
