@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Route, Router, RouterOutlet} from '@angular/router';
 import {CurrentUserService} from './shared/services/current-user.service';
+import {UmamiService} from './core/services/Umami.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import {CurrentUserService} from './shared/services/current-user.service';
 })
 export class AppComponent implements OnInit{
   title = 'vip';
-  constructor(private route: ActivatedRoute, private currentUser: CurrentUserService, private router: Router) {
+  constructor(private route: ActivatedRoute, private currentUser: CurrentUserService, private router: Router,
+              private umamiService: UmamiService) {
   }
 
   ngOnInit(): void {
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit{
         this.router.navigate(['/']);
       }
     });
+    this.umamiService.initializeManualPageTracking();
   }
 
   private setBackground() {
