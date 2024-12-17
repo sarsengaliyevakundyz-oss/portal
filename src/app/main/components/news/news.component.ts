@@ -17,9 +17,10 @@ import {TranslatePipe} from "@ngx-translate/core";
 })
 export class NewsComponent {
 
-  months =[
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+  months = [
+    'Month.January', 'Month.February', 'Month.March', 'Month.April',
+    'Month.May', 'Month.June', 'Month.July', 'Month.August',
+    'Month.September', 'Month.October', 'Month.November', 'Month.December'
   ];
   selectedMonthIndex = new Date().getMonth();
   selectedYear = new Date().getFullYear();

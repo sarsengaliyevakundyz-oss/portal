@@ -3,7 +3,7 @@
   <div class="navigation">
     <div class="month-selector">
       <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">
-      <span class="month-label">{{ selectedMonthName }}</span>
+      <span class="month-label">{{ selectedMonthName | translate }}</span>
       <img *ngIf="!(currentYear==selectedYear && selectedMonthIndex==currentMonthIndex)" (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">
     </div>
   </div>
