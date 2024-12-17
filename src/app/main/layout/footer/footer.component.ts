@@ -15,6 +15,6 @@ export class FooterComponent {
     { name: '', link: '/', logo: 'systems/footer/halyk_sanagy.svg' },
     { name: '', link: 'https://taldau.stat.gov.kz/', logo: 'systems/footer/taldau.svg' },
     { name: '', link: '/', logo: 'systems/footer/mics.svg' },
-    { name: 'Кабинет респондента', link: '/', logo: 'systems/footer/kabinet.svg' },
+    { name: 'Кабинет респондента', link: 'https://cabinet.stat.gov.kz/', logo: 'systems/footer/kabinet.svg' },
   ];
 }
