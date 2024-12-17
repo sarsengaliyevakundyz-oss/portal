@@ -89,12 +89,13 @@ export class CalendarComponent implements OnInit{
 
   generateCalendar(): void {
     this.allEvents = []; this.nextEvents = [];
-    // const query = {
-    //   ...this.query, // Create a shallow copy of the object
-    //   month: this.query.month++ // Increment month safely
-    // };
+    console.log(this.query)
+    const query = {
+      ...this.query, // Create a shallow copy of the object
+    };
+    query.month++;
     this.isLoading = true;
-    this.service.getList(this.query).subscribe(res=>{
+    this.service.getList(query).subscribe(res=>{
       const today = new Date();
 
       this.allEvents = res.result.map(item => ({
@@ -104,13 +105,7 @@ export class CalendarComponent implements OnInit{
         .filter(z=>z.dateEnd.getMonth() === this.query.month)
         .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate());
       this.nextEvents = this.allEvents
-        .filter(z => {
-          return (
-            z.dateEnd.getFullYear() === today.getFullYear() &&
-            z.dateEnd.getMonth() === today.getMonth() &&
-            z.dateEnd.getDate() >= today.getDate()
-          );
-        });
+        .filter(z => z.dateEnd> new Date());
       this.printCalendar();
     })
   }
