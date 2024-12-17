@@ -33,8 +33,9 @@ export class SystemChildComponent implements OnInit{
 
   openModule(module: SystemChildModel) {
     const url = module.url[this.translate.currentLang as keyof ITranslateName];
+    const lang = localStorage.getItem("vip_lang")
     const accessUrl = 'access_token=' + this.currentUser.getCurrentUser()?.accessToken + '&refresh_token=' + this.currentUser.getCurrentUser()?.refreshToken
-      + '&lang=' + localStorage.getItem("vip_lang")
+      + '&lang=' + lang == "kz" ? "kk" : lang
     if (url?.includes('?'))
       window.open(url + '&' + accessUrl, '_blank')
     else
