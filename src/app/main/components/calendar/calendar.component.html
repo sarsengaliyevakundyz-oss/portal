@@ -21,7 +21,7 @@
         (ngModelChange)="generateCalendar()"
       >
         <nz-option *ngIf="query.type!=1" [nzValue]=CalendarTypeEnum.Region nzLabel="Регион"></nz-option>
-        <nz-option *ngIf="query.type!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Корреспондент"></nz-option>
+        <nz-option *ngIf="query.type!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Респондент"></nz-option>
         <nz-option  [nzValue]="1" nzLabel="Регион" nzHide></nz-option>
 
       </nz-select>
