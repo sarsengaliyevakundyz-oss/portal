@@ -15,7 +15,7 @@ import ru from '@angular/common/locales/ru';
 // Factory function for the loader
 registerLocaleData(ru);
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, '/internalportal/locale/');
+  return new TranslateHttpLoader(http, 'internalportal/locale/', '');
 }
 
 export const appConfig: ApplicationConfig = {
@@ -36,6 +36,6 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     // Add HashLocationStrategy to use # in routing
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
+    // { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };
