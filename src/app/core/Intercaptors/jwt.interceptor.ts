@@ -14,8 +14,8 @@ export class JwtInterceptor implements HttpInterceptor {
     const authToken = this.currentUserService.getCurrentUser()?.accessToken;
     const refreshToken = this.currentUserService.getCurrentUser()?.refreshToken;
     if (authToken) {
-      //Проверка если токен меньше 10 минут то обновить и уже потом отправить запрос
-        if(this.currentUserService.minutesToExpire()<10 && !this.tokenIsUpdating){
+      //Проверка если токен меньше 15 минут то обновить и уже потом отправить запрос
+        if(this.currentUserService.minutesToExpire()<15 && !this.tokenIsUpdating){
           this.tokenIsUpdating = true;
           this.authService.refreshToken(refreshToken!).subscribe(res=>{
             this.currentUserService.setUser(res.access_token, res.refresh_token);
