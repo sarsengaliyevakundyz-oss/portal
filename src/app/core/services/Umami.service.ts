@@ -40,8 +40,11 @@ export class UmamiService {
   }
 
   trackButtonClick(buttonName: string, pageName: string, userInfo?: string) {
-    const eventName = 'Система: ' + pageName;
-    const eventData = `Модуль: ${buttonName}, Пользователь: ${userInfo || 'Guest'}`;
+    const maxLength = 20; // Maximum length before truncating
+    const eventName = pageName.length > maxLength
+      ? pageName.slice(0, maxLength) + '...'
+      : pageName;
+    const eventData = `Мод: ${buttonName}, Поль: ${userInfo || 'Guest'}`;
 
     if ((window as any).umami && typeof (window as any).umami.trackEvent === 'function') {
       (window as any).umami.trackEvent(eventData, eventName);
