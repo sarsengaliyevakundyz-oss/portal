@@ -139,7 +139,11 @@
   color: #000000;
 }
 
-.holiday {
+.holiday-1 {
+  background-color: #FEAD15;
+  color: #ffffff;
+}
+.holiday-2 {
   background-color: #1F82E5;
   color: #ffffff;
 }

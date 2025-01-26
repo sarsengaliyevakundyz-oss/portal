@@ -96,8 +96,6 @@ export class CalendarComponent implements OnInit{
     query.month++;
     this.isLoading = true;
     this.service.getList(query).subscribe(res=>{
-      const today = new Date();
-
       this.allEvents = res.result.map(item => ({
         ...item, // Spread all other properties
         dateEnd: new Date(item.dateEnd) // Convert dateEnd string to Date object
