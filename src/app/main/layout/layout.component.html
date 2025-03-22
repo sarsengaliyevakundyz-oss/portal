@@ -4,15 +4,16 @@
       <img src="logo.png" alt="QazStat">
     </div>
     <nav class="nav-menu">
-      <a routerLink="/" [class.active]="isExactMatch('/')">Главная</a>
-      <a routerLink="/systems" routerLinkActive="active">Системы</a>
+      <a routerLink="/" [class.active]="isExactMatch('/')">{{'main.name'}}</a>
+      <a routerLink="/systems" routerLinkActive="active">{{'main.system' | translate}}</a>
       <a routerLink="/documentation" routerLinkActive="active">Документация</a>
       <a routerLink="/profile" routerLinkActive="active">Личный кабинет</a>
     </nav>
     <div class="user-actions">
       <div class="user-actions">
         <app-lang-switcher></app-lang-switcher>
-        <a routerLink="/profile" routerLinkActive="active" class="profile-btn"><img style="margin-right: 7px; margin-bottom: 3px" src="profile.png">Профиль</a>
+        <a routerLink="/profile" routerLinkActive="active" class="profile-btn">
+          <img style="margin-right: 7px; margin-bottom: 3px" src="profile.png">{{currentUser.getCurrentUser()?.full_name}}</a>
       </div>
     </div>
   </div>
