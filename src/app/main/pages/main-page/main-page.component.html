@@ -13,6 +13,9 @@
 <main class="main-content">
   <section class="news">
     <app-news></app-news>
+    <div class="news-list-more">
+      <button (click)="window.open('/news', '_blank')">{{'action.more' | translate}}...</button>
+    </div>
   </section>
 
   <section class="calendar">

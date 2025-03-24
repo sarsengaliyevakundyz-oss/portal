@@ -96,4 +96,6 @@ export class NewsComponent {
   private getNews() {
 
   }
+
+    protected readonly window = window;
 }

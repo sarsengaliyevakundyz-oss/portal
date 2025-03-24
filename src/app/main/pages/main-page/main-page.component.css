@@ -55,6 +55,25 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   flex: 1;
   backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.news-list-more {
+  text-align: right; /* Center the button horizontally */
+  padding-right: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+}
+
+.news-list-more button {
+  background: none; /* Remove button background */
+  border: none; /* Remove button border */
+  color: #007bff; /* Customize text color (blue as an example) */
+  font-size: 14px; /* Adjust font size */
+  cursor: pointer; /* Add pointer cursor for better UX */
+  padding: 0; /* Remove default padding */
+  text-decoration: none; /* Remove underline */
 }
 
 
