@@ -1,0 +1,15 @@
+<h2>Профиль</h2>
+<div class="user-info">
+  <label>ФИО</label>
+  <input type="text" [value]="user.full_name" readonly>
+
+  <label>Логин</label>
+  <input type="text" [value]="user.preferred_username" readonly>
+
+  <label>Почта</label>
+  <input type="text" [value]="user.email" readonly>
+
+  <label>Список ролей</label>
+  <div class="roles">{{ user.roles.join(', ') }}</div>
+</div>
+

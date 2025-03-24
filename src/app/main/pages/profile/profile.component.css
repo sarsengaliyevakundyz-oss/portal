@@ -1,0 +1,45 @@
+.user-info {
+  display: flex;
+  flex-direction: column;
+  /*background: #f8f9fc;*/
+  padding: 20px;
+  border-radius: 8px;
+  width: 1200px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  width: 300px;
+}
+
+input {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  width: 300px;
+
+}
+
+input[readonly] {
+  /*background-color: #f3f3f3;*/
+  color: #777;
+  cursor: not-allowed;
+}
+
+.roles {
+  /*background: #f3f3f3;*/
+  border: 1px solid #ddd;
+  width: 300px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
