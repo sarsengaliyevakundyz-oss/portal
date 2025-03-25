@@ -28,6 +28,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "public/styles/shared-table-styles.scss",
               "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
             ],
             "scripts": []

@@ -2,9 +2,10 @@
   <div class="top-header">
     <div class="nav-logo">
       <img src="logo.png" alt="QazStat">
+      <label [innerHTML]="'main.title' | translate"></label>
     </div>
     <nav class="nav-menu">
-      <a routerLink="/" [class.active]="isExactMatch('/')">{{'main.name'}}</a>
+      <a routerLink="/" [class.active]="isExactMatch('/')">{{'main.name' | translate}}</a>
       <a routerLink="/systems" routerLinkActive="active">{{'main.system' | translate}}</a>
       <a routerLink="/documentation" routerLinkActive="active">Документация</a>
       <a routerLink="/admin" routerLinkActive="active">Личный кабинет</a>

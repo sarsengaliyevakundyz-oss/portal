@@ -1,1 +1,8 @@
+<div class="custom-select">
+  <select (change)="navigateToPage($event)">
+    <option value="" [hidden]="true"></option>
+    <option value="/admin/dic/news">Новости</option>
+    <option value="/admin/dic/trans">Переводы</option>
+  </select>
+</div>
 <router-outlet></router-outlet>
