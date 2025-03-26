@@ -11,6 +11,7 @@ RUN npm config set proxy http://172.16.12.11:3128
 RUN npm config set https-proxy http://172.16.12.11:3128
 #RUN npm config set http-proxy http://172.16.12.11:3128
 RUN npm config set registry https://registry.npmjs.org/
+RUN npm cache clean --force
 RUN npm install
 COPY . .
 RUN node --max-old-space-size=10240 ./node_modules/@angular/cli/bin/ng build --configuration development --base-href /internalportalfront/ --deploy-url /internalportalfront/
