@@ -4,7 +4,7 @@
       {{ item.name | nameTranslate }}
     </div>
     <div class="item-icon">
-      <img [src]="item.pathImg | nameTranslate" alt="{{ item.name }}" (error)="onImgError($event)">
+      <img [src]="'http://172.16.18.90:9000' + (item.pathImg | nameTranslate)" alt="{{ item.name }}" (error)="onImgError($event)">
     </div>
   </a>
 </div>
