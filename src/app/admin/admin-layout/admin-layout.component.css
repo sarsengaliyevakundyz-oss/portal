@@ -1,0 +1,49 @@
+.dashboard {
+  width: 100%;
+}
+
+.tabs {
+  background: #fff;
+  border-radius: 12px;
+  width: calc((100% - 20px));
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+
+  /* Создаём внутреннюю тень, смещённую ровно на 1px вверх от нижней границы.
+     Это будет выглядеть как 1px линия внутри. */
+  box-shadow: inset 0 -1px 0 0 #0958BF;
+}
+
+.tabs a {
+  text-decoration: none;
+  color: #6B7280;
+  font-weight: 500;
+  padding: 10px;
+  position: relative;
+}
+
+.tabs a.active {
+  color: #007bff;
+}
+
+.tabs a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 25px;
+  height: 2px;
+  background-color: #007bff;
+  transform: translateX(-50%);
+}
+
+
+
+.content {
+  padding-top: 20px;
+  /*padding: 20px;*/
+}
+
+
+

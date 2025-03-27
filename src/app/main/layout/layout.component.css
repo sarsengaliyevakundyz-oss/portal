@@ -22,6 +22,7 @@
 .nav-logo {
   display: flex;
   align-items: center;
+  color: #2B528A;
 }
 
 .nav-logo img {
@@ -92,7 +93,7 @@
 .content{
   width: 1200px;
   margin: 0 auto;
-  padding-top: 70px; /* Отступ равный высоте header */
+  padding-top: 30px;
   flex: 1; /* Заставим контент занимать оставшееся пространство */
 }
 

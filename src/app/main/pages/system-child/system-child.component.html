@@ -2,7 +2,7 @@
 <div class="cards-container">
   <a class="card" *ngFor="let system of info.children" (click)="openModule(system)">
     <h3 class="card-title">{{ system.name | nameTranslate }}</h3>
-<!--    <p class="card-subtitle">{{ system.codeName }}</p>-->
+    <p class="card-subtitle">{{ system.description | nameTranslate }}</p>
   </a>
 </div>
 

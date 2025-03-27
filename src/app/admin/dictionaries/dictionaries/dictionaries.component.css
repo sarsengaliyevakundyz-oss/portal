@@ -1,0 +1,35 @@
+.custom-select {
+  position: relative;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+.custom-select select {
+  width: 100%;
+  padding: 0px 15px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-color: #fff;
+  font-size: 18px;
+  color: #5a5a5a;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.custom-select select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.custom-select::after {
+  content: "▼";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #5a5a5a;
+  pointer-events: none;
+}

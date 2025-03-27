@@ -1,0 +1,38 @@
+<div>
+  <h2>Новости</h2>
+  <table class="styled-table">
+    <thead>
+    <tr>
+      <th>{{ 'news.number' | translate }}</th>
+      <th>{{ 'news.category' | translate }}</th>
+      <th>{{ 'news.date' | translate }}</th>
+      <th>{{ 'news.locale' | translate }}</th>
+      <th>{{ 'news.title' | translate }}</th>
+      <th>{{ 'news.short_description' | translate }}</th>
+      <th>{{ 'news.main_text' | translate }}</th>
+      <th>{{ 'news.hide' | translate }}</th>
+      <th>{{ 'news.updated_at' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of tableData; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.category }}</td>
+      <td>{{ item.date }}</td>
+      <td>{{ item.locale }}</td>
+      <td>{{ item.title }}</td>
+      <td>{{ item.shortDescription }}</td>
+      <td>{{ item.mainText }}</td>
+      <td>
+        <span *ngIf="item.hidden">
+          <i class="fa fa-eye-slash"></i>
+        </span>
+        <span *ngIf="!item.hidden">
+          <i class="fa fa-eye"></i>
+        </span>
+      </td>
+      <td>{{ item.updatedAt }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
