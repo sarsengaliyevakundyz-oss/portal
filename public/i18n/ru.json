@@ -395,6 +395,14 @@
     "id": "Id",
     "name": "Наименование"
   },
+  "system": {
+    "id": "ID",
+    "codeName": "Кодовое имя",
+    "name": "Название",
+    "description": "Описание",
+    "kurator": "Куратор",
+    "pathImg": "Изображение"
+  },
   "application_user_status": {
     "draft": "Черновик",
     "on_moderation": "На модерации",

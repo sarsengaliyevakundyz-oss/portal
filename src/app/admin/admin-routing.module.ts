@@ -11,6 +11,7 @@ import {DictionariesComponent} from './dictionaries/dictionaries/dictionaries.co
 import {AdminNewsComponent} from './dictionaries/admin-news/admin-news.component';
 import {AdminLocalizatorComponent} from './dictionaries/admin-localizator/admin-localizator.component';
 import {AdminRolesComponent} from './dictionaries/roles/admin-roles.component';
+import {AdminSystemsComponent} from './dictionaries/systems/admin-systems.component';
 
 const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
@@ -21,6 +22,7 @@ const routes: Routes = [
               {path: 'news', component: AdminNewsComponent},
               {path: 'trans', component: AdminLocalizatorComponent},
               {path: 'roles', component: AdminRolesComponent},
+              {path: 'systems', component: AdminSystemsComponent},
             ]}
         ]}
     ]

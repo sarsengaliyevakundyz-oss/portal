@@ -1,0 +1,39 @@
+<div>
+  <h2>Системы</h2>
+  <table class="styled-table">
+    <thead>
+    <tr>
+      <th>{{ 'system.id' | translate }}</th>
+      <th>{{ 'system.codeName' | translate }}</th>
+      <th>{{ 'system.name' | translate }}</th>
+      <th>{{ 'system.description' | translate }}</th>
+      <th>{{ 'system.kurator' | translate }}</th>
+      <th>{{ 'system.pathImg' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let system of paginatedData">
+      <td>{{ system.id }}</td>
+      <td>{{ system.codeName }}</td>
+      <td>{{ system.name | nameTranslate }}</td>
+      <td>{{ system.description | nameTranslate }}</td>
+      <td>
+          <span *ngFor="let k of system.kurator; let last = last">
+            {{ k.name }}<span *ngIf="!last">, </span>
+          </span>
+      </td>
+      <td>
+        <img *ngIf="system.pathImg" [src]="system.pathImg | nameTranslate" alt="System Image" width="50">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Пагинация -->
+  <nz-pagination
+    [nzPageSize]="pageSize"
+    [nzTotal]="tableData.length"
+    [(nzPageIndex)]="currentPage"
+    (nzPageIndexChange)="onPageChange($event)">
+  </nz-pagination>
+</div>

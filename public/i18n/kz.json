@@ -395,6 +395,14 @@
     "id": "Id",
     "name": "Аты"
   },
+  "system": {
+    "id": "ID",
+    "codeName": "Код атауы",
+    "name": "Атауы",
+    "description": "Сипаттама",
+    "kurator": "Куратор",
+    "pathImg": "Кескін"
+  },
   "application_user_status": {
     "draft": "Шимай қағаз",
     "on_moderation": "Модерацияда",
