@@ -1,15 +1,16 @@
 <h2>Профиль</h2>
-<div class="user-info">
-  <label>ФИО</label>
-  <input type="text" [value]="user?.full_name" readonly>
+<div class="user-container">
+  <h2 class="user-name">{{ user?.name }}</h2>
+  <p class="user-login">Логин: {{ user?.login }}</p>
 
-<!--  <label>Логин</label>-->
-<!--  <input type="text" [value]="user?." readonly>-->
+  <div *ngFor="let systemWrapper of user?.systems" class="system">
+    <h3 class="system-title">{{ systemWrapper.system.systemInfo.name | nameTranslate }}</h3>
 
-  <label>Почта</label>
-  <input type="text" [value]="user?.email" readonly>
-
-  <label>Список ролей</label>
-  <div class="roles">{{ user?.roles?.join(', ') }}</div>
+    <div *ngFor="let child of systemWrapper.system.children" class="child">
+      <h4 class="child-title">{{ child.name | nameTranslate }}</h4>
+      <ul class="roles-list">
+        <li *ngFor="let role of child.roles" class="role-item">{{ role }}</li>
+      </ul>
+    </div>
+  </div>
 </div>
-

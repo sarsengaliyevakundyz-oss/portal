@@ -1,45 +1,74 @@
-.user-info {
-  display: flex;
-  flex-direction: column;
-  /*background: #f8f9fc;*/
+.user-container {
+  /*max-width: 800px;*/
+  margin: 20px auto;
   padding: 20px;
-  border-radius: 8px;
-  width: 1200px;
+  /*background-color: #f9f9f9;*/
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-label {
-  font-size: 14px;
+.user-name {
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px;
-  width: 300px;
-}
-
-input {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-bottom: 15px;
-  width: 300px;
-
-}
-
-input[readonly] {
-  /*background-color: #f3f3f3;*/
-  color: #777;
-  cursor: not-allowed;
-}
-
-.roles {
-  background: white;
-  border: 1px solid #ddd;
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 14px;
   color: #333;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
+}
+
+.user-login {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.system {
+  margin-top: 18px;
+  padding: 15px;
+  background: #fff;
+  border-left: 3px solid #007bff;
+  border-radius: 8px;
+}
+
+.system-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.system-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.child {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+.child-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.child-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.roles-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.role-item {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  padding: 5px 10px;
+  margin: 3px;
+  border-radius: 5px;
+  font-size: 14px;
 }

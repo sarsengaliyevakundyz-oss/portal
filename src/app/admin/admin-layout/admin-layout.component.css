@@ -5,7 +5,7 @@
 .tabs {
   background: #fff;
   border-radius: 12px;
-  width: calc((100% - 20px));
+  width: 100%;
   padding: 20px;
   box-sizing: border-box;
   position: relative;

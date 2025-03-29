@@ -1,3 +1,5 @@
+import {ITranslateName} from '../pipes/name-translate.pipe';
+
 export interface UserTokenInfo {
   accessToken: string;
   refreshToken: string;
@@ -7,7 +9,27 @@ export interface UserTokenInfo {
   email: string;
 }
 
-export interface UserInfo extends UserTokenInfo{
+export interface UserInfo {
+  name: string;
+  login: string;
+  systems: SystemWrapper[];
+}
+
+export interface SystemWrapper {
+  system: System;
+}
+
+export interface System {
+  systemInfo: SystemInfo;
+  children: Child[];
+}
+
+export interface SystemInfo {
+  name: ITranslateName;
+}
+
+export interface Child {
+  name: ITranslateName;
   roles: string[];
 }
 
