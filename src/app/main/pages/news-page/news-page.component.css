@@ -15,7 +15,7 @@ body {
 /* Фильтр */
 .filter {
   width: 250px;
-  height: 300px;
+  height: 100%;
   background: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -52,6 +52,9 @@ label {
   border-radius: 8px;
   object-fit: cover;
   margin-right: 15px;
+}
+.news-content {
+  padding-bottom: 5px !important;
 }
 
 .news-content h5 {

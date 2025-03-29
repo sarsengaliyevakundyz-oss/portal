@@ -6,13 +6,15 @@ import {SystemsComponent} from './pages/systems/systems.component';
 import {SystemChildComponent} from './pages/system-child/system-child.component';
 import {NewsPageComponent} from './pages/news-page/news-page.component';
 import {ProfileComponent} from '../admin/pages/profile/profile.component';
+import {NewsDetailComponent} from './pages/news-page/news-detail/news-detail.component';
 
 const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
       {path: '', component: MainPageComponent},
       {path: 'systems', component: SystemsComponent},
       {path: 'systems/:id', component: SystemChildComponent},
-      {path: 'news', component: NewsPageComponent}
+      {path: 'news', component: NewsPageComponent},
+      { path: 'news/:id', component: NewsDetailComponent }
     ]
   }
 ];

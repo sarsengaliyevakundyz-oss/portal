@@ -4,15 +4,15 @@
     <h4>Тема</h4>
     <div *ngFor="let cat of categories">
       <label>
-        <input type="radio" name="category" [value]="cat" [(ngModel)]="selectedCategory">
-        {{ cat }}
+        <input type="radio" name="category" [value]="cat.id" [(ngModel)]="query.categoryId" (ngModelChange)="loadData()">
+        {{ cat.name }}
       </label>
     </div>
 
     <h4>Период</h4>
     <div *ngFor="let year of years">
       <label>
-        <input type="radio" name="year" [value]="year" [(ngModel)]="selectedYear">
+        <input type="radio" name="year" [value]="year" [(ngModel)]="query.year" (ngModelChange)="loadData()">
         {{ year }}
       </label>
     </div>
@@ -20,12 +20,12 @@
 
   <!-- Список новостей -->
   <div class="news-list">
-    <div *ngFor="let news of filteredNews" class="news-item">
-      <img [src]="news.image" alt="News Image">
+    <div *ngFor="let news of news" class="news-item" (click)="openNews(news.id)">
+      <img [src]="news.imageDescription" alt="News Image">
       <div class="news-content">
         <h5>{{ news.title }}</h5>
         <p>{{ news.description }}</p>
-        <small>{{ news.date }} | <span class="tag">{{ news.category }}</span></small>
+        <small>{{ news.publishDate | date : 'dd-MM-yyyy' }} | <span class="tag">{{ news.vipCategory }}</span></small>
       </div>
     </div>
   </div>

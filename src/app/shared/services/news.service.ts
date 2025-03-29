@@ -1,0 +1,28 @@
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {BaseApi} from './base-api';
+import {News, NewsCategory, NewsCategoryQuery, NewsDetail, NewsQuery} from '../models/news.model';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class NewsService extends BaseApi {
+
+  getList(query: NewsQuery): Observable<News[]> {
+    return this.getData<News[]>(this.apiUrl + '/internalportal/news/getNews', query);
+  }
+
+
+  getCategories(query: NewsCategoryQuery): Observable<NewsCategory[]> {
+    return this.getData<NewsCategory[]>(this.apiUrl + '/internalportal/news/categories', query);
+  }
+
+  getYears(): Observable<number[]> {
+    return this.getData<number[]>(this.apiUrl + '/internalportal/news/years', null);
+  }
+
+  getById(id: string): Observable<NewsDetail> {
+    return this.getData<NewsDetail>(this.apiUrl + '/internalportal/news/getNewsById?id='+id, null);
+  }
+}

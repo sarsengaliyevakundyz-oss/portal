@@ -1,0 +1,36 @@
+<div class="container">
+  <!-- Фильтр -->
+  <div class="filter">
+    <h4>Тема</h4>
+    <div *ngFor="let cat of categories">
+      <label>
+        <input type="radio" name="category" [value]="cat.id" [(ngModel)]="query.categoryId" disabled>
+        {{ cat.name }}
+      </label>
+    </div>
+
+    <h4>Период</h4>
+    <div *ngFor="let year of years">
+      <label>
+        <input type="radio" name="year" [value]="year" [(ngModel)]="query.year" disabled>
+        {{ year }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Список новостей -->
+  <div class="news-container">
+    <h1 class="news-title">
+      {{news.title}}
+    </h1>
+
+    <img class="news-image" src="assets/images/news-image.jpg" alt="Природа Казахстана">
+
+    <p class="news-text">
+      {{news.content}}
+    </p>
+
+
+    <button class="news-button" (click)="goToNewsList()">← Список новостей</button>
+  </div>
+</div>
