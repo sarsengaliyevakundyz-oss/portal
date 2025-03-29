@@ -391,7 +391,9 @@
     "company_admin": "Администратор компании",
     "company_manager": "Менеджер компании",
     "first_level_moderator": "Модератор 1-го уровня",
-    "second_level_moderator": "Модератор 2-го уровня"
+    "second_level_moderator": "Модератор 2-го уровня",
+    "id": "Id",
+    "name": "Наименование"
   },
   "application_user_status": {
     "draft": "Черновик",

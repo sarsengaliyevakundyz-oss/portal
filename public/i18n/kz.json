@@ -391,7 +391,9 @@
     "company_admin": "Компания әкімшісі",
     "company_manager": "Компания менеджері",
     "first_level_moderator": "1-деңгейдегі модератор",
-    "second_level_moderator": "2-деңгейдігі модератор"
+    "second_level_moderator": "2-деңгейдігі модератор",
+    "id": "Id",
+    "name": "Аты"
   },
   "application_user_status": {
     "draft": "Шимай қағаз",

@@ -1,0 +1,25 @@
+<div>
+  <h2>Роли</h2>
+  <table class="styled-table">
+    <thead>
+    <tr>
+      <th>{{ 'roles.id' | translate }}</th>
+      <th>{{ 'roles.name' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let role of paginatedData; let i = index">
+      <td>{{ role.id }}</td>
+      <td>{{ role.roleName }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Пагинация -->
+  <nz-pagination
+    [nzPageSize]="pageSize"
+    [nzTotal]="tableData.length"
+    [(nzPageIndex)]="currentPage"
+    (nzPageIndexChange)="onPageChange($event)">
+  </nz-pagination>
+</div>

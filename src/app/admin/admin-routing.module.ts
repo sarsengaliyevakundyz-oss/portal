@@ -10,6 +10,7 @@ import {ProfileComponent} from './pages/profile/profile.component';
 import {DictionariesComponent} from './dictionaries/dictionaries/dictionaries.component';
 import {AdminNewsComponent} from './dictionaries/admin-news/admin-news.component';
 import {AdminLocalizatorComponent} from './dictionaries/admin-localizator/admin-localizator.component';
+import {AdminRolesComponent} from './dictionaries/roles/admin-roles.component';
 
 const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
@@ -19,6 +20,7 @@ const routes: Routes = [
           {path: 'dic', component: DictionariesComponent, children: [
               {path: 'news', component: AdminNewsComponent},
               {path: 'trans', component: AdminLocalizatorComponent},
+              {path: 'roles', component: AdminRolesComponent},
             ]}
         ]}
     ]
