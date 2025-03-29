@@ -32,9 +32,9 @@ input[readonly] {
 }
 
 .roles {
-  /*background: #f3f3f3;*/
+  background: white;
   border: 1px solid #ddd;
-  width: 300px;
+  width: 100%;
   padding: 10px;
   border-radius: 6px;
   font-size: 14px;
