@@ -4,6 +4,8 @@ import {DatePipe, NgForOf} from '@angular/common';
 import {NewsService} from '../../../shared/services/news.service';
 import {News, NewsCategory, NewsCategoryQuery, NewsQuery} from '../../../shared/models/news.model';
 import {ActivatedRoute} from '@angular/router';
+import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
+import {SharedModule} from '../../../shared/shared.module';
 
 @Component({
   selector: 'app-news-page',
@@ -11,7 +13,9 @@ import {ActivatedRoute} from '@angular/router';
   imports: [
     FormsModule,
     NgForOf,
-    DatePipe
+    DatePipe,
+    NzPaginationComponent,
+    SharedModule
   ],
   templateUrl: './news-page.component.html',
   styleUrl: './news-page.component.css'
@@ -29,10 +33,13 @@ export class NewsPageComponent implements OnInit {
 
 
   news: News[] = [];
+  total: number = 0;
+
 
   loadData() {
     this.newsService.getList(this.query).subscribe(response => {
-      this.news = response;
+      this.news = response.response;
+      this.total = response.pageable.total;
     })
   }
 

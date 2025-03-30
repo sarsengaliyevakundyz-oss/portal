@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BaseApi} from './base-api';
 import {News, NewsCategory, NewsCategoryQuery, NewsDetail, NewsQuery} from '../models/news.model';
+import {PaginationResultModel} from '../models/pagination.model';
 
 
 @Injectable({
@@ -9,8 +10,8 @@ import {News, NewsCategory, NewsCategoryQuery, NewsDetail, NewsQuery} from '../m
 })
 export class NewsService extends BaseApi {
 
-  getList(query: NewsQuery): Observable<News[]> {
-    return this.getData<News[]>(this.apiUrl + '/internalportal/news/getNews', query);
+  getList(query: NewsQuery): Observable<PaginationResultModel<News>> {
+    return this.getData<PaginationResultModel<News>>(this.apiUrl + '/internalportal/news/getNews', query);
   }
 
 

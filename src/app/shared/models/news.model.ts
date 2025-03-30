@@ -1,4 +1,5 @@
 import {PaginationQueryModel} from './pagination.model';
+import {ITranslateName} from '../pipes/name-translate.pipe';
 
 export interface News {
   description: string
@@ -11,7 +12,7 @@ export interface News {
 
 export interface NewsDetail {
   id: number
-  category: string
+  categoryId: number
   publishDate: Date
   title: string
   content: string
@@ -22,7 +23,7 @@ export interface NewsDetail {
 
 export interface NewsCategory {
   id: number
-  name: string
+  name: ITranslateName
   active: boolean
 }
 

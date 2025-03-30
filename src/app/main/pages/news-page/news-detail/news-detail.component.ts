@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {NewsService} from '../../../../shared/services/news.service';
 import {News, NewsCategory, NewsDetail, NewsQuery} from '../../../../shared/models/news.model';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SharedModule} from '../../../../shared/shared.module';
 
 @Component({
   selector: 'app-news-detail',
@@ -11,7 +12,8 @@ import {ActivatedRoute, Router} from '@angular/router';
   imports: [
     DatePipe,
     FormsModule,
-    NgForOf
+    NgForOf,
+    SharedModule
   ],
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.css'
@@ -39,7 +41,7 @@ export class NewsDetailComponent implements OnInit {
         this.newsService.getById(id).subscribe(response => {
           this.news = response;
           this.query.year = new Date(this.news.publishDate).getFullYear();
-          this.query.categoryId = this.categories.filter(z=>z.name == this.news.category)[0].id;
+          this.query.categoryId = this.news.categoryId;
         })
       }
     });

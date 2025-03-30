@@ -5,7 +5,7 @@
     <div *ngFor="let cat of categories">
       <label>
         <input type="radio" name="category" [value]="cat.id" [(ngModel)]="query.categoryId" (ngModelChange)="loadData()">
-        {{ cat.name }}
+        {{ cat.name | nameTranslate }}
       </label>
     </div>
 
@@ -28,5 +28,8 @@
         <small>{{ news.publishDate | date : 'dd-MM-yyyy' }} | <span class="tag">{{ news.vipCategory }}</span></small>
       </div>
     </div>
+    <nz-pagination [nzPageSize]="query.limit"
+                   [nzTotal]="total"
+                   [nzPageIndex]="query.page + 1"></nz-pagination>
   </div>
 </div>

@@ -5,7 +5,7 @@
     <div *ngFor="let cat of categories">
       <label>
         <input type="radio" name="category" [value]="cat.id" [(ngModel)]="query.categoryId" disabled>
-        {{ cat.name }}
+        {{ cat.name | nameTranslate }}
       </label>
     </div>
 
