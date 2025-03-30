@@ -1,5 +1,6 @@
 import {ITranslateName, NameTranslatePipe} from '../pipes/name-translate.pipe';
 
+
 export interface SystemModel {
   id: number
   codeName: string

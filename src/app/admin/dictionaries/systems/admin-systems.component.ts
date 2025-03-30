@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
-import {Role} from '../../../shared/models/user.model';
 import {SystemsService} from '../../../shared/services/systems.service';
-import {SystemModel} from '../../../shared/models/system.model';
+import {SystemChildInfoModel} from '../../../shared/models/system.model';
 import {SharedModule} from '../../../shared/shared.module';
+import {environment} from '../../../../environments/environment';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-roles',
@@ -15,8 +17,12 @@ import {SharedModule} from '../../../shared/shared.module';
     NgIf,
     TranslatePipe,
     NzPaginationComponent,
-    SharedModule
+    SharedModule,
+    NzButtonComponent,
+    NzModalComponent,
+    NgTemplateOutlet
   ],
+  providers: [NzModalService],
   templateUrl: './admin-systems.component.html',
   styleUrl: './admin-systems.component.css'
 })
@@ -26,8 +32,8 @@ export class AdminSystemsComponent implements OnInit {
 
   pageSize = 10; // Количество элементов на странице
   currentPage = 1;
-  paginatedData : SystemModel[] = [];
-  tableData: SystemModel[] = [];
+  paginatedData : SystemChildInfoModel[] = [];
+  tableData: SystemChildInfoModel[] = [];
 
   ngOnInit(): void {
     this.loadData();
@@ -46,8 +52,22 @@ export class AdminSystemsComponent implements OnInit {
 
   private loadData() {
     this.service.getAllSystems().subscribe((res) => {
-      this.tableData = res;
+      this.tableData = res.result;
       this.updatePagination();
     })
+  }
+
+  protected readonly environment = environment;
+
+  isModalVisible = false;
+  selectedSystem: SystemChildInfoModel | null = null;
+
+  openChild(system: SystemChildInfoModel): void {
+    this.selectedSystem = system;
+    this.isModalVisible = true;
+  }
+
+  handleCancel(): void {
+    this.isModalVisible = false;
   }
 }

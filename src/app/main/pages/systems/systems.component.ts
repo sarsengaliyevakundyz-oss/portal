@@ -5,6 +5,7 @@ import {SystemsService} from '../../../shared/services/systems.service';
 import {SystemModel} from '../../../shared/models/system.model';
 import {SharedModule} from '../../../shared/shared.module';
 import {TranslatePipe} from '@ngx-translate/core';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-systems',
@@ -39,4 +40,6 @@ export class SystemsComponent implements  OnInit{
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'systems/default_system.png';
   }
+
+    protected readonly environment = environment;
 }

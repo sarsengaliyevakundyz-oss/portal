@@ -27,7 +27,7 @@ export class SystemsService extends BaseApi {
     return this.getData<UserInfo>(this.apiUrl + '/internalportal/systems/getRoleByUser', null);
   }
 
-  getAllSystems(): Observable<SystemModel[]> {
-    return this.getData<SystemModel[]>(this.apiUrl + '/internalportal/systems/allSystems', null);
+  getAllSystems(): Observable<ResultModel<SystemChildInfoModel[]>> {
+    return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/systems/allSystems', null);
   }
 }

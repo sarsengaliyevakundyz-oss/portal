@@ -9,21 +9,27 @@
       <th>{{ 'system.description' | translate }}</th>
       <th>{{ 'system.kurator' | translate }}</th>
       <th>{{ 'system.pathImg' | translate }}</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let system of paginatedData">
-      <td>{{ system.id }}</td>
-      <td>{{ system.codeName }}</td>
-      <td>{{ system.name | nameTranslate }}</td>
-      <td>{{ system.description | nameTranslate }}</td>
+      <td>{{ system.systemInfo.id }}</td>
+      <td>{{ system.systemInfo.codeName }}</td>
+      <td>{{ system.systemInfo.name | nameTranslate }}</td>
+      <td [innerHTML]="system.systemInfo.description | nameTranslate"></td>
       <td>
-          <span *ngFor="let k of system.kurator; let last = last">
-            {{ k.name }}<span *ngIf="!last">, </span>
+          <span *ngFor="let k of system.systemInfo.kurator; let last = last">
+            {{ k.name | nameTranslate }}<span *ngIf="!last">, </span>
           </span>
       </td>
       <td>
-        <img *ngIf="system.pathImg" [src]="system.pathImg | nameTranslate" alt="System Image" width="50">
+        <img *ngIf="system.systemInfo.pathImg" [src]="environment.storageUrl + (system.systemInfo.pathImg | nameTranslate)" alt="System Image" width="50">
+      </td>
+      <td>
+        <button *ngIf="system.children.length>0" nz-button nzType="primary" nzShape="circle" (click)="openChild(system)">
+          +
+        </button>
       </td>
     </tr>
     </tbody>
@@ -37,3 +43,48 @@
     (nzPageIndexChange)="onPageChange($event)">
   </nz-pagination>
 </div>
+
+
+<nz-modal
+  [(nzVisible)]="isModalVisible" nzWidth="1200px"
+  [nzTitle]="selectedSystem?.systemInfo?.name | nameTranslate"
+  [nzContent]="contentTemplate"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null">
+
+  <ng-template #contentTemplate>
+    <table class="styled-table">
+      <thead>
+      <tr>
+        <th>{{ 'system.id' | translate }}</th>
+        <th>{{ 'system.codeName' | translate }}</th>
+        <th>{{ 'system.name' | translate }}</th>
+        <th>{{ 'system.description' | translate }}</th>
+<!--        <th>{{ 'system.img' | translate }}</th>-->
+        <th>Url</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let child of selectedSystem?.children">
+        <td>{{ child.id }}</td>
+        <td>{{ child.codeName }}</td>
+        <td>{{ child.name | nameTranslate }}</td>
+        <td>{{ child.description | nameTranslate }}</td>
+<!--        <td>-->
+<!--          <img *ngIf="environment.storageUrl + (child.img | )" [src]="child.img" alt="Image" width="50">-->
+<!--        </td>-->
+        <td>
+          <a [href]="child.url.ru" target="_blank">
+            {{ child.url.ru }}
+          </a> <br>
+          <a [href]="child.url.kz" target="_blank">
+            {{ child.url.kz }}
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+</nz-modal>

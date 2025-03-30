@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NameTranslatePipe} from './pipes/name-translate.pipe';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 
 
 @NgModule({
@@ -8,10 +9,10 @@ import {NameTranslatePipe} from './pipes/name-translate.pipe';
     NameTranslatePipe
   ],
     imports: [
-        CommonModule,
+        CommonModule, NzIconModule
     ],
     exports: [
-      NameTranslatePipe
+      NameTranslatePipe, NzIconModule
     ]
 
 })
