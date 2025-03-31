@@ -11,11 +11,12 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import ru from '@angular/common/locales/ru';
+import {environment} from '../environments/environment';
 
 // Factory function for the loader
 registerLocaleData(ru);
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, '/i18n/', '.json');
+  return new TranslateHttpLoader(http, environment.frontUrl+'i18n/', '.json');
 }
 
 export const appConfig: ApplicationConfig = {
