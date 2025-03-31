@@ -16,7 +16,7 @@ import {environment} from '../environments/environment';
 // Factory function for the loader
 registerLocaleData(ru);
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, 'internalportalfront/i18n/', '.json');
+  return new TranslateHttpLoader(http, '/internalportalfront/i18n/', '.json');
 }
 
 export const appConfig: ApplicationConfig = {
