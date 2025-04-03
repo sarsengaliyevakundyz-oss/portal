@@ -63,6 +63,12 @@
   /*margin-right: 15px;*/
 }
 
+::ng-deep .ant-select-item{
+  padding: 5px 5px !important;
+}
+::ng-deep .ant-select-dropdown{
+  padding: 0 !important;
+}
 ::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector{
   border: none !important;
   box-shadow: none !important;
@@ -70,21 +76,21 @@
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content {
   text-align: right;
-  background-color: transparent !important;
+  background-color: white !important;
   box-shadow: none !important;
 }
 ::ng-deep .ant-select-dropdown .ant-select-item-option-content:hover {
-  background-color: transparent !important;
+  background-color: white !important;
   box-shadow: none !important;
 }
 
 ::ng-deep .ant-select-dropdown {
-  background: transparent !important;
+  background: white !important;
   box-shadow: none !important;
-  margin-top: -18px !important;
+  //margin-top: -18px !important;
 }
 ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled){
-  background-color: transparent !important;
+  background-color: #1890ff !important;
 }
 
 .calendar-grid {

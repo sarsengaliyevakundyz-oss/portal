@@ -24,7 +24,7 @@ import {NzTableComponent} from 'ng-zorro-antd/table';
   ],
   providers: [NzModalService], // Add the provider here,
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css'],
+  styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit{
   months = [

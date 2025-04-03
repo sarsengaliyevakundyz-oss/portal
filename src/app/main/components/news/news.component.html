@@ -2,24 +2,35 @@
   <h1>{{'title.news' | translate}}</h1>
   <div class="navigation">
     <div class="month-selector">
-      <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">
-      <span class="month-label">{{ selectedMonthName | translate }}</span>
-      <img *ngIf="!(currentYear==selectedYear && selectedMonthIndex==currentMonthIndex)" (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">
+      <nz-select style="width: 175px;"
+        [(ngModel)]="query.categoryId"
+        [nzSuffixIcon]="arrowTemplate"
+        (ngModelChange)="loadData()"
+      >
+        <nz-option *ngFor="let item of categories" [nzLabel]="item.name | nameTranslate" [nzValue]="item.id"></nz-option>
+      </nz-select>
+<!--      <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">-->
+<!--      <span class="month-label">{{ selectedMonthName | translate }}</span>-->
+<!--      <img *ngIf="!(currentYear==selectedYear && selectedMonthIndex==currentMonthIndex)" (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">-->
     </div>
+    <ng-template #arrowTemplate>
+      <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
+    </ng-template>
   </div>
+
 <!--  первая новость-->
   <div class="news-item" *ngIf="news.length">
     <div class="news-header">
       <div class="news-image">
-        <img [src]="news[0].mainImageUrl" alt="news image">
+        <img [src]="news[0].imageDescription" alt="news image">
       </div>
       <div class="news-content">
         <h2>{{ news[0].title }}</h2>
-        <div class="news-date">{{ news[0].date | date: 'dd.MM.yyyy' }}</div>
+        <div class="news-date">{{ news[0].publishDate | date: 'dd.MM.yyyy' }}</div>
       </div>
     </div>
     <div class="news-short-text">
-      <p>{{ news[0].shortText }}</p>
+      <p>{{ news[0].description }}</p>
     </div>
   </div>
 
@@ -27,10 +38,10 @@
   <div class="news-list" *ngIf="news.length > 1">
     <div class="news-list-item" *ngFor="let item of news.slice(1)">
       <div class="news-list-header">
-        <div class="news-list-date">{{ item.date | date: 'dd.MM.yyyy' }}</div>
+        <div class="news-list-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
         <div class="news-list-title">{{ item.title }}</div>
       </div>
-      <p class="news-list-short-text">{{ item.shortText }}</p>
+      <p class="news-list-short-text">{{ item.description }}</p>
     </div>
   </div>
 </div>

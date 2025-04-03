@@ -6,17 +6,18 @@
   font-size: 14px;
   height: 32px;
 }
-.month-selector img {
-  background: none;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  color: #007BFF;
-  transition: filter 0.3s ease;
-}
-.month-selector img:hover {
-  filter: brightness(0.7) saturate(2) hue-rotate(-30deg);
-}
+//
+/*.month-selector img {*/
+/*  background: none;*/
+/*  border: none;*/
+/*  font-size: 14px;*/
+/*  cursor: pointer;*/
+/*  color: #007BFF;*/
+/*  transition: filter 0.3s ease;*/
+/*}*/
+/*.month-selector img:hover {*/
+/*  filter: brightness(0.7) saturate(2) hue-rotate(-30deg);*/
+/*}*/
 
 .month-label {
   width: 60px;
@@ -45,7 +46,7 @@
 }
 
 .news-image img {
-  width: 100%;
+  width: 300px;
   height: auto;
   border-radius: 8px;
 }
