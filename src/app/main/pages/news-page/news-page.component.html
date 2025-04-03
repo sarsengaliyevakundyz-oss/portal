@@ -20,12 +20,12 @@
 
   <!-- Список новостей -->
   <div class="news-list">
-    <div *ngFor="let news of news" class="news-item" (click)="openNews(news.id)">
-      <img [src]="news.imageDescription" alt="News Image">
+    <div *ngFor="let news_item of news" class="news-item" (click)="window.open('/news/'+news_item.id, '_self')">
+      <img [src]="news_item.imageDescription" alt="News Image">
       <div class="news-content">
-        <h5>{{ news.title }}</h5>
-        <p>{{ news.description }}</p>
-        <small>{{ news.publishDate | date : 'dd-MM-yyyy' }} | <span class="tag">{{ news.vipCategory }}</span></small>
+        <h5>{{ news_item.title }}</h5>
+        <p>{{ news_item.description }}</p>
+        <small>{{ news_item.publishDate | date : 'dd-MM-yyyy' }} | <span class="tag">{{ news_item.vipCategory }}</span></small>
       </div>
     </div>
     <nz-pagination [nzPageSize]="query.limit"

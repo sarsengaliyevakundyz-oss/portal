@@ -52,9 +52,6 @@ export class NewsPageComponent implements OnInit {
     })
   }
 
-  openNews(id: number) {
-    window.open(`news/${id}`, '_blank');
-  }
 
   private preLoad() {
     this.route.queryParamMap.subscribe(params => { // Используем queryParamMap
@@ -71,4 +68,6 @@ export class NewsPageComponent implements OnInit {
       }
     });
   }
+
+  protected readonly window = window;
 }
