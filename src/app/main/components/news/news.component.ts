@@ -8,6 +8,7 @@ import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {CalendarTypeEnum} from '../../../shared/models/calendar.model';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-news',
@@ -20,7 +21,8 @@ import {SharedModule} from '../../../shared/shared.module';
     NzOptionComponent,
     NzSelectComponent,
     FormsModule,
-    SharedModule
+    SharedModule,
+    RouterLink
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'

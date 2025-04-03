@@ -37,6 +37,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   margin-top: 10px;
   height: 312px;
+  cursor: pointer;
 }
 
 .news-header {
@@ -85,6 +86,7 @@
 .news-list-item {
   padding-bottom: 5px;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 
 .news-list-header {
@@ -101,7 +103,6 @@
 .news-list-title {
   font-size: 16px;
   color: #4264D0;
-  cursor: pointer;
   transition: color 0.3s ease;
 }
 

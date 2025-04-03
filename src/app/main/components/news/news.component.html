@@ -19,7 +19,7 @@
   </div>
 
 <!--  первая новость-->
-  <div class="news-item" *ngIf="news.length">
+  <div class="news-item" *ngIf="news.length" [routerLink]="'/news/'+news[0].id">
     <div class="news-header">
       <div class="news-image">
         <img [src]="news[0].imageDescription" alt="news image">
@@ -36,7 +36,7 @@
 
   <!--  Остальные новости -->
   <div class="news-list" *ngIf="news.length > 1">
-    <div class="news-list-item" *ngFor="let item of news.slice(1)">
+    <div class="news-list-item" *ngFor="let item of news.slice(1)" [routerLink]="'/news/' + item.id">
       <div class="news-list-header">
         <div class="news-list-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
         <div class="news-list-title">{{ item.title }}</div>
