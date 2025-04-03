@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {DatePipe, NgForOf} from '@angular/common';
 import {NewsService} from '../../../shared/services/news.service';
 import {News, NewsCategory, NewsCategoryQuery, NewsQuery} from '../../../shared/models/news.model';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SharedModule} from '../../../shared/shared.module';
 
@@ -15,7 +15,8 @@ import {SharedModule} from '../../../shared/shared.module';
     NgForOf,
     DatePipe,
     NzPaginationComponent,
-    SharedModule
+    SharedModule,
+    RouterLink
   ],
   templateUrl: './news-page.component.html',
   styleUrl: './news-page.component.css'
