@@ -79,7 +79,9 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   handleFormSubmit(data: any) {
-    this.isShowCreateForm = false;
-    console.log('Received Data:', data);
+    this.service.addSystem(data).subscribe((res) => {
+      this.isShowCreateForm = false;
+      this.loadData();
+    })
   }
 }

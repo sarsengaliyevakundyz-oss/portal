@@ -62,6 +62,7 @@ export class AddSystemComponent {
   }
 
   submitForm(): void {
+    console.log(this.form);
     if (this.form.invalid) {
       return;
     }

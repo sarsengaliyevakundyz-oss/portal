@@ -4,6 +4,8 @@
     "code": "Код",
     "enterCode": "Код енгізіңіз",
     "description": "Сипаттама",
+    "name": "Аты",
+    "image": "Сурет",
     "enterDescription": "Сипаттаманы енгізіңіз",
     "kazakh": "Қазақша",
     "russian": "Орысша",

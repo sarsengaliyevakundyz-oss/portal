@@ -4,6 +4,8 @@
     "code": "Код",
     "enterCode": "Введите код",
     "description": "Описание",
+    "name": "Наименование",
+    "image": "Картинка",
     "enterDescription": "Введите описание",
     "kazakh": "Казахский",
     "russian": "Русский",
