@@ -8,6 +8,7 @@ import {SharedModule} from '../../../shared/shared.module';
 import {environment} from '../../../../environments/environment';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {AddSystemComponent} from './add-ssytem/add-system.component';
 
 @Component({
   selector: 'app-roles',
@@ -20,7 +21,8 @@ import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
     SharedModule,
     NzButtonComponent,
     NzModalComponent,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    AddSystemComponent
   ],
   providers: [NzModalService],
   templateUrl: './admin-systems.component.html',
@@ -69,5 +71,15 @@ export class AdminSystemsComponent implements OnInit {
 
   handleCancel(): void {
     this.isModalVisible = false;
+  }
+
+  isShowCreateForm = false;
+  openCreateModal() {
+    this.isShowCreateForm = true;
+  }
+
+  handleFormSubmit(data: any) {
+    this.isShowCreateForm = false;
+    console.log('Received Data:', data);
   }
 }

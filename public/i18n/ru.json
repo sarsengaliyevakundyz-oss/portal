@@ -1,4 +1,16 @@
 {
+  "modal": {
+    "title": "Добавить новый элемент",
+    "code": "Код",
+    "enterCode": "Введите код",
+    "description": "Описание",
+    "enterDescription": "Введите описание",
+    "kazakh": "Казахский",
+    "russian": "Русский",
+    "kurator": "Куратор",
+    "department": "Отдел",
+    "addKurator": "Добавить куратора"
+  },
   "ru": "Рус",
   "kz": "Қаз",
   "en": "Eng",

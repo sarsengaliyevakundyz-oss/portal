@@ -1,0 +1,53 @@
+<nz-modal [(nzVisible)]="isCreateFormVisible" [nzTitle]="'modal.title' | translate" [nzOkText]="'action.save' | translate" [nzCancelText]="'action.cancel' | translate"
+          (nzOnCancel)="closeModal()" (nzOnOk)="submitForm()" [nzContent]="contentTemplate">
+  <ng-template #contentTemplate>
+    <form [formGroup]="form" (ngSubmit)="submitForm()">
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.code' | translate }}:</label>
+          <input nz-input formControlName="code" placeholder="{{ 'modal.enterCode' | translate }}" />
+        </div>
+      </div>
+
+      <h3>{{ 'modal.description' | translate }}</h3>
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.kazakh' | translate }}:</label>
+          <input nz-input formControlName="descriptionKz" placeholder="{{ 'modal.enterDescription' | translate }}" />
+        </div>
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.russian' | translate }}:</label>
+          <input nz-input formControlName="descriptionRu" placeholder="{{ 'modal.enterDescription' | translate }}" />
+        </div>
+      </div>
+
+      <h3>{{ 'modal.kurator' | translate }}</h3>
+      <div formArrayName="kurator">
+        <div *ngFor="let kurator of kuratorControls.controls; let i = index" [formGroupName]="i">
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.department' | translate }} (KZ):</label>
+              <input nz-input formControlName="departamentKz" />
+            </div>
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.department' | translate }} (RU):</label>
+              <input nz-input formControlName="departamentRu" />
+            </div>
+          </div>
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.kurator' | translate }} (KZ):</label>
+              <input nz-input formControlName="kuratorKz" />
+            </div>
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.kurator' | translate }} (RU):</label>
+              <input nz-input formControlName="kuratorRu" />
+            </div>
+          </div>
+        </div>
+        <button nz-button nzType="dashed" (click)="addKurator()">+ {{ 'modal.addKurator' | translate }}</button>
+      </div>
+    </form>
+  </ng-template>
+
+</nz-modal>

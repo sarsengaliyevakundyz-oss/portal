@@ -1,4 +1,16 @@
 {
+  "modal": {
+    "title": "Жаңа элемент қосу",
+    "code": "Код",
+    "enterCode": "Код енгізіңіз",
+    "description": "Сипаттама",
+    "enterDescription": "Сипаттаманы енгізіңіз",
+    "kazakh": "Қазақша",
+    "russian": "Орысша",
+    "kurator": "Куратор",
+    "department": "Бөлім",
+    "addKurator": "Куратор қосу"
+  },
   "ru": "Рус",
   "kz": "Қаз",
   "en": "Eng",

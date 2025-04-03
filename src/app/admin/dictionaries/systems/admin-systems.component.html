@@ -1,5 +1,9 @@
 <div>
   <h2>Системы</h2>
+  <button nz-button nzType="primary" (click)="openCreateModal()">+</button>
+
+  <!-- Include Create Item Modal -->
+  <app-add-system *ngIf="isShowCreateForm" (formSubmitted)="handleFormSubmit($event)" (cancel)="isShowCreateForm=false"></app-add-system>
   <table class="styled-table">
     <thead>
     <tr>
