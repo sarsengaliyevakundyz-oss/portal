@@ -9,6 +9,7 @@ import {CalendarTypeEnum} from '../../../shared/models/calendar.model';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {RouterLink} from '@angular/router';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-news',
@@ -88,4 +89,6 @@ export class NewsComponent implements OnInit {
       this.news = response.response;
     })
   }
+
+  protected readonly environment = environment;
 }

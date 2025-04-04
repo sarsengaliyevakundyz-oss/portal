@@ -22,7 +22,7 @@
   <div class="news-item" *ngIf="news.length" [routerLink]="'/news/'+news[0].id">
     <div class="news-header">
       <div class="news-image">
-        <img [src]="news[0].imageDescription" alt="news image">
+        <img [src]="environment.storageUrl + news[0].imageDescription" alt="news image">
       </div>
       <div class="news-content">
         <h2>{{ news[0].title }}</h2>
