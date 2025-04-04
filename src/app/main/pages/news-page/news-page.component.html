@@ -21,7 +21,7 @@
   <!-- Список новостей -->
   <div class="news-list">
     <a *ngFor="let news_item of news" class="news-item" [routerLink]="'/news/'+ news_item.id">
-      <img [src]="news_item.imageDescription" alt="News Image">
+      <img [src]="environment.storageUrl + news_item.imageDescription" alt="News Image">
       <div class="news-content">
         <h5>{{ news_item.title }}</h5>
         <p>{{ news_item.description }}</p>

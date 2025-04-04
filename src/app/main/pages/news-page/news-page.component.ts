@@ -6,6 +6,7 @@ import {News, NewsCategory, NewsCategoryQuery, NewsQuery} from '../../../shared/
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SharedModule} from '../../../shared/shared.module';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-news-page',
@@ -71,4 +72,5 @@ export class NewsPageComponent implements OnInit {
   }
 
   protected readonly window = window;
+    protected readonly environment = environment;
 }
