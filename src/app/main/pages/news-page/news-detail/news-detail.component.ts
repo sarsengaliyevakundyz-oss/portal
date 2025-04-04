@@ -5,6 +5,7 @@ import {NewsService} from '../../../../shared/services/news.service';
 import {News, NewsCategory, NewsDetail, NewsQuery} from '../../../../shared/models/news.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SharedModule} from '../../../../shared/shared.module';
+import {environment} from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-news-detail',
@@ -60,4 +61,6 @@ export class NewsDetailComponent implements OnInit {
   goToNewsList() {
     this.router.navigate(['/news'], { queryParams: { category: this.query.categoryId, year: new Date(this.news.publishDate).getFullYear() } });
   }
+
+    protected readonly environment = environment;
 }

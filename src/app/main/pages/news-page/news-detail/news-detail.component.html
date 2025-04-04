@@ -24,7 +24,7 @@
       {{news.title}}
     </h1>
 
-    <img class="news-image" src="assets/images/news-image.jpg" alt="Природа Казахстана">
+    <img class="news-image" [src]="environment.storageUrl + news.imageDescription" alt="Природа Казахстана">
 
     <p class="news-text">
       {{news.content}}
