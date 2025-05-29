@@ -35,7 +35,7 @@ export class CurrentUserService {
   }
 
   private handleSSOResponse(secretCode: string) {
-    this.http.post('/getSsoToken', { secretCode })
+    this.http.post('/internalportal/getSsoToken', { secretCode })
       .subscribe({
         next: (response: any) => {
           this.setUser(response.accessToken, response.refreshToken);
