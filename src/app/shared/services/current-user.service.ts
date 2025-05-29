@@ -20,7 +20,7 @@ export class CurrentUserService {
 
   private setupSSOListener() {
     window.addEventListener('message', (event) => {
-
+      console.log("event - ", event)
       if (event.data.data) {
         this.handleSSOResponse(event.data.data);
       }
@@ -28,7 +28,7 @@ export class CurrentUserService {
   }
 
   private handleSSOResponse(secretCode: string) {
-    this.http.post('/api/auth/token', { secretCode })
+    this.http.post('/getSsoToken', { secretCode })
       .subscribe({
         next: (response: any) => {
           this.setUser(response.accessToken, response.refreshToken);
@@ -82,7 +82,7 @@ export class CurrentUserService {
     // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    window.open(ssoUrl, '_blank');
+    window.open(ssoUrl, '_self');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
