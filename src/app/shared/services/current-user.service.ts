@@ -14,10 +14,31 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
+    this.setupSSOListener();
   }
 
+  private setupSSOListener() {
+    window.addEventListener('message', (event) => {
 
+      if (event.data.data) {
+        this.handleSSOResponse(event.data.data);
+      }
+    });
+  }
+
+  private handleSSOResponse(secretCode: string) {
+    this.http.post('/api/auth/token', { secretCode })
+      .subscribe({
+        next: (response: any) => {
+          this.setUser(response.accessToken, response.refreshToken);
+        },
+        error: (err) => {
+          console.error('Token exchange failed', err);
+          this.router.navigate(['/login']);
+        }
+      });
+  }
 
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
@@ -60,7 +81,8 @@ export class CurrentUserService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    window.location.href = 'http://172.16.18.182:9999/ssofrontinternal/?ref=vipnew';
+    const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
+    window.open(ssoUrl, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
