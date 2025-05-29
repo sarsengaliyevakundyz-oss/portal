@@ -93,7 +93,7 @@ export class CurrentUserService {
     
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
     
-    window.location.replace(ssoUrl);
+    window.open(ssoUrl, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
