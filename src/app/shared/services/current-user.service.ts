@@ -14,17 +14,24 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
+  private isLoggingOut = false;
   constructor(private router: Router, private http: HttpClient) {
     this.setupSSOListener();
   }
 
   private setupSSOListener() {
-    window.addEventListener('message', (event) => {
-      console.log("event - ", event)
-      if (event.data.data) {
-        this.handleSSOResponse(event.data.data);
-      }
-    });
+    window.removeEventListener('message', this.messageHandler);
+    window.addEventListener('message', this.messageHandler.bind(this));
+  }
+
+  private messageHandler(event: MessageEvent) {
+    console.log("event - ", event);
+    
+    if (event.origin !== window.location.origin) return;
+
+    if (event.data?.data) {
+      this.handleSSOResponse(event.data.data);
+    }
   }
 
   private handleSSOResponse(secretCode: string) {
@@ -79,10 +86,14 @@ export class CurrentUserService {
 
 
   logout() {
-    // remove user from local storage to log user out
+    if (this.isLoggingOut) return;
+    
+    this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
+    
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    window.open(ssoUrl, '_self');
+    
+    window.location.replace(ssoUrl);
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
