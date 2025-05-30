@@ -84,9 +84,9 @@ export class CurrentUserService {
 
 
   logout() {
-    if (this.isLoggingOut) return;
+    // if (this.isLoggingOut) return;
     
-    this.isLoggingOut = true;
+    // this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
     
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
