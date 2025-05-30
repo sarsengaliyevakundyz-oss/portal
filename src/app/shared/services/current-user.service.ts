@@ -90,14 +90,19 @@ export class CurrentUserService {
 
 
   logout() {
-    if (this.isLoggingOut) return;
+    // if (this.isLoggingOut) return;
     
-    this.isLoggingOut = true;
+    // this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
     
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
+    const newWindow = window.open(ssoUrl, '_blank');
     
-    window.open(ssoUrl, '_blank');
+    if (!newWindow || newWindow.closed) {
+      this.isLoggingOut = false;
+      console.error('Failed to open logout window');
+      window.location.href = ssoUrl;
+    }
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
