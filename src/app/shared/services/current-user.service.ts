@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {RoleEnum, UserTokenInfo} from '../models/user.model';
 import {jwtDecode} from 'jwt-decode';
@@ -35,7 +35,12 @@ export class CurrentUserService {
   }
 
   private handleSSOResponse(secretCode: string) {
-    this.http.post('/internalportal/getSsoToken', { secretCode })
+    const headers = new HttpHeaders({
+      'accept': 'application/json',
+      'Authorization': secretCode
+    });
+  
+    this.http.get('/internalportal/getSsoToken', { headers })
       .subscribe({
         next: (response: any) => {
           this.setUser(response.accessToken, response.refreshToken);
