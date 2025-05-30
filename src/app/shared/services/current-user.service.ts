@@ -16,15 +16,25 @@ export class CurrentUserService {
   private authResponseKey = 'authResponse';
   private isLoggingOut = false;
   constructor(private router: Router, private http: HttpClient) {
+    console.log('CurrentUserService initialized');
     this.setupSSOListener();
   }
 
   private setupSSOListener() {
+    console.log('Setting up SSO listener');
+    
     window.removeEventListener('message', this.messageHandler);
-    window.addEventListener('message', this.messageHandler.bind(this));
+    
+    window.addEventListener('message', this.messageHandler, false);
+    
+    setTimeout(() => {
+      console.log('Sending test message...');
+      window.postMessage({ test: 'SSO handler test' }, '*');
+    }, 1000);
   }
 
   private messageHandler(event: MessageEvent) {
+    console.group('SSO Message Handler');
     console.log("event - ", event);
     
     if (event.origin !== window.location.origin) return;
