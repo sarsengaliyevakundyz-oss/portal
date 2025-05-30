@@ -20,18 +20,12 @@ export class CurrentUserService {
   }
 
   private setupSSOListener() {
-    window.removeEventListener('message', this.messageHandler);
-    window.addEventListener('message', this.messageHandler.bind(this));
-  }
-
-  private messageHandler(event: MessageEvent) {
-    console.log("event - ", event);
-    
-    if (event.origin !== window.location.origin) return;
-
-    if (event.data?.data) {
-      this.handleSSOResponse(event.data.data);
-    }
+    window.addEventListener('message', (event) => {
+      console.log("event - ", event)
+      if (event.data.data) {
+        this.handleSSOResponse(event.data.data);
+      }
+    });
   }
 
   private handleSSOResponse(secretCode: string) {
@@ -90,19 +84,14 @@ export class CurrentUserService {
 
 
   logout() {
-    // if (this.isLoggingOut) return;
+    if (this.isLoggingOut) return;
     
-    // this.isLoggingOut = true;
+    this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
     
     const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    const newWindow = window.open(ssoUrl, '_blank');
     
-    if (!newWindow || newWindow.closed) {
-      this.isLoggingOut = false;
-      console.error('Failed to open logout window');
-      window.location.href = ssoUrl;
-    }
+    window.open(ssoUrl, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
