@@ -14,7 +14,6 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  private isLoggingOut = false;
   constructor(private router: Router, private http: HttpClient) {
     this.setupSSOListener();
   }
