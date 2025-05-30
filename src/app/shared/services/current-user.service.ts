@@ -28,12 +28,7 @@ export class CurrentUserService {
   }
 
   private handleSSOResponse(secretCode: string) {
-    const headers = new HttpHeaders({
-      'accept': 'application/json',
-      'Authorization': secretCode
-    });
-  
-    this.http.get('/internalportal/getSsoToken', { headers })
+    this.http.post('/api/auth/token', { secretCode })
       .subscribe({
         next: (response: any) => {
           this.setUser(response.accessToken, response.refreshToken);
@@ -88,9 +83,7 @@ export class CurrentUserService {
     // this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
     
-    const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    
-    window.open(ssoUrl, '_blank');
+    window.location.href = 'http://172.16.18.182:9999/ssofrontinternal/?ref=vipnew';
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
