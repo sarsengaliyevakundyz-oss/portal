@@ -54,13 +54,12 @@ export class CurrentUserService {
 
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
+    if (!this.currentUser) {
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      if(!userInfo){
-        this.logout()
-      }
-      else{
+      if (!userInfo) {
+        return null;
+      } else {
         this.setUser(userInfo.accessToken, userInfo.refreshToken);
       }
     };
