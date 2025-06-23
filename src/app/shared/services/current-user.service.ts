@@ -60,8 +60,8 @@ export class CurrentUserService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    window.open(ssoUrl, '_blank');
+    console.log("ssointernalfrontnew redirect")
+    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
