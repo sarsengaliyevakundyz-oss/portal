@@ -82,7 +82,7 @@ export class CurrentUserService {
     
     // this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
-    
+    console.log("ssointernalfrontnew redirect")
     window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
   }
 
