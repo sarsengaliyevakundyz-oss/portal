@@ -1,10 +1,17 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {RoleEnum, UserTokenInfo} from '../models/user.model';
 import {jwtDecode} from 'jwt-decode';
+import { firstValueFrom } from 'rxjs';
 
-
+interface SsoTokenResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  refresh_expires_in: number;
+  token_type: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +21,39 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  constructor(private router: Router, private http: HttpClient) {
+
+  constructor(
+    private router: Router, 
+    private http: HttpClient
+  ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
   }
  
-  private onMessage(event: MessageEvent) {
+  private async onMessage(event: MessageEvent) {
     console.log('event', event);
     const data = event.data;
     if (data?.type === 'AUTH_SECRET_CODE') {
       const secretCode = data.secretCode;
       console.log('Получили secretCode через postMessage:', secretCode);
+    
+      try {
+        const response = await firstValueFrom(
+          this.http.get<SsoTokenResponse>(
+            '/internalportal/getSsoToken',
+            {
+              headers: new HttpHeaders({
+                'Accept': 'application/json',
+                'Authorization': secretCode
+              })
+            }
+          )
+        );
+        this.setUser(response.access_token, response.refresh_token);
+
+        this.router.navigateByUrl('/');
+      } catch (err) {
+        console.error('Не удалось получить SSO-токен:', err);
+      }
     }
   }
  
@@ -81,17 +111,17 @@ export class CurrentUserService {
     console.log(token)
     console.log(refresh)
     try {
-      const decodedToken: any = jwtDecode(token);
-      console.log('decoded', decodedToken)
-      if(!this.isExpired(token)){
-        this.currentUser = {accessToken: token, family_name: decodedToken.family_name, given_name: decodedToken.given_name,
-          full_name: decodedToken.name, email: decodedToken.email, preferred_username: decodedToken.preferred_username, refreshToken: refresh } as UserTokenInfo;
-        localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
-      }
-      else{
-        console.log('token expired')
-        this.logout();
-      }
+      const decoded: any = jwtDecode(token);
+      this.currentUser = {
+        accessToken: token,
+        refreshToken: refresh,
+        full_name: decoded.name,
+        family_name: decoded.family_name,
+        given_name: decoded.given_name,
+        email: decoded.email,
+        preferred_username: decoded.preferred_username
+      } as UserTokenInfo;
+      localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
     } catch (error) {
       localStorage.removeItem(this.authResponseKey);
       this.logout();
