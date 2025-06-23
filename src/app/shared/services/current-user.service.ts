@@ -83,8 +83,7 @@ export class CurrentUserService {
     // this.isLoggingOut = true;
     localStorage.removeItem(this.authResponseKey);
     
-    const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
-    window.open(ssoUrl, '_blank');
+    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
