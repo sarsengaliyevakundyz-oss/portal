@@ -15,6 +15,7 @@ export class CurrentUserService {
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
   constructor(private router: Router, private http: HttpClient) {
+    console.log('CurrentUserService ctor');
     this.setupSSOListener();
   }
 
