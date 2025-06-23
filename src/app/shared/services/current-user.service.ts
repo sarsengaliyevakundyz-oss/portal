@@ -20,6 +20,7 @@ export class CurrentUserService {
   }
 
   private setupSSOListener() {
+    console.log('setupSSOListener');
     window.addEventListener('message', (event) => {
       console.log("event - ", event)
       if (event.data.data) {
