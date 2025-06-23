@@ -14,10 +14,18 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
+    window.addEventListener('message', this.onMessage.bind(this), false);
   }
  
- 
+  private onMessage(event: MessageEvent) {
+    console.log('event', event);
+    const data = event.data;
+    if (data?.type === 'AUTH_SECRET_CODE') {
+      const secretCode = data.secretCode;
+      console.log('Получили secretCode через postMessage:', secretCode);
+    }
+  }
  
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
