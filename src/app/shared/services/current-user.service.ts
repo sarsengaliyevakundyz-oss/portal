@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {RoleEnum, UserTokenInfo} from '../models/user.model';
 import {jwtDecode} from 'jwt-decode';
@@ -14,51 +14,20 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  constructor(private router: Router, private http: HttpClient) {
-    console.log('CurrentUserService ctor');
-    this.setupSSOListener();
-  
-    const raw = localStorage.getItem(this.authResponseKey);
-    if (raw) {
-      const { accessToken } = JSON.parse(raw) as UserTokenInfo;
-      if (this.isExpired(accessToken)) {
-        console.log('Token is expired on startup — logging out');
-        this.logout();
-      }
-    }
+  constructor(private router: Router) {
   }
-
-  private setupSSOListener() {
-    console.log('setupSSOListener');
-    window.addEventListener('message', (event) => {
-      console.log("event - ", event)
-      if (event.data.data) {
-        this.handleSSOResponse(event.data.data);
-      }
-    });
-  }
-
-  private handleSSOResponse(secretCode: string) {
-    this.http.post('/getSsoToken', { secretCode })
-      .subscribe({
-        next: (response: any) => {
-          this.setUser(response.accessToken, response.refreshToken);
-        },
-        error: (err) => {
-          console.error('Token exchange failed', err);
-          this.router.navigate(['/login']);
-        }
-      });
-  }
-
+ 
+ 
+ 
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser) {
+    if (!this.currentUser){
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      if (!userInfo) {
-        return null;
-      } else {
+      if(!userInfo){
+        this.logout()
+      }
+      else{
         this.setUser(userInfo.accessToken, userInfo.refreshToken);
       }
     };
@@ -89,12 +58,10 @@ export class CurrentUserService {
 
 
   logout() {
-    // if (this.isLoggingOut) return;
-    
-    // this.isLoggingOut = true;
+    // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    console.log("ssointernalfrontnew redirect")
-    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
+    const ssoUrl = `${window.location.origin}/ssointernalfrontnew/?client-id=2`;
+    window.open(ssoUrl, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
