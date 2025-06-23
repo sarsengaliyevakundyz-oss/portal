@@ -17,6 +17,15 @@ export class CurrentUserService {
   constructor(private router: Router, private http: HttpClient) {
     console.log('CurrentUserService ctor');
     this.setupSSOListener();
+  
+    const raw = localStorage.getItem(this.authResponseKey);
+    if (raw) {
+      const { accessToken } = JSON.parse(raw) as UserTokenInfo;
+      if (this.isExpired(accessToken)) {
+        console.log('Token is expired on startup — logging out');
+        this.logout();
+      }
+    }
   }
 
   private setupSSOListener() {
