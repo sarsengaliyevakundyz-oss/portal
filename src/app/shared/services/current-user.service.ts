@@ -85,6 +85,7 @@ export class CurrentUserService {
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
       console.log("userInfo - ", userInfo)
       if(!userInfo){
+        console.log("userInfo logout ")
         this.logout();
         return false;
       }
