@@ -104,9 +104,7 @@ export class CurrentUserService {
     if (this.hasLoggedOut) return;
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
-    const base = `${window.location.origin}/ssointernalfrontnew`;
-    const params = new URLSearchParams({ 'client-id': '2' });
-    window.location.href = `${base}?${params.toString()}`;
+    window.location.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
     this.hasLoggedOut = true;
     console.log("ssointernalfrontnew redirect")
   }
