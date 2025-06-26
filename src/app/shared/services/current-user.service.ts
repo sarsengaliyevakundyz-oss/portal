@@ -100,21 +100,16 @@ export class CurrentUserService {
   }
 
 
-  logout(): void {
+  logout() {
     if (this.hasLoggedOut) return;
-    
+    console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
-  
-    const link = document.createElement('a');
-    link.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  
+    window.open(
+      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+      '_blank'
+    );
     this.hasLoggedOut = true;
-    console.log('redirect via dynamic <a>');
+    console.log("ssointernalfrontnew redirect")
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
