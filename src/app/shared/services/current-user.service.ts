@@ -104,7 +104,10 @@ export class CurrentUserService {
     if (this.hasLoggedOut) return;
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
-    window.location.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
+    window.open(
+      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+      '_blank'
+    );
     this.hasLoggedOut = true;
     console.log("ssointernalfrontnew redirect")
   }
