@@ -95,17 +95,11 @@ export class CurrentUserService {
   }
 
 
-  private hasLoggedOut = false;
-
   logout() {
-    if (this.hasLoggedOut) return;
-    this.hasLoggedOut = true;
+    // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    console.log("ssointernalfrontnew redirect - ")
-    window.open(
-      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-      '_blank'
-    );
+    console.log("ssointernalfrontnew redirect")
+    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
