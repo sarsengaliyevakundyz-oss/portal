@@ -102,14 +102,18 @@ export class CurrentUserService {
 
   logout() {
     if (this.hasLoggedOut) return;
-    console.log("this.hasLoggedOut - ", this.hasLoggedOut)
+  
+    const popup = window.open('', '_blank');
+    if (!popup) {
+      console.error('Не удалось открыть новую вкладку — возможно, браузер блокирует попапы.');
+      return;
+    }
+  
     localStorage.removeItem(this.authResponseKey);
-    window.open(
-      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-      '_blank'
-    );
+    popup.location.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
+  
     this.hasLoggedOut = true;
-    console.log("ssointernalfrontnew redirect")
+    console.log('redirect to ssointernalfrontnew');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
