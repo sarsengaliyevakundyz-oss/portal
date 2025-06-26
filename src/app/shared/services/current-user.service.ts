@@ -103,13 +103,12 @@ export class CurrentUserService {
   logout() {
     if (this.hasLoggedOut) return;
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
+    localStorage.removeItem(this.authResponseKey);
     const base = `${window.location.origin}/ssointernalfrontnew`;
     const params = new URLSearchParams({ 'client-id': '2' });
     window.location.href = `${base}?${params.toString()}`;
     this.hasLoggedOut = true;
-    localStorage.removeItem(this.authResponseKey);
     console.log("ssointernalfrontnew redirect")
-
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
