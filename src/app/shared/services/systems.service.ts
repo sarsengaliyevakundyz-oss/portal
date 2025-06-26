@@ -12,7 +12,7 @@ import {Role, UserInfo} from '../models/user.model';
 export class SystemsService extends BaseApi {
 
   getList(): Observable<ResultModel<SystemModel[]>> {
-    return this.getData<ResultModel<SystemModel[]>>(this.apiUrl + '/internalportal/systems/parent', null);
+    return this.getData<ResultModel<SystemModel[]>>(this.apiUrl + '/internalportal/infoSystems/parent', null);
   }
 
   getSystemInfo(id: string): Observable<ResultModel<SystemChildInfoModel>> {
