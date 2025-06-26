@@ -5,7 +5,11 @@
       {{ item.name | nameTranslate }}
     </div>
     <div class="item-icon">
-      <img [src]="environment.storageUrl + (item.pathImg | nameTranslate)" alt="{{ item.name }}" (error)="onImgError($event)">
+      <img
+        [src]="item.fullPathImg"
+        alt="{{ item.name }}"
+        (error)="onImgError($event)"
+      />
     </div>
   </a>
 </div>

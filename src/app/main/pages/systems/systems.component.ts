@@ -32,6 +32,7 @@ export class SystemsComponent implements  OnInit{
 
   getData(){
     this.service.getList().subscribe(res=>{
+      console.log("res.result - ", res.result)
       this.items = res.result;
     })
   }
