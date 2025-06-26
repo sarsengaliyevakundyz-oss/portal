@@ -20,7 +20,6 @@ export class CurrentUserService {
 
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
-  private hasLoggedOut = false;
   private authResponseKey = 'authResponse';
 
   constructor(
@@ -60,17 +59,19 @@ export class CurrentUserService {
  
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
-    const raw = localStorage.getItem(this.authResponseKey);
-    if (!raw) {
-      this.logout();
-      return null;
-    }
-    if (!this.currentUser) {
-      const userInfo = JSON.parse(raw) as UserTokenInfo;
-      this.setUser(userInfo.accessToken, userInfo.refreshToken);
-    }
+    if (!this.currentUser){
+      // @ts-ignore
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      if(!userInfo){
+        this.logout()
+      }
+      else{
+        this.setUser(userInfo.accessToken, userInfo.refreshToken);
+      }
+    };
     return this.currentUser;
   }
+
   getPermissions(): RoleEnum[]{
     return this.permissions;
   }
@@ -94,15 +95,11 @@ export class CurrentUserService {
   }
 
 
-  logout(): void {
-    if (this.hasLoggedOut) return;
-    this.hasLoggedOut = true;
+  logout() {
+    // remove user from local storage to log user out
     localStorage.removeItem(this.authResponseKey);
-    console.log("ssointernalfrontnew redirect");
-    window.open(
-      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-      '_blank'
-    );
+    console.log("ssointernalfrontnew redirect")
+    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
@@ -124,7 +121,6 @@ export class CurrentUserService {
         email: decoded.email,
         preferred_username: decoded.preferred_username
       } as UserTokenInfo;
-      this.hasLoggedOut = false;
       localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
     } catch (error) {
       localStorage.removeItem(this.authResponseKey);
