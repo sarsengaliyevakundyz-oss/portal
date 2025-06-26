@@ -21,6 +21,7 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
+  private hasLoggedOut = false;
 
   constructor(
     private router: Router, 
@@ -63,7 +64,8 @@ export class CurrentUserService {
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
       if(!userInfo){
-        this.logout()
+        this.logout();
+        return null;
       }
       else{
         this.setUser(userInfo.accessToken, userInfo.refreshToken);
@@ -82,6 +84,7 @@ export class CurrentUserService {
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
       if(!userInfo){
+        this.logout();
         return false;
       }
       else{
@@ -96,7 +99,8 @@ export class CurrentUserService {
 
 
   logout() {
-    // remove user from local storage to log user out
+    if (this.hasLoggedOut) return;
+    this.hasLoggedOut = true;
     localStorage.removeItem(this.authResponseKey);
     console.log("ssointernalfrontnew redirect")
     window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
