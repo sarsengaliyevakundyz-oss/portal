@@ -100,20 +100,21 @@ export class CurrentUserService {
   }
 
 
-  logout() {
+  logout(): void {
     if (this.hasLoggedOut) return;
-  
-    const popup = window.open('', '_blank');
-    if (!popup) {
-      console.error('Не удалось открыть новую вкладку — возможно, браузер блокирует попапы.');
-      return;
-    }
-  
+    
     localStorage.removeItem(this.authResponseKey);
-    popup.location.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
+  
+    const link = document.createElement('a');
+    link.href = `${window.location.origin}/ssointernalfrontnew?client-id=2`;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   
     this.hasLoggedOut = true;
-    console.log('redirect to ssointernalfrontnew');
+    console.log('redirect via dynamic <a>');
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
