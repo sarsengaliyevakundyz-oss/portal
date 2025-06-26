@@ -20,6 +20,7 @@ export class CurrentUserService {
 
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
+  private hasLoggedOut = false;
   private authResponseKey = 'authResponse';
 
   constructor(
@@ -95,11 +96,15 @@ export class CurrentUserService {
   }
 
 
-  logout() {
-    // remove user from local storage to log user out
+  logout(): void {
+    if (this.hasLoggedOut) return;
+    this.hasLoggedOut = true;
     localStorage.removeItem(this.authResponseKey);
-    console.log("ssointernalfrontnew redirect")
-    window.open(`${window.location.origin}/ssointernalfrontnew?client-id=2`, '_blank');
+    console.log("ssointernalfrontnew redirect");
+    window.open(
+      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+      '_blank'
+    );
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
@@ -121,6 +126,7 @@ export class CurrentUserService {
         email: decoded.email,
         preferred_username: decoded.preferred_username
       } as UserTokenInfo;
+      this.hasLoggedOut = false;
       localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
     } catch (error) {
       localStorage.removeItem(this.authResponseKey);
