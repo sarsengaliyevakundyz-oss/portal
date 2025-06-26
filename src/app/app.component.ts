@@ -18,7 +18,7 @@ export class AppComponent implements OnInit{
  
   ngOnInit(): void {
     this.setBackground();
-    this.currentUser.getCurrentUser();
+    this.currentUser.isAuthenticated();
     this.route.queryParams.subscribe(params => {
       const token = params['access_token'];
       const refresh = params['refresh_token'];
