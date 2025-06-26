@@ -83,6 +83,7 @@ export class CurrentUserService {
     if (!this.currentUser){
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      console.log("userInfo - ", userInfo)
       if(!userInfo){
         this.logout();
         return false;
