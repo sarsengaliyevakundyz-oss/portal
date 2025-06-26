@@ -101,6 +101,7 @@ export class CurrentUserService {
 
 
   logout() {
+    console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     if (this.hasLoggedOut) return;
     this.hasLoggedOut = true;
     localStorage.removeItem(this.authResponseKey);
