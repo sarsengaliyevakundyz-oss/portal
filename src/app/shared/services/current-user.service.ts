@@ -60,19 +60,17 @@ export class CurrentUserService {
  
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
-      // @ts-ignore
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      if(!userInfo){
-        this.logout()
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken);
-      }
-    };
+    const raw = localStorage.getItem(this.authResponseKey);
+    if (!raw) {
+      this.logout();
+      return null;
+    }
+    if (!this.currentUser) {
+      const userInfo = JSON.parse(raw) as UserTokenInfo;
+      this.setUser(userInfo.accessToken, userInfo.refreshToken);
+    }
     return this.currentUser;
   }
-
   getPermissions(): RoleEnum[]{
     return this.permissions;
   }
