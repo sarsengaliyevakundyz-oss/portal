@@ -19,11 +19,13 @@ export class CalendarService extends BaseApi {
         const asString = typeof result === 'string'
           ? result
           : JSON.stringify(result);
+          console.log("asString - ", asString)
         if (
           asString.includes(
             'Сессия пользователя истекла или недействительна.Требуется повторная авторизация через SSO'
           )
         ) {
+          console.log("asString.includes")
           window.open(
             `${window.location.origin}/ssointernalfrontnew?client-id=2`,
             '_blank'
