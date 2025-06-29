@@ -13,6 +13,7 @@ export class AuthService{
   constructor(private http: HttpClient, private currentUser: CurrentUserService) {}
 
   refreshToken(refreshToken: string): Observable<AuthResult> {
+    console.log('refreshToken:', refreshToken);
     // Формируем данные формы
     // const body = new HttpParams()
     //   .set('grant_type', 'refresh_token')
