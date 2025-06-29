@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { BaseApi } from './base-api';
-import { ResultModel } from '../models/result.model';
-import { CalendarModel, CalendarQuery } from '../models/calendar.model';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {BaseApi} from './base-api';
+import {SystemChildInfoModel, SystemModel} from '../models/system.model';
+import {ResultModel} from '../models/result.model';
+import {CalendarModel, CalendarQuery} from '../models/calendar.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,28 +12,7 @@ import { CalendarModel, CalendarQuery } from '../models/calendar.model';
 export class CalendarService extends BaseApi {
 
   getList(query: CalendarQuery): Observable<ResultModel<CalendarModel[]>> {
-    return this.getData<ResultModel<CalendarModel[]>>(
-      this.apiUrl + '/internalportal/calendar',
-      query
-    ).pipe(
-      tap(result => {
-        console.log("result - ", result)
-        const asString = typeof result === 'string'
-          ? result
-          : JSON.stringify(result);
-          console.log("asString - ", asString)
-        if (
-          asString.includes(
-            'Сессия пользователя истекла или недействительна.Требуется повторная авторизация через SSO'
-          )
-        ) {
-          console.log("asString.includes")
-          window.open(
-            `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-            '_blank'
-          );
-        }
-      })
-    );
+    return this.getData<ResultModel<CalendarModel[]>>(this.apiUrl + '/internalportal/calendar', query);
   }
+
 }
