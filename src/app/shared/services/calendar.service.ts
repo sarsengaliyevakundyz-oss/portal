@@ -16,6 +16,7 @@ export class CalendarService extends BaseApi {
       query
     ).pipe(
       tap(result => {
+        console.log("result - ", result)
         const asString = typeof result === 'string'
           ? result
           : JSON.stringify(result);
