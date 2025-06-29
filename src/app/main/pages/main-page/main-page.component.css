@@ -22,7 +22,7 @@
 }
 
 .image-container img {
-  height: 100%; /* Scale image to full height */
+  height: 100px; /* Scale image to full height */
   width: auto; /* Maintain aspect ratio */
 }
 
@@ -36,14 +36,14 @@
 
 .text-container .title {
   font-size: 36px;
-  font-weight: bold;
-  color: #2f5faa; /* Blue color for title */
-  margin: 0 0 10px 0;
+  font-weight: 800;
+  color: #0575DA; /* Blue color for title */
+  margin: 0;
 }
 
 .text-container .description {
   font-size: 16px;
-  color: #555;
+  color: #0575DA;
   margin: 0;
 }
 
