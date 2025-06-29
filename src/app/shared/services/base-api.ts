@@ -33,6 +33,8 @@ export class BaseApi {
           localStorage.removeItem('authResponse');
           localStorage.removeItem('vip_lang');
           localStorage.removeItem('secretCode');
+
+          window.location.reload();
         }
         return throwError(() => err);
       })
