@@ -17,7 +17,7 @@ interface SsoTokenResponse {
   providedIn: 'root'
 })
 export class CurrentUserService {
-
+  private secretCode?: string;
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
@@ -35,6 +35,7 @@ export class CurrentUserService {
     const data = event.data;
     if (data?.type === 'AUTH_SECRET_CODE') {
       const secretCode = data.secretCode;
+      this.secretCode = secretCode;
       console.log('Получили secretCode через postMessage:', secretCode);
     
       try {
@@ -58,6 +59,10 @@ export class CurrentUserService {
     }
   }
  
+  public getSecretCode(): string | undefined {
+    return this.secretCode;
+  }
+
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
     if (!this.currentUser){

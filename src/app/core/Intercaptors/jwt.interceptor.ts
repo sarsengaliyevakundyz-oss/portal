@@ -3,6 +3,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs';
 import {CurrentUserService} from '../../shared/services/current-user.service';
 import {AuthService} from '../../shared/services/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -11,13 +12,15 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(private currentUserService: CurrentUserService, private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const user = this.currentUserService.getCurrentUser();
     const authToken = this.currentUserService.getCurrentUser()?.accessToken;
     const refreshToken = this.currentUserService.getCurrentUser()?.refreshToken;
+    const secretCode = this.currentUserService.getSecretCode();
     if (authToken) {
       //Проверка если токен меньше 15 минут то обновить и уже потом отправить запрос
         if(this.currentUserService.minutesToExpire()<15 && !this.tokenIsUpdating){
           this.tokenIsUpdating = true;
-          this.authService.refreshToken(refreshToken!).subscribe(res=>{
+          this.authService.refreshToken(refreshToken!, secretCode!).subscribe(res=>{
             this.currentUserService.setUser(res.access_token, res.refresh_token);
             this.tokenIsUpdating = false;
           });
