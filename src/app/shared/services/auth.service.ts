@@ -21,8 +21,8 @@ export class AuthService{
     //   .set('client_id', environment.client)
     //   .set('refresh_token', refreshToken);
     const headers = new HttpHeaders({
+      'RefreshToken': this.currentUser.getCurrentUser()?.refreshToken!,
       'Authorization':  secretCode,
-      'RefreshToken':   refreshToken
     });
 
     return this.http.get<AuthResult>('/internalportal/getToken', { headers });
