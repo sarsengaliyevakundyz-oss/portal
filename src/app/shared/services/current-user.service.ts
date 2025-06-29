@@ -21,6 +21,7 @@ export class CurrentUserService {
   private currentUser!:UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
+  private secretCodeKey   = 'secretCode';
   private hasLoggedOut = false;
 
   constructor(
@@ -28,15 +29,25 @@ export class CurrentUserService {
     private http: HttpClient
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
+    const savedCode = localStorage.getItem(this.secretCodeKey);
+    if (savedCode) {
+      this.secretCode = savedCode;
+      console.log('Loaded secretCode from localStorage:', savedCode);
+    }
   }
  
   private async onMessage(event: MessageEvent) {
-    console.log('event', event);
     const data = event.data;
-    if (data?.type === 'AUTH_SECRET_CODE') {
-      const secretCode = data.secretCode;
-      this.secretCode = secretCode;
-      console.log('Получили secretCode через postMessage:', secretCode);
+  if (data?.type === 'AUTH_SECRET_CODE') {
+    const receivedCode = data.secretCode;
+    if (typeof receivedCode !== 'string') {
+      console.error('Unexpected secretCode:', receivedCode);
+      return;
+    }
+
+    this.secretCode = receivedCode;
+    localStorage.setItem(this.secretCodeKey, receivedCode);
+    console.log('Получили secretCode через postMessage:', receivedCode);
     
       try {
         const response = await firstValueFrom(
@@ -45,7 +56,7 @@ export class CurrentUserService {
             {
               headers: new HttpHeaders({
                 'Accept': 'application/json',
-                'Authorization': secretCode
+                'Authorization': this.secretCode!
               })
             }
           )
@@ -60,7 +71,7 @@ export class CurrentUserService {
   }
  
   public getSecretCode(): string | undefined {
-    return this.secretCode;
+    return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
   // Method to get the current authenticated user's details
@@ -109,6 +120,7 @@ export class CurrentUserService {
     if (this.hasLoggedOut) return;
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
+    localStorage.removeItem(this.secretCodeKey);
     window.open(
       `${window.location.origin}/ssointernalfrontnew?client-id=2`,
       '_blank'
