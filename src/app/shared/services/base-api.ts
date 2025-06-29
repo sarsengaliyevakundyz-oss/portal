@@ -1,7 +1,9 @@
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {formatDate} from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable({
@@ -16,14 +18,25 @@ export class BaseApi {
   protected getData<T>(uri: string, params: any, headers?: HttpHeaders): Observable<T> {
     params = this.normalBody(params);
     const pars = this.getUrlParams(params);
+    const options = headers !== undefined
+      ? { params: pars, headers }
+      : { params: pars };
 
-    const options = headers !== undefined ? {params: pars, headers} : {params: pars};
+    const request$ = this.haveOtherBaseUrl(uri)
+      ? this.http.get<T>(uri, { params: pars })
+      : this.http.get<T>(uri, options);
 
-    if (this.haveOtherBaseUrl(uri)) {
-      return this.http.get<T>(uri, {params: pars});
-    } else {
-      return this.http.get<T>(uri, options);
-    }
+    return request$.pipe(
+      catchError((err: HttpErrorResponse) => {
+        const msg = err.error?.message as string|undefined;
+        if (msg?.includes('status 401 reading')) {
+          localStorage.removeItem('authResponse');
+          localStorage.removeItem('vip_lang');
+          localStorage.removeItem('secretCode');
+        }
+        return throwError(() => err);
+      })
+    );
   }
 
   protected postData<T>(uri: string, body: any): Observable<T> {
