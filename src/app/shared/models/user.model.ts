@@ -10,9 +10,9 @@ export interface UserTokenInfo {
 }
 
 export interface UserInfo {
-  name: string;
   login: string;
-  systems: SystemWrapper[];
+  fullName: string;
+  systems: SystemInfo[];
 }
 
 export interface SystemWrapper {
@@ -25,7 +25,16 @@ export interface System {
 }
 
 export interface SystemInfo {
-  name: ITranslateName;
+  id: number;
+  name: string;
+  code: string;
+  subsystems: Subsystem[];
+}
+
+export interface Subsystem {
+  id: number;
+  name: string;
+  roles: string[];
 }
 
 export interface Child {

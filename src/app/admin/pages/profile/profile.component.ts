@@ -25,7 +25,13 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.system.getUserInfo().subscribe(userRoles => {
       this.user = userRoles;
-  })
+  
+      this.expandedSystems = new Array(this.user.systems.length).fill(false);
+  
+      this.expandedChildren = this.user.systems.map(sys =>
+        new Array(sys.subsystems.length).fill(false)
+      );
+    });
   }
 
   expandedSystems: boolean[] = [];

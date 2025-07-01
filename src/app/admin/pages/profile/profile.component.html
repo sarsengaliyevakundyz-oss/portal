@@ -1,24 +1,23 @@
 <h2>Профиль</h2>
 <div class="user-container">
-  <h2 class="user-name">{{ user?.name }}</h2>
+  <h2 class="user-name">{{ user?.fullName }}</h2>
   <p class="user-login">Логин: {{ user?.login }}</p>
 
-  <div *ngFor="let systemWrapper of user?.systems; let i = index" class="system">
-    <!-- Кнопка для раскрытия -->
+  <div *ngFor="let system of user?.systems; let i = index" class="system">
     <h3 class="system-title" (click)="toggleSystem(i)">
-      {{ systemWrapper.system.systemInfo.name | nameTranslate }}
+      {{ system.name }}
       <span class="arrow" [ngClass]="{ 'open': expandedSystems[i] }">▼</span>
     </h3>
 
     <div *ngIf="expandedSystems[i]">
-      <div *ngFor="let child of systemWrapper.system.children; let j = index" class="child">
+      <div *ngFor="let subsystem of system.subsystems; let j = index" class="child">
         <h4 class="child-title" (click)="toggleChild(i, j)">
-          {{ child.name | nameTranslate }}
+          {{ subsystem.name }}
           <span class="arrow" [ngClass]="{ 'open': expandedChildren[i][j] }">▼</span>
         </h4>
 
         <ul *ngIf="expandedChildren[i][j]" class="roles-list">
-          <li *ngFor="let role of child.roles" class="role-item">{{ role }}</li>
+          <li *ngFor="let role of subsystem.roles" class="role-item">{{ role }}</li>
         </ul>
       </div>
     </div>
