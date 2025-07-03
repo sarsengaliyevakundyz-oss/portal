@@ -37,7 +37,7 @@ export class SystemChildComponent implements OnInit{
     console.log(this.info.systemInfo)
     this.umami.trackButtonClick(module.name.ru, this.info.systemInfo.name.ru, this.currentUser.getCurrentUser()?.full_name)
     const url = module.url[this.translate.currentLang as keyof ITranslateName];
-    let accessUrl = 'secretCode=' + this.currentUser.getSecretCode() + '&access_token=' + this.currentUser.getCurrentUser()?.accessToken + '&refresh_token=' + this.currentUser.getCurrentUser()?.refreshToken
+    let accessUrl = 'secretCode=' + this.currentUser.getSecretCode()
       // + '&lang=' + lang == "kz" ? "kk" : lang
     if(!url.includes('lang')){
       const lang = localStorage.getItem("vip_lang")
