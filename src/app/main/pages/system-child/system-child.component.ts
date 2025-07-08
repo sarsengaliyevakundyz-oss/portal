@@ -33,21 +33,33 @@ export class SystemChildComponent implements OnInit{
   }
 
   openModule(module: SystemChildModel) {
-    console.log(module)
-    console.log(this.info.systemInfo)
-    this.umami.trackButtonClick(module.name.ru, this.info.systemInfo.name.ru, this.currentUser.getCurrentUser()?.full_name)
+    this.umami.trackButtonClick(
+      module.name.ru,
+      this.info.systemInfo.name.ru,
+      this.currentUser.getCurrentUser()?.full_name
+    );
+  
     const url = module.url[this.translate.currentLang as keyof ITranslateName];
-    let accessUrl = 'secretCode=' + this.currentUser.getSecretCode()
-      // + '&lang=' + lang == "kz" ? "kk" : lang
-    if(!url.includes('lang')){
-      const lang = localStorage.getItem("vip_lang")
-      accessUrl+='&lang=' + (lang == "kz" ? "kk" : "ru")
+    const langStorage = localStorage.getItem("vip_lang");
+    const lang = (langStorage === "kz" ? "kk" : "ru");
+  
+    const newWin = window.open(url, '_blank');
+    if (!newWin) {
+      console.error('Не удалось открыть окно для модуля:', url);
+      return;
     }
-    if (url?.includes('?'))
-      window.open(url + '&' + accessUrl, '_blank')
-    else
-      window.open(url + '?' +accessUrl, '_blank')
+  
+    newWin.addEventListener('load', () => {
+      const message = {
+        type: 'AUTH_SECRET_CODE',
+        secretCode: this.currentUser.getSecretCode(),
+        lang
+      };
+      const targetOrigin = new URL(url).origin;
+      newWin.postMessage(message, targetOrigin);
+    });
   }
+  
 
   onImgError(event: Event) {
     const imgElement = event.target as HTMLImageElement;
