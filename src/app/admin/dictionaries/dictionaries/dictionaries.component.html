@@ -5,7 +5,7 @@
     </option>
 
     <option *ngIf="!isLoading && allowedSections.length === 0" value="">
-      {{ 'admin.noAccess' | translate }}
+      {{ 'У вас нет доступа к административным разделам' | translate }}
     </option>
     <option
       *ngFor="let section of allowedSections"
