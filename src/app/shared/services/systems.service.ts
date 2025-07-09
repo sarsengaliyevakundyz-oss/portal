@@ -4,6 +4,7 @@ import {BaseApi} from './base-api';
 import {SystemChildInfoModel, SystemModel} from '../models/system.model';
 import {ResultModel} from '../models/result.model';
 import {Role, UserInfo} from '../models/user.model';
+import { AdminAccessMap } from '../models/admin-access.model';
 
 
 @Injectable({
@@ -27,8 +28,8 @@ export class SystemsService extends BaseApi {
     return this.getData<UserInfo>(this.apiUrl + '/internalportal/infoSystems/userProfile', null);
   }
 
-  getАdminInfo(): Observable<UserInfo> {
-    return this.getData<UserInfo>(this.apiUrl + '/internalportal/infoSystems/adminAccessMap', null);
+  getАdminInfo(): Observable<AdminAccessMap> {
+    return this.getData<AdminAccessMap>(this.apiUrl + '/internalportal/infoSystems/adminAccessMap', null);
   }
 
   getAllSystems(): Observable<ResultModel<SystemChildInfoModel[]>> {

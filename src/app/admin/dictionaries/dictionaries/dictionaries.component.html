@@ -1,10 +1,18 @@
 <div class="custom-select">
-  <select (change)="navigateToPage($event)">
-    <option value="" [hidden]="true"></option>
-<!--    <option value="/admin/dic/news">Новости</option>-->
-<!--    <option value="/admin/dic/trans">Переводы</option>-->
-    <option value="/admin/dic/roles">Роли</option>
-    <option value="/admin/dic/systems">Системы</option>
+  <select (change)="navigateToPage($event)" [disabled]="isLoading">
+    <option *ngIf="isLoading" value="">
+      {{ 'common.loading' | translate }}…
+    </option>
+
+    <option *ngIf="!isLoading && allowedSections.length === 0" value="">
+      {{ 'admin.noAccess' | translate }}
+    </option>
+    <option
+      *ngFor="let section of allowedSections"
+      [value]="section.route">
+      {{ section.labelKey | translate }}
+    </option>
   </select>
 </div>
+
 <router-outlet></router-outlet>
