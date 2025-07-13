@@ -164,6 +164,16 @@
     "privacy": "Құпиялылық саясаты",
     "impaired_version": "Нашар көретіндерге арналған нұсқа"
   },
+  "admin": {
+    "sections": {
+      "systems": "Системы / Подсистемы",
+      "localization": "Локализация",
+      "news": "Новости",
+      "categories": "Категории новостей",
+      "instructions": "Инструкции",
+      "roles": "Роли"
+    }
+  },
   "label": {
     "login": "Логин",
     "password": "Пароль",

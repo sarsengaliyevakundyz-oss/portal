@@ -119,6 +119,16 @@
     "privacy": "Политика конфиденциальности",
     "impaired_version": "Версия для слабовидящих"
   },
+  "admin": {
+    "sections": {
+      "systems": "Системы / Подсистемы",
+      "localization": "Локализация",
+      "news": "Новости",
+      "categories": "Категории новостей",
+      "instructions": "Инструкции",
+      "roles": "Роли"
+    }
+  },
   "label": {
     "login": "Логин",
     "password": "Пароль",
