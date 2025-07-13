@@ -1,18 +1,19 @@
-<div class="custom-select">
-  <select (change)="navigateToPage($event)" [disabled]="isLoading">
-    <option *ngIf="isLoading" value="">
-      {{ 'common.loading' | translate }}…
-    </option>
-
-    <option *ngIf="!isLoading && allowedSections.length === 0" value="">
-      {{ 'У вас нет доступа к административным разделам' | translate }}
-    </option>
+<div class="custom-select" *ngIf="!isLoading && allowedSections.length > 0">
+  <select (change)="navigateToPage($event)">
     <option
       *ngFor="let section of allowedSections"
       [value]="section.route">
       {{ section.labelKey | translate }}
     </option>
   </select>
+</div>
+
+<div *ngIf="isLoading">
+  {{ 'common.loading' | translate }}…
+</div>
+
+<div *ngIf="!isLoading && allowedSections.length === 0">
+  {{ 'У вас нет доступа к административным разделам' | translate }}
 </div>
 
 <router-outlet></router-outlet>
