@@ -10,6 +10,16 @@ export interface News {
   vipCategory: string
 }
 
+export interface PaginationResultModel<T> {
+  pageable: {
+    total: number;
+    totalPages: number;
+    pageNumber: number;
+    pageSize: number;
+  };
+  response: T[];
+}
+
 export interface NewsDetail {
   id: number
   categoryId: number
