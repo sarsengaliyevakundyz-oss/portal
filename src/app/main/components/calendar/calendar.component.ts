@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
-import {CommonModule, NgForOf, NgIf} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {CalendarModel, CalendarQuery, CalendarTypeEnum} from '../../../shared/models/calendar.model';
-import {CalendarService} from '../../../shared/services/calendar.service';
-import {TranslatePipe} from '@ngx-translate/core';
-import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
-import {NzTableComponent} from 'ng-zorro-antd/table';
+import { Component, OnInit } from '@angular/core';
+import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CalendarModel, CalendarQuery, CalendarTypeEnum } from '../../../shared/models/calendar.model';
+import { CalendarService } from '../../../shared/services/calendar.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableComponent } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-calendar',
@@ -22,11 +22,11 @@ import {NzTableComponent} from 'ng-zorro-antd/table';
     NzModalComponent,
     NzTableComponent
   ],
-  providers: [NzModalService], // Add the provider here,
+  providers: [NzModalService],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit{
+export class CalendarComponent implements OnInit {
   months = [
     'Month.January', 'Month.February', 'Month.March', 'Month.April',
     'Month.May', 'Month.June', 'Month.July', 'Month.August',
@@ -37,17 +37,27 @@ export class CalendarComponent implements OnInit{
   currentYear = new Date().getFullYear();
   CalendarTypeEnum = CalendarTypeEnum;
 
-  query: CalendarQuery = {type: CalendarTypeEnum.Region, year: new Date().getFullYear(), month:new Date().getMonth()} as CalendarQuery;
+  query: CalendarQuery = { 
+    type: CalendarTypeEnum.Region, 
+    year: new Date().getFullYear(), 
+    month: new Date().getMonth() 
+  } as CalendarQuery;
 
-  allEvents: CalendarModel[] = [];
-  nextEvents: CalendarModel[] = [];
-  calendarDays: { date: number, isPast: boolean, isCurrent: boolean, isHoliday: boolean, isNextMonth: boolean }[] = [];
+  allEvents: any[] = [];
+  nextEvents: any[] = [];
+  calendarDays: { 
+    date: number, 
+    isPast: boolean, 
+    isCurrent: boolean, 
+    isHoliday: boolean, 
+    isNextMonth: boolean,
+    events?: any[] 
+  }[] = [];
+  
   isLoading: boolean = false;
-  isShowAllEvents: boolean =false;
+  isShowAllEvents: boolean = false;
 
-
-  constructor(private service: CalendarService) {
-  }
+  constructor(private service: CalendarService) {}
 
   ngOnInit(): void {
     this.generateCalendar();
@@ -88,38 +98,57 @@ export class CalendarComponent implements OnInit{
   }
 
   generateCalendar(): void {
-    this.allEvents = []; this.nextEvents = [];
-    console.log(this.query)
-    const query = {
-      ...this.query, // Create a shallow copy of the object
-    };
-    query.month++;
+    this.allEvents = []; 
+    this.nextEvents = [];
     this.isLoading = true;
-    this.service.getList(query).subscribe(res=>{
-      this.allEvents = res.result.map(item => ({
-        ...item, // Spread all other properties
-        dateEnd: new Date(item.dateEnd) // Convert dateEnd string to Date object
-      }))
-        .filter(z=>z.dateEnd.getMonth() === this.query.month)
-        .sort((a, b) => a.dateEnd.getDate() - b.dateEnd.getDate());
-      this.nextEvents = this.allEvents
-        .filter(z => z.dateEnd> new Date());
-      this.printCalendar();
-    })
+    
+    this.service.getList(this.query).subscribe({
+      next: (res) => {
+        this.processCalendarData(res.result);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading calendar data:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
-  private printCalendar() {
-    this.isLoading = true;
+  private processCalendarData(data: any[]): void {
+    this.allEvents = data.map(item => ({
+      ...item,
+      date: new Date(item.date),
+      month: item.month - 1 
+    }));
+
+    const currentMonthEvents = this.allEvents.filter(event => 
+      event.year === this.query.year && 
+      event.month === this.query.month
+    );
+
+    currentMonthEvents.sort((a, b) => a.date.getDate() - b.date.getDate());
+
+    this.printCalendar(currentMonthEvents);
+  }
+
+  private printCalendar(events: any[]): void {
     this.calendarDays = [];
     const firstDayOfMonth = new Date(this.query.year, this.query.month, 1).getDay();
     const daysInMonth = new Date(this.query.year, this.query.month + 1, 0).getDate();
     const daysInPrevMonth = new Date(this.query.year, this.query.month, 0).getDate();
-
-    // Заполнение предыдущего месяца
-    let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     const today = new Date();
-    const nextDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1); // Normalize to start of the day
-    console.log(nextDay)
+    const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    const eventsByDay: { [key: number]: any[] } = {};
+    events.forEach(event => {
+      const day = event.date.getDate();
+      if (!eventsByDay[day]) {
+        eventsByDay[day] = [];
+      }
+      eventsByDay[day].push(event);
+    });
+
+    let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     for (let i = startDay; i > 0; i--) {
       this.calendarDays.push({
         date: daysInPrevMonth - i + 1,
@@ -130,23 +159,26 @@ export class CalendarComponent implements OnInit{
       });
     }
 
-    // Заполнение текущего месяца
-    const events = this.allEvents.map(z=>z.dateEnd.getDate());
-
     for (let i = 1; i <= daysInMonth; i++) {
-      const isPast = new Date(this.query.year, this.query.month, i) < nextDay;
-      const isHoliday = events.includes(i);
+      const date = new Date(this.query.year, this.query.month, i);
+      const isPast = date < currentDate;
+      const dayEvents = eventsByDay[i] || [];
+      
       this.calendarDays.push({
         date: i,
         isPast: isPast,
         isCurrent: !isPast,
-        isHoliday: isHoliday,
-        isNextMonth: false
+        isHoliday: dayEvents.length > 0,
+        isNextMonth: false,
+        events: dayEvents
       });
+
+      if (!isPast && dayEvents.length > 0) {
+        this.nextEvents.push(...dayEvents);
+      }
     }
 
-    // Заполнение следующего месяца
-    const remainingDays = (this.calendarDays.length >35 ? 42:35) - this.calendarDays.length; // 35-42 ячейки для 6 недель
+    const remainingDays = (this.calendarDays.length > 35 ? 42 : 35) - this.calendarDays.length;
     for (let i = 1; i <= remainingDays; i++) {
       this.calendarDays.push({
         date: i,
@@ -156,7 +188,5 @@ export class CalendarComponent implements OnInit{
         isNextMonth: true
       });
     }
-    this.isLoading = false;
-
   }
 }
