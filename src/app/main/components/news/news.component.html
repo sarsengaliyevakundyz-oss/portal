@@ -56,7 +56,7 @@
   </div>
 
   <div class="news-list" *ngIf="!loading && news.length > 1">
-    <div class="news-list-item" *ngFor="let item of news.slice(1)" [routerLink]="'/news/' + item.id">
+    <div class="news-list-item" *ngFor="let item of news.slice(1, 3)" [routerLink]="'/news/' + item.id">
       <div class="news-list-header">
         <div class="news-list-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
         <div class="news-list-title">{{ item.title }}</div>
