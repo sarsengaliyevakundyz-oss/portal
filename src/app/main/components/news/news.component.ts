@@ -12,6 +12,8 @@ import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-news',
@@ -27,7 +29,9 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     SharedModule,
     RouterLink,
     NzCarouselModule,
-    NzSpinModule
+    NzSpinModule,
+    NzIconModule,
+    NzButtonModule,
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'

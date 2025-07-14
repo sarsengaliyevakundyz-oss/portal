@@ -46,6 +46,13 @@
         </div>
       </div>
     </div>
+    <button nz-button nzType="default" class="carousel-arrow prev" nzPrev>
+      <span nz-icon nzType="left"></span>
+    </button>
+    
+    <button nz-button nzType="default" class="carousel-arrow next" nzNext>
+      <span nz-icon nzType="right"></span>
+    </button>
   </nz-carousel>
 
   <div class="news-list" *ngIf="!loading && news.length > 1">
