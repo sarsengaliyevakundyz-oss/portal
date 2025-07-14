@@ -104,6 +104,10 @@ export class CalendarComponent implements OnInit {
     
     this.service.getList(this.query).subscribe({
       next: (res) => {
+        if (!res) {
+          this.isLoading = false;
+          return;
+        }
         this.processCalendarData(res.result);
         this.isLoading = false;
       },
@@ -114,7 +118,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  private processCalendarData(data: any[]): void {
+  private processCalendarData(data: any[] | undefined): void {
+    if (!data || !Array.isArray(data)) {
+      this.allEvents = [];
+      this.printCalendar([]);
+      return;
+    }
+  
     this.allEvents = data.map(item => ({
       ...item,
       date: new Date(item.date),
