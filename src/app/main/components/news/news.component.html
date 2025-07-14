@@ -2,6 +2,12 @@
   <h1>{{'title.news' | translate}}</h1>
   <div class="navigation">
     <div class="month-selector">
+      <img (click)="prevMonth()" src="arrow_left.png" alt="Previous month">
+      <span class="month-label">{{ selectedMonthName | translate }} {{ selectedYear }}</span>
+      <img (click)="nextMonth()" src="arrow_right.png" alt="Next month">
+    </div>
+    
+    <div class="category-selector">
       <nz-select style="width: 175px;"
         [(ngModel)]="query.categoryId"
         [nzSuffixIcon]="arrowTemplate"
@@ -9,10 +15,10 @@
       >
         <nz-option *ngFor="let item of categories" [nzLabel]="item.name | nameTranslate" [nzValue]="item.id"></nz-option>
       </nz-select>
+      <ng-template #arrowTemplate>
+        <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
+      </ng-template>
     </div>
-    <ng-template #arrowTemplate>
-      <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
-    </ng-template>
   </div>
 
   <div *ngIf="loading" class="loading-spinner">
