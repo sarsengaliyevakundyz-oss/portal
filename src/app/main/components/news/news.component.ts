@@ -116,8 +116,7 @@ export class NewsComponent implements OnInit {
   }
 
   private getNews() {
-    this.query.year = this.selectedYear;
-    this.loadData();
+
   }
 
   protected readonly window = window;
