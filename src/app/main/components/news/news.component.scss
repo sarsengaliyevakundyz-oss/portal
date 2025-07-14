@@ -15,11 +15,35 @@
   position: relative;
 }
 
-.carousel-arrow {
+.carousel-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.single-item-carousel {
+  .slick-slide {
+    padding: 0 15px;
+  }
+  
+  .slick-list {
+    margin: 0 -15px;
+  }
+}
+
+.carousel-controls {
   position: absolute;
   top: 50%;
+  left: 0;
+  right: 0;
   transform: translateY(-50%);
-  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.carousel-arrow {
+  pointer-events: all;
   background: rgba(255, 255, 255, 0.7);
   border: none;
   width: 40px;
@@ -33,14 +57,6 @@
   
   &:hover {
     background: rgba(255, 255, 255, 0.9);
-  }
-
-  &.prev {
-    left: 15px;
-  }
-
-  &.next {
-    right: 15px;
   }
 
   [nz-icon] {

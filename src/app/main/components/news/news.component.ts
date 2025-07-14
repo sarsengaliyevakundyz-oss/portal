@@ -56,11 +56,22 @@ export class NewsComponent implements OnInit {
     });
   }
 
+  currentSlideIndex = 0;
+
+  prevSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.news.length) % this.news.length;
+  }
+  
+  nextSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.news.length;
+  }
+  
   loadData(): void {
     this.loading = true;
     this.newsService.getList(this.query).subscribe({
       next: (response: PaginationResultModel<News>) => {
         this.news = response.response;
+        this.currentSlideIndex = 0;
         this.loading = false;
       },
       error: () => {

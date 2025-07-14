@@ -9,9 +9,6 @@
       >
         <nz-option *ngFor="let item of categories" [nzLabel]="item.name | nameTranslate" [nzValue]="item.id"></nz-option>
       </nz-select>
-<!--      <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">-->
-<!--      <span class="month-label">{{ selectedMonthName | translate }}</span>-->
-<!--      <img *ngIf="!(currentYear==selectedYear && selectedMonthIndex==currentMonthIndex)" (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">-->
     </div>
     <ng-template #arrowTemplate>
       <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
@@ -22,38 +19,41 @@
     <nz-spin nzSimple></nz-spin>
   </div>
 
-  <nz-carousel 
-    *ngIf="!loading && news.length"
-    nzAutoPlay
-    [nzAutoPlaySpeed]="5000"
-    [nzEffect]="'fade'"
-    [nzDotPosition]="'bottom'"
-    class="news-carousel"
-  >
-    <div nz-carousel-content *ngFor="let item of news">
-      <div class="carousel-news-item" [routerLink]="'/news/'+item.id">
-        <div class="news-header">
-          <div class="news-image">
-            <img [src]="environment.storageUrl + item.imageDescription" alt="news image">
-          </div>
-          <div class="news-content">
-            <h2>{{ item.title }}</h2>
-            <div class="news-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
-            <div class="news-short-text">
-              <p>{{ item.description }}</p>
+  <div class="carousel-wrapper" *ngIf="!loading && news.length">
+    <nz-carousel 
+      [nzAutoPlay]="true"
+      [nzAutoPlaySpeed]="5000"
+      [nzEffect]="'fade'"
+      [nzDotPosition]="'bottom'"
+      class="single-item-carousel"
+    >
+      <div nz-carousel-content *ngFor="let item of news">
+        <div class="carousel-news-item" [routerLink]="'/news/'+item.id">
+          <div class="news-header">
+            <div class="news-image">
+              <img [src]="environment.storageUrl + item.imageDescription" alt="news image">
+            </div>
+            <div class="news-content">
+              <h2>{{ item.title }}</h2>
+              <div class="news-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
+              <div class="news-short-text">
+                <p>{{ item.description }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </nz-carousel>
+
+    <div class="carousel-controls">
+      <button nz-button nzType="default" class="carousel-arrow prev" (click)="prevSlide()">
+        <span nz-icon nzType="left"></span>
+      </button>
+      <button nz-button nzType="default" class="carousel-arrow next" (click)="nextSlide()">
+        <span nz-icon nzType="right"></span>
+      </button>
     </div>
-    <button nz-button nzType="default" class="carousel-arrow prev" nzPrev>
-      <span nz-icon nzType="left"></span>
-    </button>
-    
-    <button nz-button nzType="default" class="carousel-arrow next" nzNext>
-      <span nz-icon nzType="right"></span>
-    </button>
-  </nz-carousel>
+  </div>
 
   <div class="news-list" *ngIf="!loading && news.length > 1">
     <div class="news-list-item" *ngFor="let item of news.slice(1)" [routerLink]="'/news/' + item.id">
