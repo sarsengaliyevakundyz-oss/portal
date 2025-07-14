@@ -30,12 +30,14 @@
       <div nz-carousel-content *ngFor="let item of news">
         <div class="carousel-news-item" [routerLink]="'/news/'+item.id">
           <div class="news-header">
-            <div class="news-image">
-              <img [src]="environment.storageUrl + item.imageDescription" alt="news image">
-            </div>
-            <div class="news-content">
-              <h2>{{ item.title }}</h2>
-              <div class="news-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
+            <div class="news-top">
+              <div class="news-image">
+                <img [src]="environment.storageUrl + item.imageDescription" alt="news image">
+              </div>
+              <div class="news-content">
+                <h2>{{ item.title }}</h2>
+                <div class="news-date">{{ item.publishDate | date: 'dd.MM.yyyy' }}</div>
+              </div>
             </div>
             <div class="news-short-text">
               <p>{{ item.description }}</p>
