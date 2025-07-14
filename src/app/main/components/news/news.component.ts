@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild } from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NewsItem} from '../../../shared/models/news';
 import {TranslatePipe} from "@ngx-translate/core";
@@ -14,6 +14,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 
 @Component({
   selector: 'app-news',
@@ -38,6 +39,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 })
 
 export class NewsComponent implements OnInit {
+  @ViewChild(NzCarouselComponent) carousel!: NzCarouselComponent;
   news: News[] = [];
   categories: NewsCategory[] = [];
   loading = true;
@@ -59,11 +61,11 @@ export class NewsComponent implements OnInit {
   currentSlideIndex = 0;
 
   prevSlide(): void {
-    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.news.length) % this.news.length;
+    this.carousel.pre();
   }
   
   nextSlide(): void {
-    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.news.length;
+    this.carousel.next();
   }
   
   loadData(): void {
