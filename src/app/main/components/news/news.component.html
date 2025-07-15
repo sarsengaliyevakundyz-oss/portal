@@ -1,20 +1,14 @@
 <div class="news-container">
   <h1>{{'title.news' | translate}}</h1>
   <div class="navigation">
-    <div class="categories-carousel">
-      <img (click)="prevCategory()" class="carousel-arrow" src="arrow_left.png" alt="Previous">
-      <nz-carousel 
-        [nzDots]="false"
-        [nzEffect]="'fade'"
-        class="categories-carousel-content"
-        [(nzCurrent)]="currentCategoryIndex"
-        (nzCurrentChange)="onCategoryChange()"
+    <div class="month-selector">
+      <nz-select style="width: 175px;"
+        [(ngModel)]="query.categoryId"
+        [nzSuffixIcon]="arrowTemplate"
+        (ngModelChange)="loadData()"
       >
-        <div nz-carousel-content *ngFor="let category of categories">
-          <span class="category-name">{{ category.name | nameTranslate }}</span>
-        </div>
-      </nz-carousel>
-      <img (click)="nextCategory()" class="carousel-arrow" src="arrow_right.png" alt="Next">
+        <nz-option *ngFor="let item of categories" [nzLabel]="item.name | nameTranslate" [nzValue]="item.id"></nz-option>
+      </nz-select>
     </div>
     <ng-template #arrowTemplate>
       <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />

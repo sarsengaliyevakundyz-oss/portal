@@ -39,12 +39,9 @@ import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 })
 
 export class NewsComponent implements OnInit {
-  @ViewChild('categoriesCarousel', { static: false }) categoriesCarousel!: NzCarouselComponent;
-  @ViewChild('newsCarousel') newsCarousel!: NzCarouselComponent;
-  
+  @ViewChild(NzCarouselComponent) carousel!: NzCarouselComponent;
   news: News[] = [];
   categories: NewsCategory[] = [];
-  currentCategoryIndex = 0;
   loading = true;
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
   
@@ -52,53 +49,23 @@ export class NewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadData();
   }
 
   loadCategories(): void {
     this.newsService.getCategories({isActive: true}).subscribe(response => {
       this.categories = response;
-      if (this.categories.length > 0) {
-        this.query.categoryId = this.categories[0].id;
-        this.loadData();
-      }
     });
-  }
-
-  prevCategory(): void {
-    if (this.categories.length === 0) return;
-    
-    this.currentCategoryIndex = 
-      (this.currentCategoryIndex - 1 + this.categories.length) % this.categories.length;
-    this.updateCategory();
-  }
-
-  nextCategory(): void {
-    if (this.categories.length === 0) return;
-    
-    this.currentCategoryIndex = 
-      (this.currentCategoryIndex + 1) % this.categories.length;
-    this.updateCategory();
-  }
-
-  onCategoryChange(): void {
-    this.updateCategory();
-  }
-
-  private updateCategory(): void {
-    if (this.categories[this.currentCategoryIndex]) {
-      this.query.categoryId = this.categories[this.currentCategoryIndex].id;
-      this.loadData();
-    }
   }
 
   currentSlideIndex = 0;
 
   prevSlide(): void {
-    this.newsCarousel.pre();
+    this.carousel.pre();
   }
   
   nextSlide(): void {
-    this.newsCarousel.next();
+    this.carousel.next();
   }
   
   loadData(): void {
@@ -106,6 +73,7 @@ export class NewsComponent implements OnInit {
     this.newsService.getList(this.query).subscribe({
       next: (response: PaginationResultModel<News>) => {
         this.news = response.response;
+        this.currentSlideIndex = 0;
         this.loading = false;
       },
       error: () => {
