@@ -59,7 +59,7 @@
           {{ day.date }}
           <div *ngIf="day.events?.length" class="day-events">
             <div *ngFor="let event of day.events" class="event-tooltip">
-              {{ event.formName }} ({{ event.periodKindlistName }})
+              {{ event.formName }} ({{ event.periodKindlistName }}).
             </div>
           </div>
         </div>
