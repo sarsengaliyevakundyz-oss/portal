@@ -133,18 +133,25 @@ export class CalendarComponent implements OnInit {
       return {
         ...item,
         date: new Date(year, month - 1, day),
-        month: month,
+        month: month - 1,
         year: year
       };
     });
   
+    const upcomingEvents = this.allEvents.filter(event => 
+      (event.year === this.query.year && event.month >= this.query.month - 1) ||
+      (event.year === this.query.year + 1 && event.month < (this.query.month + 2) % 12)
+    );
+  
+    this.nextEvents = upcomingEvents
+      .filter(event => event.date >= new Date())
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+  
     const currentMonthEvents = this.allEvents.filter(event => 
       event.year === this.query.year && 
-      event.month === this.query.month
+      event.month === this.query.month - 1
     );
-
-    currentMonthEvents.sort((a, b) => a.date.getDate() - b.date.getDate());
-
+  
     this.printCalendar(currentMonthEvents);
   }
 
@@ -202,16 +209,12 @@ export class CalendarComponent implements OnInit {
       this.calendarDays.push({
         date: i,
         isPast: isPast,
-        isCurrent: !isPast,
+        isCurrent: date.toDateString() === currentDate.toDateString(),
         isHoliday: dayData.events.length > 0,
         isNextMonth: false,
         events: dayData.events,
         eventType: eventType
       });
-  
-      if (!isPast && dayData.events.length > 0) {
-        this.nextEvents.push(...dayData.events);
-      }
     }
 
     const remainingDays = (this.calendarDays.length > 35 ? 42 : 35) - this.calendarDays.length;
