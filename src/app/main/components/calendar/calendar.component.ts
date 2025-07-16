@@ -120,67 +120,83 @@ export class CalendarComponent implements OnInit {
   }
 
   private processCalendarData(data: any[] | undefined): void {
+    console.log('[1] Starting processCalendarData with raw data:', data);
+  
     if (!data || !Array.isArray(data)) {
+      console.log('[2] No data or data is not array');
       this.allEvents = [];
       this.printCalendar([]);
       return;
     }
   
-    console.log('Raw API data:', data);
-
     this.allEvents = data.map(item => {
-      const dateParts = item.dateEnd.split(/[\.\/]/);
-      const day = parseInt(dateParts[0], 10);
-      const month = parseInt(dateParts[1], 10) - 1;
-      const year = parseInt(dateParts[2], 10);
+      console.log('[3] Processing item:', item);
+      
+      const [day, month, year] = item.dateEnd.split('.').map(Number);
+      const date = new Date(year, month - 1, day);
+      
+      console.log(`[4] Parsed date: day=${day}, month=${month}, year=${year}, jsDate=${date}`);
       
       return {
         ...item,
-        date: new Date(year, month, day),
-        month: month,
+        date: date,
+        jsMonth: month - 1,
         year: year,
         day: day
       };
     });
   
-    console.log('Processed events:', this.allEvents);
+    console.log('[5] All processed events:', this.allEvents);
   
-    const currentMonthEvents = this.allEvents.filter(event => 
-      event.year === this.query.year && 
-      event.month === this.query.month - 1
-    );
+    const currentMonthEvents = this.allEvents.filter(event => {
+      const matches = event.year === this.query.year && event.jsMonth === this.query.month - 1;
+      console.log(`[6] Checking event: ${event.dateEnd} | matches=${matches} | queryMonth=${this.query.month}, eventMonth=${event.jsMonth + 1}`);
+      return matches;
+    });
+  
+    console.log('[7] Current month events:', currentMonthEvents);
   
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
     this.nextEvents = this.allEvents
-      .filter(event => event.date >= today)
+      .filter(event => {
+        const isUpcoming = event.date >= today;
+        console.log(`[8] Checking upcoming: ${event.dateEnd} | isUpcoming=${isUpcoming}`);
+        return isUpcoming;
+      })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
+  
+    console.log('[9] Next events:', this.nextEvents);
   
     this.printCalendar(currentMonthEvents);
   }
 
   private printCalendar(events: any[]): void {
-    console.log('Events for printCalendar:', events);
-    
+    console.log('[10] Starting printCalendar with events:', events);
+  
     this.calendarDays = [];
     const firstDayOfMonth = new Date(this.query.year, this.query.month - 1, 1).getDay();
     const daysInMonth = new Date(this.query.year, this.query.month, 0).getDate();
     const daysInPrevMonth = new Date(this.query.year, this.query.month - 1, 0).getDate();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+  
+    console.log(`[11] Calendar params: year=${this.query.year}, month=${this.query.month}, daysInMonth=${daysInMonth}, firstDay=${firstDayOfMonth}`);
+  
     const eventsByDay: { [key: number]: any[] } = {};
+    
     events.forEach(event => {
       const eventDay = event.date.getDate();
-
+      console.log(`[12] Processing event: ${event.dateEnd} -> day ${eventDay}`);
+      
       if (!eventsByDay[eventDay]) {
         eventsByDay[eventDay] = [];
       }
       eventsByDay[eventDay].push(event);
     });
-
-    console.log('Events by day:', eventsByDay);
+  
+    console.log('[13] Events grouped by day:', eventsByDay);
   
     let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     for (let i = startDay; i > 0; i--) {
@@ -229,5 +245,11 @@ export class CalendarComponent implements OnInit {
     }
 
     console.log('Generated calendar days:', this.calendarDays);
+    console.log('[14] Final calendar days:', this.calendarDays.map(day => ({
+      date: day.date,
+      isHoliday: day.isHoliday,
+      eventType: day.eventType,
+      events: day.events?.map(e => e.dateEnd)
+    })));
   }
 }
