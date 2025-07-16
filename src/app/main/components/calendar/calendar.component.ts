@@ -149,6 +149,8 @@ export class CalendarComponent implements OnInit {
   }
 
   private printCalendar(events: any[]): void {
+    console.log('Events for calendar:', events);
+    
     this.calendarDays = [];
     const firstDayOfMonth = new Date(this.query.year, this.query.month - 1, 1).getDay();
     const daysInMonth = new Date(this.query.year, this.query.month, 0).getDate();
@@ -222,5 +224,7 @@ export class CalendarComponent implements OnInit {
         isNextMonth: true
       });
     }
+
+    console.log('Generated calendar days:', this.calendarDays); 
   }
 }
