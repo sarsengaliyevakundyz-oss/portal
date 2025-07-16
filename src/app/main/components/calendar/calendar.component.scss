@@ -151,6 +151,16 @@
   flex-wrap: wrap;
 }
 
+.holiday-region {
+  background-color: #1890ff;
+  color: white;
+}
+
+.holiday-respondent {
+  background-color: #fa8c16;
+  color: white;
+}
+
 .day-item {
   width: calc((100% / 7) - 14px);
   height: 40px;
@@ -162,6 +172,13 @@
   transition: background-color 0.3s;
   margin-right: 7px;
   margin-left: 7px;
+  &.holiday-region, &.holiday-respondent {
+    font-weight: bold;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 .past-day {

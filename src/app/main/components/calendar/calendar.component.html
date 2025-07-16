@@ -52,8 +52,8 @@
              [ngClass]="{
                'past-day': day.isPast,
                'current-day': day.isCurrent,
-               'holiday-1': day.isHoliday && query.type==1,
-               'holiday-2': day.isHoliday && query.type==2,
+               'holiday-region': day.isHoliday && day.eventType === 'region',
+               'holiday-respondent': day.isHoliday && day.eventType === 'respondent',
                'next-month-day': day.isNextMonth
              }">
           {{ day.date }}
