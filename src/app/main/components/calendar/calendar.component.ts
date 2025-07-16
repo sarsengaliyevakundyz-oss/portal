@@ -180,7 +180,7 @@ export class CalendarComponent implements OnInit {
     this.calendarDays = [];
     const firstDayOfMonth = new Date(this.query.year, this.query.month - 1, 1).getDay();
     const daysInMonth = new Date(this.query.year, this.query.month, 0).getDate();
-    const daysInPrevMonth = new Date(this.query.year, this.query.month - 1, 0).getDate();
+    const daysInPrevMonth = new Date(this.query.year, this.query.month - 1, 1).getDate();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
   
