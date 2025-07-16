@@ -71,12 +71,12 @@
     <div *ngFor="let event of nextEvents | slice:0:3" class="event-item">
       <div class="event-date">
         <span class="event-day">{{ event.date.getDate() }}</span>
-        <span class="event-month">{{ months[event.month] | translate | slice:0:3 }}</span>
+        <span class="event-month">{{ months[event.month - 1] | translate | slice:0:3 }}</span>
       </div>
       <div class="event-details">
         <p><strong>Отрасль:</strong> {{ event.sectorName }}</p>
         <p>Форма: {{ event.formName }}</p>
-        <p>Отчётный период: {{ event.periodKindlistName }}.</p>
+        <p>Отчётный период: {{ event.periodKindlistName }}</p>
       </div>
     </div>
     <div class="event-list-more">
@@ -112,7 +112,7 @@
         <td>{{ data.date | date: 'dd.MM.yyyy' }}</td>
         <td>{{ data.sectorName }}</td>
         <td>{{ data.formName }}</td>
-        <td>{{ data.periodKindlistName }}..</td>
+        <td>{{ data.periodKindlistName }}</td>
       </tr>
       </tbody>
     </nz-table>
