@@ -40,7 +40,7 @@ export class CalendarComponent implements OnInit {
   query: CalendarQuery = { 
     type: CalendarTypeEnum.Region, 
     year: new Date().getFullYear(), 
-    month: new Date().getMonth() 
+    month: new Date().getMonth() + 1
   } as CalendarQuery;
 
   allEvents: any[] = [];
@@ -64,13 +64,13 @@ export class CalendarComponent implements OnInit {
   }
 
   get selectedMonthName(): string {
-    return this.months[this.query.month];
+    return this.months[this.query.month - 1];
   }
 
   prevMonth(): void {
     this.query.month--;
-    if (this.query.month < 0) {
-      this.query.month = 11;
+    if (this.query.month < 1) {
+      this.query.month = 12;
       this.query.year--;
     }
     this.generateCalendar();
@@ -78,8 +78,8 @@ export class CalendarComponent implements OnInit {
 
   nextMonth(): void {
     this.query.month++;
-    if (this.query.month > 11) {
-      this.query.month = 0;
+    if (this.query.month > 12) {
+      this.query.month = 1;
       this.query.year++;
     }
     this.generateCalendar();
@@ -87,13 +87,13 @@ export class CalendarComponent implements OnInit {
 
   selectPreviousYear(): void {
     this.query.year--;
-    this.query.month = 11;
+    this.query.month = 12;
     this.generateCalendar();
   }
 
   selectNextYear(): void {
     this.query.year++;
-    this.query.month = 0;
+    this.query.month = 1;
     this.generateCalendar();
   }
 
@@ -143,9 +143,9 @@ export class CalendarComponent implements OnInit {
 
   private printCalendar(events: any[]): void {
     this.calendarDays = [];
-    const firstDayOfMonth = new Date(this.query.year, this.query.month, 1).getDay();
-    const daysInMonth = new Date(this.query.year, this.query.month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(this.query.year, this.query.month, 0).getDate();
+    const firstDayOfMonth = new Date(this.query.year, this.query.month - 1, 1).getDay();
+    const daysInMonth = new Date(this.query.year, this.query.month, 0).getDate();
+    const daysInPrevMonth = new Date(this.query.year, this.query.month - 1, 0).getDate();
     const today = new Date();
     const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
