@@ -129,28 +129,33 @@ export class CalendarComponent implements OnInit {
     console.log('Raw API data:', data);
 
     this.allEvents = data.map(item => {
-      const [day, month, year] = item.dateEnd.split('.').map(Number);
+      const dateParts = item.dateEnd.split(/[\.\/]/);
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const year = parseInt(dateParts[2], 10);
+      
       return {
         ...item,
-        date: new Date(year, month - 1, day),
-        month: month - 1,
-        year: year
+        date: new Date(year, month, day),
+        month: month,
+        year: year,
+        day: day
       };
     });
   
-    const upcomingEvents = this.allEvents.filter(event => 
-      (event.year === this.query.year && event.month >= this.query.month - 1) ||
-      (event.year === this.query.year + 1 && event.month < (this.query.month + 2) % 12)
-    );
-  
-    this.nextEvents = upcomingEvents
-      .filter(event => event.date >= new Date())
-      .sort((a, b) => a.date.getTime() - b.date.getTime());
+    console.log('Processed events:', this.allEvents);
   
     const currentMonthEvents = this.allEvents.filter(event => 
       event.year === this.query.year && 
       event.month === this.query.month - 1
     );
+  
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    this.nextEvents = this.allEvents
+      .filter(event => event.date >= today)
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
   
     this.printCalendar(currentMonthEvents);
   }
@@ -163,22 +168,15 @@ export class CalendarComponent implements OnInit {
     const daysInMonth = new Date(this.query.year, this.query.month, 0).getDate();
     const daysInPrevMonth = new Date(this.query.year, this.query.month - 1, 0).getDate();
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  
-    const eventsByDay: { [key: number]: {events: any[], hasRegion: boolean, hasRespondent: boolean} } = {};
-    
+    const eventsByDay: { [key: number]: any[] } = {};
     events.forEach(event => {
       const day = event.date.getDate();
       if (!eventsByDay[day]) {
-        eventsByDay[day] = {events: [], hasRegion: false, hasRespondent: false};
+        eventsByDay[day] = [];
       }
-      eventsByDay[day].events.push(event);
-      
-      if (event.type === '1' || event.type === CalendarTypeEnum.Region) {
-        eventsByDay[day].hasRegion = true;
-      } else if (event.type === '2' || event.type === CalendarTypeEnum.Respondent) {
-        eventsByDay[day].hasRespondent = true;
-      }
+      eventsByDay[day].push(event);
     });
 
     let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
@@ -195,24 +193,29 @@ export class CalendarComponent implements OnInit {
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(this.query.year, this.query.month - 1, i);
       const isPast = date < currentDate;
-      const dayData = eventsByDay[i] || {events: [], hasRegion: false, hasRespondent: false};
+      const dayEvents = eventsByDay[i] || [];
       
       let eventType: 'region' | 'respondent' | undefined;
-      if (dayData.hasRegion && dayData.hasRespondent) {
-        eventType = this.query.type === CalendarTypeEnum.Region ? 'region' : 'respondent';
-      } else if (dayData.hasRegion) {
-        eventType = 'region';
-      } else if (dayData.hasRespondent) {
-        eventType = 'respondent';
+      if (dayEvents.length > 0) {
+        const hasRegion = dayEvents.some(e => e.type === '1' || e.type === CalendarTypeEnum.Region);
+        const hasRespondent = dayEvents.some(e => e.type === '2' || e.type === CalendarTypeEnum.Respondent);
+        
+        if (hasRegion && hasRespondent) {
+          eventType = this.query.type === CalendarTypeEnum.Region ? 'region' : 'respondent';
+        } else if (hasRegion) {
+          eventType = 'region';
+        } else if (hasRespondent) {
+          eventType = 'respondent';
+        }
       }
-      
+  
       this.calendarDays.push({
         date: i,
         isPast: isPast,
         isCurrent: date.toDateString() === currentDate.toDateString(),
-        isHoliday: dayData.events.length > 0,
+        isHoliday: dayEvents.length > 0,
         isNextMonth: false,
-        events: dayData.events,
+        events: dayEvents,
         eventType: eventType
       });
     }
