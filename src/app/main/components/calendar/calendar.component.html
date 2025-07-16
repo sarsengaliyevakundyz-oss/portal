@@ -48,14 +48,14 @@
       </div>
       <div class="days">
         <div *ngFor="let day of calendarDays"
-             class="day-item"
-             [ngClass]="{
-               'past-day': day.isPast,
-               'current-day': day.isCurrent,
-               'holiday-region': day.isHoliday && day.eventType === 'region',
-               'holiday-respondent': day.isHoliday && day.eventType === 'respondent',
-               'next-month-day': day.isNextMonth
-             }">
+          class="day-item"
+          [ngClass]="[
+            day.isPast ? 'past-day' : '',
+            day.isCurrent ? 'current-day' : '',
+            (day.isHoliday && day.eventType === 'region') ? 'holiday-region' : '',
+            (day.isHoliday && day.eventType === 'respondent') ? 'holiday-respondent' : '',
+            day.isNextMonth ? 'next-month-day' : ''
+          ]">
           {{ day.date }}
           <div *ngIf="day.events?.length" class="day-events">
             <div *ngFor="let event of day.events" class="event-tooltip">

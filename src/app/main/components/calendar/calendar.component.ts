@@ -126,6 +126,8 @@ export class CalendarComponent implements OnInit {
       return;
     }
   
+    console.log('Raw API data:', data);
+
     this.allEvents = data.map(item => {
       const [day, month, year] = item.dateEnd.split('.').map(Number);
       return {
@@ -163,9 +165,9 @@ export class CalendarComponent implements OnInit {
       }
       eventsByDay[day].events.push(event);
       
-      if (event.type === '1') {
+      if (event.type === '1' || event.type === CalendarTypeEnum.Region) {
         eventsByDay[day].hasRegion = true;
-      } else if (event.type === '2') {
+      } else if (event.type === '2' || event.type === CalendarTypeEnum.Respondent) {
         eventsByDay[day].hasRespondent = true;
       }
     });
