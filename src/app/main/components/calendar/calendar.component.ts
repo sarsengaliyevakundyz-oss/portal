@@ -109,6 +109,8 @@ export class CalendarComponent implements OnInit {
           this.isLoading = false;
           return;
         }
+        console.log("res - ", res);
+        
         this.processCalendarData(res.result);
         this.isLoading = false;
       },
