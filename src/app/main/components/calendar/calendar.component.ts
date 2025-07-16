@@ -104,14 +104,14 @@ export class CalendarComponent implements OnInit {
     this.isLoading = true;
     
     this.service.getList(this.query).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (!res) {
           this.isLoading = false;
           return;
         }
         console.log("res - ", res);
         
-        this.processCalendarData(res.result);
+        this.processCalendarData(res.data);
         this.isLoading = false;
       },
       error: (err) => {
