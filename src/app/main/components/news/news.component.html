@@ -1,21 +1,22 @@
 <div class="news-container">
   <h1>{{'title.news' | translate}}</h1>
-  <div class="navigation">
-    <div class="month-selector">
-      <nz-select style="width: 175px;"
-        [(ngModel)]="query.categoryId"
-        [nzSuffixIcon]="arrowTemplate"
-        (ngModelChange)="loadData()"
-      >
-        <nz-option *ngFor="let item of categories" [nzLabel]="item.name | nameTranslate" [nzValue]="item.id"></nz-option>
-      </nz-select>
-<!--      <img (click)="prevMonth()" style="margin-right: 7px" src="arrow_left.png">-->
-<!--      <span class="month-label">{{ selectedMonthName | translate }}</span>-->
-<!--      <img *ngIf="!(currentYear==selectedYear && selectedMonthIndex==currentMonthIndex)" (click)="nextMonth()" style="margin-right: 7px" src="arrow_right.png">-->
+  <div class="category-carousel">
+    <button (click)="scrollCategories(-1)" class="carousel-nav" [disabled]="isScrollStart()">
+      <img src="arrow_left.png" alt="Previous">
+    </button>
+    
+    <div class="categories-wrapper" #categoriesContainer>
+      <div *ngFor="let item of categories" 
+           class="category-item" 
+           [class.active]="item.id === query.categoryId"
+           (click)="selectCategory(item.id)">
+        {{ item.name | nameTranslate }}
+      </div>
     </div>
-    <ng-template #arrowTemplate>
-      <img src="arrow_bottom.png" style="width: 13px; height: 7px;" alt="Arrow" />
-    </ng-template>
+    
+    <button (click)="scrollCategories(1)" class="carousel-nav" [disabled]="isScrollEnd()">
+      <img src="arrow_right.png" alt="Next">
+    </button>
   </div>
  
   <div class="news-item" *ngIf="news.length" [routerLink]="'/news/'+news[0].id">

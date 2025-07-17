@@ -1,16 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
-import {NewsItem} from '../../../shared/models/news';
-import {TranslatePipe} from "@ngx-translate/core";
-import {NewsService} from '../../../shared/services/news.service';
-import {News, NewsCategory, NewsQuery} from '../../../shared/models/news.model';
-import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
-import {CalendarTypeEnum} from '../../../shared/models/calendar.model';
-import {FormsModule} from '@angular/forms';
-import {SharedModule} from '../../../shared/shared.module';
-import {RouterLink} from '@angular/router';
-import {environment} from '../../../../environments/environment';
- 
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { DatePipe, NgForOf, NgIf } from '@angular/common';
+import { TranslatePipe } from "@ngx-translate/core";
+import { NewsService } from '../../../shared/services/news.service';
+import { News, NewsCategory, NewsQuery } from '../../../shared/models/news.model';
+import { RouterLink } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-news',
   standalone: true,
@@ -19,76 +14,76 @@ import {environment} from '../../../../environments/environment';
     DatePipe,
     NgForOf,
     TranslatePipe,
-    NzOptionComponent,
-    NzSelectComponent,
-    FormsModule,
-    SharedModule,
     RouterLink
   ],
   templateUrl: './news.component.html',
-  styleUrl: './news.component.scss'
+  styleUrls: ['./news.component.scss']
 })
-
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, AfterViewInit {
+  @ViewChild('categoriesContainer') categoriesContainer!: ElementRef<HTMLDivElement>;
+  
   news: News[] = [];
   categories: NewsCategory[] = [];
-  query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
-  constructor(private newsService: NewsService) {
-  }
- 
+  query = { limit: 4, page: 0, categoryId: 22 } as NewsQuery;
+  
+  constructor(private newsService: NewsService) {}
+
   ngOnInit(): void {
-    this.newsService.getCategories({isActive: true}).subscribe(response => {
-      this.categories = response;
-    })
+    this.loadCategories();
     this.loadData();
- 
   }
 
-  months = [
-    'Month.January', 'Month.February', 'Month.March', 'Month.April',
-    'Month.May', 'Month.June', 'Month.July', 'Month.August',
-    'Month.September', 'Month.October', 'Month.November', 'Month.December'
-  ];
-  selectedMonthIndex = new Date().getMonth();
-  selectedYear = new Date().getFullYear();
-
-  currentMonthIndex = new Date().getMonth();
-  currentYear = new Date().getFullYear();
-
-  get selectedMonthName(): string {
-    return this.months[this.selectedMonthIndex];
+  ngAfterViewInit() {
+    this.checkScrollButtons();
   }
 
-  prevMonth(): void {
-    this.selectedMonthIndex--;
-    if (this.selectedMonthIndex < 0) {
-      this.selectedMonthIndex = 11;
-      this.selectedYear--;
-    }
-    this.getNews();
+  loadCategories(): void {
+    this.newsService.getCategories({ isActive: true }).subscribe(response => {
+      this.categories = response;
+    
+      if (this.categories.length > 0 && !this.query.categoryId) {
+        this.query.categoryId = this.categories[0].id;
+      }
+    });
   }
 
-  nextMonth(): void {
-    this.selectedMonthIndex++;
-    if (this.selectedMonthIndex > 11) {
-      this.selectedMonthIndex = 0;
-      this.selectedYear++;
-    }
-    this.getNews();
-  }
- 
-  private getNews() {
- 
-  }
- 
-    protected readonly window = window;
-  protected readonly CalendarTypeEnum = CalendarTypeEnum;
- 
-  loadData() {
+  loadData(): void {
     this.newsService.getList(this.query).subscribe(response => {
       this.news = response.response;
-    })
+    });
   }
- 
+
+  scrollCategories(direction: number): void {
+    const container = this.categoriesContainer.nativeElement;
+    const scrollAmount = 200; // Шаг прокрутки
+    
+    container.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+    
+    setTimeout(() => this.checkScrollButtons(), 300);
+  }
+
+  checkScrollButtons(): void {
+    // Можно добавить дополнительную логику при необходимости
+  }
+
+  isScrollStart(): boolean {
+    const container = this.categoriesContainer?.nativeElement;
+    return container ? container.scrollLeft <= 10 : true;
+  }
+
+  isScrollEnd(): boolean {
+    const container = this.categoriesContainer?.nativeElement;
+    if (!container) return true;
+    return container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+  }
+
+  selectCategory(categoryId: number): void {
+    this.query.categoryId = categoryId;
+    this.loadData();
+  }
+
   protected readonly environment = environment;
 }
