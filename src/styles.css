@@ -11,6 +11,11 @@ html, body {
   color: #333;
 }
 
+.ant-pagination-item, 
+.ant-pagination {
+  font-family: inherit !important;
+}
+
 body {
   display: flex;
   flex-direction: column;
