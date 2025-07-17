@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NewsItem} from '../../../shared/models/news';
 import {TranslatePipe} from "@ngx-translate/core";
@@ -29,6 +29,7 @@ import {environment} from '../../../../environments/environment';
   styleUrl: './news.component.scss'
 })
 export class NewsComponent implements OnInit {
+  @ViewChild('categoriesScroll') categoriesScroll!: ElementRef;
   news: News[] = [];
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
@@ -55,6 +56,20 @@ export class NewsComponent implements OnInit {
  
   get selectedMonthName(): string {
     return this.months[this.selectedMonthIndex];
+  }
+
+  selectCategory(categoryId: number): void {
+    this.query.categoryId = categoryId;
+    this.loadData();
+  }
+
+  scrollCategories(direction: number): void {
+    const scrollElement = this.categoriesScroll.nativeElement;
+    const scrollAmount = 200;
+    scrollElement.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
   }
 
   prevMonth(): void {
