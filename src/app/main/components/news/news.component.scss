@@ -227,11 +227,12 @@
   }
 }
 
+.carousel-container img {
+  cursor: pointer;
+}
+
 .category-item {
-  padding: 8px 16px;
-  border-radius: 16px;
-  background-color: #f5f5f5;
-  color: #555;
+  color: #2B2E35;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.3s ease;
@@ -242,9 +243,7 @@
   }
 
   &.active {
-    background-color: #1890ff;
-    color: white;
-    font-weight: bold;
+    font-weight: 400;
   }
 }
 
@@ -276,10 +275,5 @@
   &.right {
     margin-left: 10px;
   }
-}
-
-img.disabled {
-  opacity: 0.4;
-  pointer-events: none;
 }
 
