@@ -1,21 +1,16 @@
-import {Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NewsItem} from '../../../shared/models/news';
 import {TranslatePipe} from "@ngx-translate/core";
 import {NewsService} from '../../../shared/services/news.service';
-import {News, NewsCategory, NewsQuery, PaginationResultModel} from '../../../shared/models/news.model';
+import {News, NewsCategory, NewsQuery} from '../../../shared/models/news.model';
 import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {CalendarTypeEnum} from '../../../shared/models/calendar.model';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
-
+ 
 @Component({
   selector: 'app-news',
   standalone: true,
@@ -28,58 +23,25 @@ import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
     NzSelectComponent,
     FormsModule,
     SharedModule,
-    RouterLink,
-    NzCarouselModule,
-    NzSpinModule,
-    NzIconModule,
-    NzButtonModule,
+    RouterLink
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'
 })
 
 export class NewsComponent implements OnInit {
-  @ViewChild(NzCarouselComponent) carousel!: NzCarouselComponent;
   news: News[] = [];
   categories: NewsCategory[] = [];
-  loading = true;
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
-  
-  constructor(private newsService: NewsService) {}
-
-  ngOnInit(): void {
-    this.loadCategories();
-    this.loadData();
+  constructor(private newsService: NewsService) {
   }
-
-  loadCategories(): void {
+ 
+  ngOnInit(): void {
     this.newsService.getCategories({isActive: true}).subscribe(response => {
       this.categories = response;
-    });
-  }
-
-  currentSlideIndex = 0;
-
-  prevSlide(): void {
-    this.carousel.pre();
-  }
-  
-  nextSlide(): void {
-    this.carousel.next();
-  }
-  
-  loadData(): void {
-    this.loading = true;
-    this.newsService.getList(this.query).subscribe({
-      next: (response: PaginationResultModel<News>) => {
-        this.news = response.response;
-        this.currentSlideIndex = 0;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+    })
+    this.loadData();
+ 
   }
 
   months = [
@@ -114,13 +76,19 @@ export class NewsComponent implements OnInit {
     }
     this.getNews();
   }
-
+ 
   private getNews() {
-
+ 
   }
-
-  protected readonly window = window;
+ 
+    protected readonly window = window;
   protected readonly CalendarTypeEnum = CalendarTypeEnum;
-
+ 
+  loadData() {
+    this.newsService.getList(this.query).subscribe(response => {
+      this.news = response.response;
+    })
+  }
+ 
   protected readonly environment = environment;
 }
