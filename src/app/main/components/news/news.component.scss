@@ -277,3 +277,32 @@
     margin-left: 10px;
   }
 }
+
+.single-category-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.current-category {
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: #1890ff;
+  color: white;
+  font-weight: bold;
+  min-width: 150px;
+  text-align: center;
+}
+
+.carousel-arrow {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}

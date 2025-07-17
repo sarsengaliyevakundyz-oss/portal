@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NewsItem} from '../../../shared/models/news';
 import {TranslatePipe} from "@ngx-translate/core";
@@ -29,17 +29,44 @@ import {environment} from '../../../../environments/environment';
   styleUrl: './news.component.scss'
 })
 export class NewsComponent implements OnInit {
-  @ViewChild('categoriesScroll') categoriesScroll!: ElementRef;
   news: News[] = [];
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
-  constructor(private newsService: NewsService) {
-  }
+  currentCategoryIndex = 0;
+
+  constructor(private newsService: NewsService) {}
  
   ngOnInit(): void {
     this.newsService.getCategories({isActive: true}).subscribe(response => {
       this.categories = response;
-    })
+      this.currentCategoryIndex = this.categories.findIndex(c => c.id === this.query.categoryId);
+      if (this.currentCategoryIndex === -1) this.currentCategoryIndex = 0;
+    });
+    this.loadData();
+  }
+
+  getCurrentCategoryName(): string {
+    if (!this.categories.length) return '';
+    return (this.categories[this.currentCategoryIndex]?.name as unknown as string) || '';
+  }
+
+  prevCategory(): void {
+    if (!this.categories.length) return;
+    this.currentCategoryIndex--;
+    if (this.currentCategoryIndex < 0) {
+      this.currentCategoryIndex = this.categories.length - 1;
+    }
+    this.query.categoryId = this.categories[this.currentCategoryIndex].id;
+    this.loadData();
+  }
+
+  nextCategory(): void {
+    if (!this.categories.length) return;
+    this.currentCategoryIndex++;
+    if (this.currentCategoryIndex >= this.categories.length) {
+      this.currentCategoryIndex = 0;
+    }
+    this.query.categoryId = this.categories[this.currentCategoryIndex].id;
     this.loadData();
   }
 
@@ -56,20 +83,6 @@ export class NewsComponent implements OnInit {
  
   get selectedMonthName(): string {
     return this.months[this.selectedMonthIndex];
-  }
-
-  selectCategory(categoryId: number): void {
-    this.query.categoryId = categoryId;
-    this.loadData();
-  }
-
-  scrollCategories(direction: number): void {
-    const scrollElement = this.categoriesScroll.nativeElement;
-    const scrollAmount = 200;
-    scrollElement.scrollBy({
-      left: direction * scrollAmount,
-      behavior: 'smooth'
-    });
   }
 
   prevMonth(): void {
