@@ -7,7 +7,7 @@ html, body {
   height: 100%;
   /*background: #eef3f7 url('/background_image.png') no-repeat fixed center center;*/
   background-size: cover;
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Nunito Sans', sans-serif !important;
   color: #333;
 }
 
