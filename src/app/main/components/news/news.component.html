@@ -3,9 +3,7 @@
   <div class="navigation">
     <div class="categories-carousel">
       <div class="carousel-container">
-        <div class="carousel-arrow left" (click)="scrollCategories(-1)">
-          <img src="arrow_left.png" alt="Previous">
-        </div>
+        <img (click)="scrollCategories(-1)" style="margin-right: 7px" src="arrow_left.png" alt="Previous">
         <div class="categories-scroll" #categoriesScroll>
           <div *ngFor="let item of categories" 
                class="category-item"
@@ -14,9 +12,7 @@
             {{ item.name | nameTranslate }}
           </div>
         </div>
-        <div class="carousel-arrow right" (click)="scrollCategories(1)">
-          <img src="arrow_right.png" alt="Next">
-        </div>
+        <img (click)="scrollCategories(1)" style="margin-right: 7px" src="arrow_right.png" alt="Next">
       </div>
     </div>
   </div>
