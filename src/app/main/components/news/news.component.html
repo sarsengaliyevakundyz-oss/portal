@@ -2,17 +2,26 @@
   <h1>{{'title.news' | translate}}</h1>
   <div class="navigation">
     <div class="categories-carousel">
-      <div class="carousel-container">
-        <img (click)="scrollCategories(-1)" style="margin-right: 7px" src="arrow_left.png" alt="Previous">
-        <div class="categories-scroll" #categoriesScroll>
-          <div *ngFor="let item of categories" 
-               class="category-item"
-               [class.active]="query.categoryId === item.id"
-               (click)="selectCategory(item.id)">
-            {{ item.name | nameTranslate }}
+      <div class="categories-carousel">
+        <div class="carousel-container">
+          <img
+            (click)="scrollCategories(-1)"
+            [class.disabled]="currentCategoryIndex === 0"
+            src="arrow_left.png"
+            alt="Previous"
+          />
+      
+          <div class="category-item active">
+            {{ categories[currentCategoryIndex].name | nameTranslate }}
           </div>
+      
+          <img
+            (click)="scrollCategories(1)"
+            [class.disabled]="currentCategoryIndex === categories.length - 1"
+            src="arrow_right.png"
+            alt="Next"
+          />
         </div>
-        <img (click)="scrollCategories(1)" style="margin-right: 7px" src="arrow_right.png" alt="Next">
       </div>
     </div>
   </div>

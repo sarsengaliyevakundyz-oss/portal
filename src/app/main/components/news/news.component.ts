@@ -33,14 +33,19 @@ export class NewsComponent implements OnInit {
   news: News[] = [];
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
+  currentCategoryIndex = 0;
   constructor(private newsService: NewsService) {
   }
  
   ngOnInit(): void {
-    this.newsService.getCategories({isActive: true}).subscribe(response => {
+    this.newsService.getCategories({ isActive: true }).subscribe(response => {
       this.categories = response;
-    })
-    this.loadData();
+      if (this.categories.length) {
+        this.currentCategoryIndex = 0;
+        this.query.categoryId = this.categories[0].id;
+        this.loadData();
+      }
+    });
   }
  
   months = [
@@ -64,12 +69,14 @@ export class NewsComponent implements OnInit {
   }
  
   scrollCategories(direction: number): void {
-    const scrollElement = this.categoriesScroll.nativeElement;
-    const scrollAmount = 200;
-    scrollElement.scrollBy({
-      left: direction * scrollAmount,
-      behavior: 'smooth'
-    });
+    const newIndex = this.currentCategoryIndex + direction;
+  
+    if (newIndex >= 0 && newIndex < this.categories.length) {
+      this.currentCategoryIndex = newIndex;
+      const category = this.categories[this.currentCategoryIndex];
+      this.query.categoryId = category.id;
+      this.loadData();
+    }
   }
  
   prevMonth(): void {
