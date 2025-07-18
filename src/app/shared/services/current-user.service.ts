@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {RoleEnum, UserTokenInfo} from '../models/user.model';
 import {jwtDecode} from 'jwt-decode';
 import { firstValueFrom } from 'rxjs';
+import * as CryptoJS from 'crypto-js';
 
 interface SsoTokenResponse {
   access_token: string;
@@ -22,6 +23,7 @@ export class CurrentUserService {
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
   private secretCodeKey   = 'secretCode';
+  private iinKey = 'iin';
   private hasLoggedOut = false;
 
   constructor(
@@ -35,6 +37,27 @@ export class CurrentUserService {
       console.log('Loaded secretCode from localStorage:', savedCode);
     }
   }
+
+    private async deactivateToken(): Promise<void> {
+      const iin = localStorage.getItem(this.iinKey);
+      if (!iin) return;
+  
+      try {
+        const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
+        const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
+        const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
+  
+        await firstValueFrom(
+          this.http.post(
+            '/sso-internal-back-new/sso/internal/deactivateSecretCode',
+            { iin: encryptedIIN },
+            { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+          )
+        );
+      } catch (error) {
+        console.error('Error deactivating token:', error);
+      }
+    }
  
   private async onMessage(event: MessageEvent) {
     const data = event.data;
@@ -116,11 +139,14 @@ export class CurrentUserService {
   }
 
 
-  logout() {
+  async logout() {
     if (this.hasLoggedOut) return;
+
+    await this.deactivateToken();
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
     window.open(
       `${window.location.origin}/ssointernalfrontnew?client-id=2`,
       '_blank'

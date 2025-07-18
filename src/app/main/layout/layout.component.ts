@@ -22,9 +22,26 @@ import {TranslatePipe} from '@ngx-translate/core';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
+  showProfileMenu = false;
+  constructor(
+    private router: Router,
+    public currentUser: CurrentUserService
+  ) {}
 
-  constructor(private router: Router, public currentUser: CurrentUserService) {
+  toggleProfileMenu(): void {
+    this.showProfileMenu = !this.showProfileMenu;
   }
+  async logout(): Promise<void> {
+    await this.currentUser.logout();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('.profile-container')) {
+      this.showProfileMenu = false;
+    }
+  }
+
   isExactMatch(path: string): boolean {
     return this.router.url === path;
   }

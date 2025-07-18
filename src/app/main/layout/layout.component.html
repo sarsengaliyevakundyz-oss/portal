@@ -11,10 +11,19 @@
       <a routerLink="/admin" routerLinkActive="active">{{'main.personal_cabinet' | translate}}</a>
     </nav>
     <div class="user-actions">
-      <div class="user-actions">
-        <app-lang-switcher></app-lang-switcher>
-        <a routerLink="/admin" routerLinkActive="active" class="profile-btn">
-          <img style="margin-right: 7px; margin-bottom: 3px" src="profile.png">{{currentUser.getCurrentUser()?.full_name}}</a>
+      <app-lang-switcher></app-lang-switcher>
+      <div class="profile-container">
+        <a 
+          routerLinkActive="active" 
+          class="profile-btn"
+          (click)="toggleProfileMenu()"
+        >
+          <img style="margin-right: 7px; margin-bottom: 3px" src="profile.png">
+          {{currentUser.getCurrentUser()?.full_name}}
+        </a>
+        <div class="profile-menu" *ngIf="showProfileMenu">
+          <button class="menu-item" (click)="logout()">Выход</button>
+        </div>
       </div>
     </div>
   </div>

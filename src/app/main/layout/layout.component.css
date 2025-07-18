@@ -104,3 +104,32 @@
 }
 
 
+.profile-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+}
