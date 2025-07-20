@@ -142,7 +142,7 @@ export class CurrentUserService {
   async logout() {
     if (this.hasLoggedOut) return;
 
-    await this.deactivateToken();
+    // await this.deactivateToken();
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
