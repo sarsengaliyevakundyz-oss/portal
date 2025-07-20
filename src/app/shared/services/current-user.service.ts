@@ -176,8 +176,10 @@ export class CurrentUserService {
       } as UserTokenInfo;
       localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
     } catch (error) {
-      localStorage.removeItem(this.authResponseKey);
-      this.logout();
+      console.log("error error - ", error)
+
+      // localStorage.removeItem(this.authResponseKey);
+      // this.logout();
     }
   }
 
