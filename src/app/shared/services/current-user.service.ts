@@ -38,7 +38,7 @@ export class CurrentUserService {
     }
   }
 
-    private async deactivateToken(): Promise<void> {
+    async deactivateToken(): Promise<void> {
       const iin = localStorage.getItem(this.iinKey);
       if (!iin) return;
   
@@ -54,6 +54,8 @@ export class CurrentUserService {
             { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
           )
         );
+
+        this.logout();
       } catch (error) {
         console.error('Error deactivating token:', error);
       }

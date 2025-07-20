@@ -31,8 +31,8 @@ export class LayoutComponent {
   toggleProfileMenu(): void {
     this.showProfileMenu = !this.showProfileMenu;
   }
-  async logout(): Promise<void> {
-    await this.currentUser.logout();
+  async deactivateToken(): Promise<void> {
+    await this.currentUser.deactivateToken();
   }
 
   @HostListener('document:click', ['$event'])
