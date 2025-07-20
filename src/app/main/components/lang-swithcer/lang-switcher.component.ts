@@ -1,7 +1,7 @@
-import {Component, HostListener} from '@angular/core';
-import {CommonModule, NgIf} from '@angular/common';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {Lang} from '../../../shared/pipes/name-translate.pipe';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Lang } from '../../../shared/pipes/name-translate.pipe';
 
 @Component({
   selector: 'app-lang-switcher',
@@ -12,15 +12,24 @@ import {Lang} from '../../../shared/pipes/name-translate.pipe';
   templateUrl: './lang-switcher.component.html',
   styleUrl: './lang-switcher.component.css'
 })
-export class LangSwitcherComponent{
+export class LangSwitcherComponent implements OnInit {
   currentLanguage: string = 'Рус';
   isLanguageListVisible = false;  // Состояние видимости списка языков
 
   langs = Lang;
-  constructor(private translate: TranslateService) {
-    this.currentLanguage = this.translate.currentLang ?? localStorage.getItem("vip_lang") ?? Lang.Kz;
-    this.translate.setDefaultLang(this.currentLanguage);
-    this.translate.currentLang =this.currentLanguage;
+
+  constructor(private translate: TranslateService) {}
+
+  ngOnInit(): void {
+    const savedLang = localStorage.getItem('vip_lang');
+    if (!savedLang) {
+      localStorage.setItem('vip_lang', Lang.Kz);
+    }
+
+    const langToUse = savedLang || Lang.Kz;
+    this.translate.setDefaultLang(langToUse);
+    this.translate.use(langToUse);
+    this.currentLanguage = langToUse;
   }
 
   toggleLanguageList(event: Event): void {
@@ -29,7 +38,6 @@ export class LangSwitcherComponent{
   }
 
   changeLanguage(language: string): void {
-    this.translate.setDefaultLang(language);
     this.translate.use(language);
     this.currentLanguage = language;
     localStorage.setItem("vip_lang", language);
