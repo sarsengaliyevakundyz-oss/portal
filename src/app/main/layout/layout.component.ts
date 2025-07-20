@@ -32,7 +32,8 @@ export class LayoutComponent {
     this.showProfileMenu = !this.showProfileMenu;
   }
   async deactivateToken(): Promise<void> {
-    await this.currentUser.deactivateToken();
+    console.log('deactivateToken called');
+    this.currentUser.logout();
   }
 
   @HostListener('document:click', ['$event'])

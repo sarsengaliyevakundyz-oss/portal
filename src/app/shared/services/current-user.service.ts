@@ -58,6 +58,7 @@ export class CurrentUserService {
         this.logout();
       } catch (error) {
         console.error('Error deactivating token:', error);
+        throw error;
       }
     }
  

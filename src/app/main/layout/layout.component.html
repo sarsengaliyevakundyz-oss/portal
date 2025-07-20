@@ -22,7 +22,7 @@
           {{currentUser.getCurrentUser()?.full_name}}
         </a>
         <div class="profile-menu" *ngIf="showProfileMenu">
-          <button class="menu-item" (click)="deactivateToken()">Выход</button>
+          <button class="menu-item" (click)="deactivateToken(); $event.stopPropagation()">Выход</button>
         </div>
       </div>
     </div>
