@@ -154,6 +154,7 @@ export class CurrentUserService {
       '_blank'
     );
     this.hasLoggedOut = true;
+    window.location.reload();
     console.log("ssointernalfrontnew redirect")
   }
 
