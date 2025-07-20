@@ -153,6 +153,7 @@ export class CurrentUserService {
       `${window.location.origin}/ssointernalfrontnew?client-id=2`,
       '_blank'
     );
+    window.location.href = `${window.location.origin}/`;
     this.hasLoggedOut = true;
     console.log("ssointernalfrontnew redirect")
   }
