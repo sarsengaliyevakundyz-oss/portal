@@ -71,6 +71,11 @@ export class CurrentUserService {
       return;
     }
 
+    if (data.iin && !localStorage.getItem(this.iinKey)) {
+      localStorage.setItem(this.iinKey, data.iin);
+      console.log('Saved IIN to localStorage:', data.iin);
+    }
+
     this.secretCode = receivedCode;
     localStorage.setItem(this.secretCodeKey, receivedCode);
     console.log('Получили secretCode через postMessage:', receivedCode);
