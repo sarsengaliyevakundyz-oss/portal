@@ -39,6 +39,7 @@ export class NewsComponent implements OnInit {
  
   ngOnInit(): void {
     this.newsService.getCategories({ isActive: true }).subscribe(response => {
+      console.log( "news response - ", response )
       this.categories = response;
       if (this.categories.length) {
         this.currentCategoryIndex = 0;
