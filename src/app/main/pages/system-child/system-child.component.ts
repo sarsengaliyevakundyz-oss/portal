@@ -56,6 +56,10 @@ export class SystemChildComponent implements OnInit{
         lang
       };
       const targetOrigin = new URL(url).origin;
+      console.log('PostMessage data:', {
+        message: message,
+        targetOrigin: targetOrigin
+      });
       newWin.postMessage(message, targetOrigin);
     });
   }
