@@ -156,6 +156,7 @@ export class CurrentUserService {
     console.log("this.hasLoggedOut - ", this.hasLoggedOut)
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
     window.open(
       `${window.location.origin}/ssointernalfrontnew?client-id=2`,
       '_blank'
