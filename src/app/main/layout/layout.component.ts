@@ -33,7 +33,7 @@ export class LayoutComponent {
   }
   async deactivateToken(): Promise<void> {
     console.log('deactivateToken called');
-    this.currentUser.logout();
+    await this.currentUser.deactivateToken();
   }
 
   @HostListener('document:click', ['$event'])

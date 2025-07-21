@@ -39,6 +39,8 @@ export class CurrentUserService {
   }
 
     async deactivateToken(): Promise<void> {
+      console.log("deactivateToken run")
+
       const iin = localStorage.getItem(this.iinKey);
       if (!iin) return;
   
