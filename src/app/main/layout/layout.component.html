@@ -4,13 +4,13 @@
       <img src="logo.png" alt="QazStat">
       <!-- <label [innerHTML]="'main.title' | translate"></label> -->
     </div>
-    <nav class="nav-menu">
+    <nav class="nav-menu" *ngIf="isAuthenticated()">
       <a routerLink="/" [class.active]="isExactMatch('/')">{{'main.name' | translate}}</a>
       <a routerLink="/systems" routerLinkActive="active">{{'main.system' | translate}}</a>
       <a routerLink="/documentation" routerLinkActive="active">{{'main.document' | translate}}</a>
       <a routerLink="/admin" routerLinkActive="active">{{'main.personal_cabinet' | translate}}</a>
     </nav>
-    <div class="user-actions">
+    <div class="user-actions" *ngIf="isAuthenticated()">
       <app-lang-switcher></app-lang-switcher>
       <div class="profile-container">
         <a 

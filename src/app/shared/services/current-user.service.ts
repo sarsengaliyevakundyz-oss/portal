@@ -102,6 +102,14 @@ export class CurrentUserService {
       }
     }
   }
+
+  public getAuthResponseKey(): string {
+    return this.authResponseKey;
+  }
+  
+  public getSecretCodeKey(): string {
+    return this.secretCodeKey;
+  }
  
   public getSecretCode(): string | undefined {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;

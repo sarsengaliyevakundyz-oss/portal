@@ -28,6 +28,12 @@ export class LayoutComponent {
     public currentUser: CurrentUserService
   ) {}
 
+  isAuthenticated(): boolean {
+    return this.currentUser.isAuthenticated() && 
+           !!localStorage.getItem(this.currentUser.getAuthResponseKey()) && 
+           !!localStorage.getItem(this.currentUser.getSecretCodeKey());
+  }
+
   toggleProfileMenu(): void {
     this.showProfileMenu = !this.showProfileMenu;
   }
