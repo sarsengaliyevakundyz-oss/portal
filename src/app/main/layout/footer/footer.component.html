@@ -1,13 +1,13 @@
 <div class="support-container">
   <img class="support-logo" src="support.png" alt="Support Logo" />
   <div class="support-text">
-    <span class="support-label">Техническая поддержка пользователей</span>
+    <span class="support-label">{{ 'support.technical_support' | translate }}</span>
     <div class="call-center-container">
       <div class="call-center-number">
         <img src="support-phone.png" alt="Phone Icon" />
-        <span class="support-number">1446</span>
+        <span class="support-number">{{ 'support.call_center_number' | translate }}</span>
       </div>
-      <div class="call-center-label">CALL-ЦЕНТР</div>
+      <div class="call-center-label">{{ 'support.call_center' | translate }}</div>
     </div>
   </div>
 </div>
@@ -19,37 +19,35 @@
   </a>
 </div>
 
-
 <div class="footer-black">
   <div class="footer-content">
     <div class="footer-column">
-      <h4>Город Астана</h4>
-      <p>Республика Казахстан, 010000, Казахстан, Левый берег р. Ишим,</p>
-      <p>Проспект Мангилик ел, 8 Дом Министерств, 4 подъезд</p>
+      <h4>{{ 'footer.address.city' | translate }}</h4>
+      <p>{{ 'footer.address.line1' | translate }}</p>
+      <p>{{ 'footer.address.line2' | translate }}</p>
     </div>
     <div class="footer-column">
-      <h4>Пресс-служба</h4>
-      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
-      <p>+7 7172 74 90 02</p>
+      <h4>{{ 'footer.press_service.title' | translate }}</h4>
+      <p>{{ 'footer.press_service.hours' | translate }}</p>
+      <p>{{ 'footer.press_service.phone' | translate }}</p>
     </div>
     <div class="footer-column">
-      <h4>Информационная служба</h4>
-      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
-      <p>+7 7172 74 90 10</p>
-      <p>+7 7172 74 90 11</p>
+      <h4>{{ 'footer.info_service.title' | translate }}</h4>
+      <p>{{ 'footer.info_service.hours' | translate }}</p>
+      <p *ngFor="let phone of 'footer.info_service.phones' | translate">{{ phone }}</p>
     </div>
     <div class="footer-column">
-      <h4>Канцелярия</h4>
-      <p>Пн-Пт с 9:00 до 18:30, 13:00-14:30 – обеденный перерыв</p>
-      <p>+7 7172 74 95 47</p>
-      <p>Факс: +7 7172 74 94 94</p>
+      <h4>{{ 'footer.office.title' | translate }}</h4>
+      <p>{{ 'footer.office.hours' | translate }}</p>
+      <p>{{ 'footer.office.phone' | translate }}</p>
+      <p>{{ 'footer.office.fax' | translate }}</p>
     </div>
   </div>
 </div>
 
 <div class="footer-socials">
   <div class="footer-socials-content">
-    <span>Все права защищены</span>
+    <span>{{ 'footer.copyright' | translate }}</span>
     <div>
 <!--      <a href="#" title="Facebook"><img src="socials/facebook.png"></a>-->
 <!--      <a href="#" title="Twitter"><img src="socials/twitter.png"></a>-->
