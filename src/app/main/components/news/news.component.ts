@@ -10,6 +10,7 @@ import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
+import { CurrentUserService } from '../../../shared/services/current-user.service';
  
 @Component({
   selector: 'app-news',
@@ -34,10 +35,22 @@ export class NewsComponent implements OnInit {
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
   currentCategoryIndex = 0;
-  constructor(private newsService: NewsService) {
-  }
+  constructor(
+    private newsService: NewsService,
+    public currentUser: CurrentUserService
+  ) {}
  
+  isAuthenticated(): boolean {
+    return this.currentUser.isAuthenticated();
+  }
+
   ngOnInit(): void {
+    if (this.isAuthenticated()) {
+      this.loadCategories();
+    }
+  }
+
+  private loadCategories(): void {
     this.newsService.getCategories({ isActive: true }).subscribe(response => {
       this.categories = response;
       if (this.categories.length) {

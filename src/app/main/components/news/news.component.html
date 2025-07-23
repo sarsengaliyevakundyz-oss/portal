@@ -1,4 +1,4 @@
-<div class="news-container">
+<div class="news-container" *ngIf="isAuthenticated()">
   <h1>{{'title.news' | translate}}</h1>
   <div class="navigation">
     <div class="categories-carousel">
