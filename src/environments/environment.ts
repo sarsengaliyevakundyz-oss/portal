@@ -3,5 +3,5 @@ export const environment = {
   tokenUrl: '/realms/test_user/protocol/openid-connect/token',
   client: 'test_user',
   storageUrl: "http://172.16.18.90:9000",
-  frontUrl: '/'
+  frontUrl: 'internalportalfront/'
 };
