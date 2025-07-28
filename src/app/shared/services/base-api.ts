@@ -68,7 +68,11 @@ export class BaseApi {
       localStorage.removeItem('iinKey');
       localStorage.removeItem('vip_lang');
     }
-    
+
+    window.open(
+      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+      '_blank'
+    );
     return throwError(() => err);
   }
 
