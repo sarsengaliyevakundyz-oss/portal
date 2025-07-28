@@ -7,6 +7,7 @@ import { CalendarService } from '../../../shared/services/calendar.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableComponent } from 'ng-zorro-antd/table';
+import { CurrentUserService } from '../../../shared/services/current-user.service';
 
 @Component({
   selector: 'app-calendar',
@@ -58,7 +59,10 @@ export class CalendarComponent implements OnInit {
   isLoading: boolean = false;
   isShowAllEvents: boolean = false;
 
-  constructor(private service: CalendarService) {}
+  constructor(
+    private service: CalendarService,
+    public currentUser: CurrentUserService
+  ) {}
 
   ngOnInit(): void {
     this.generateCalendar();
