@@ -1,10 +1,8 @@
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
-import {formatDate} from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -28,41 +26,50 @@ export class BaseApi {
 
     return request$.pipe(
       catchError((err: HttpErrorResponse) => {
-        const msg = err.error?.message as string|undefined;
-        if (msg?.includes('status 401 reading')) {
-          localStorage.removeItem('authResponse');
-          localStorage.removeItem('vip_lang');
-          localStorage.removeItem('secretCode');
-
-          window.location.reload();
-        }
-        return throwError(() => err);
+        return this.handleAuthError(err);
       })
     );
   }
 
-  protected postData<T>(uri: string, body: any): Observable<T> {
-    if (this.haveOtherBaseUrl(uri)) {
-      return this.http.post<T>(uri, body);
-    } else {
-      return this.http.post<T>(uri, body);
-    }
+  protected postData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
+    return this.http.post<T>(uri, body, { headers }).pipe(
+      catchError((err: HttpErrorResponse) => {
+        return this.handleAuthError(err);
+      })
+    );
   }
 
-  protected putData<T>(uri: string, body: any): Observable<T> {
-    if (this.haveOtherBaseUrl(uri)) {
-      return this.http.put<T>(uri, body);
-    } else {
-      return this.http.put<T>(uri, body);
-    }
+  protected putData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
+    return this.http.put<T>(uri, body, { headers }).pipe(
+      catchError((err: HttpErrorResponse) => {
+        return this.handleAuthError(err);
+      })
+    );
   }
 
-  protected removeData(uri: string, body: any): Observable<any> {
-    if (this.haveOtherBaseUrl(uri)) {
-      return this.http.delete(uri, {params: body});
-    } else {
-      return this.http.delete(uri, {params: body});
+  protected removeData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
+    return this.http.delete<T>(uri, { params: body, headers }).pipe(
+      catchError((err: HttpErrorResponse) => {
+        return this.handleAuthError(err);
+      })
+    );
+  }
+
+  private handleAuthError(err: HttpErrorResponse): Observable<never> {
+    const errorMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+    
+    if (err.status === 401 || 
+        errorMessage?.includes('Сессия пользователя истекла') ||
+        errorMessage?.includes('Требуется повторная авторизация через SSO') ||
+        errorMessage?.includes('status 401 reading')) {
+      
+      localStorage.removeItem('authResponse');
+      localStorage.removeItem('secretCode');
+      localStorage.removeItem('iinKey');
+      localStorage.removeItem('vip_lang');
     }
+    
+    return throwError(() => err);
   }
 
   protected GetFile(uri: string, params: any = null): void {
