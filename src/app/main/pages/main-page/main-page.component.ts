@@ -4,6 +4,7 @@ import {NewsComponent} from "../../components/news/news.component";
 import {TranslatePipe} from "@ngx-translate/core";
 import {RouterLink} from '@angular/router';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-main-page',
@@ -12,7 +13,8 @@ import { CurrentUserService } from '../../../shared/services/current-user.servic
     CalendarComponent,
     NewsComponent,
     TranslatePipe,
-    RouterLink
+    RouterLink,
+    NgIf
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
