@@ -85,3 +85,11 @@
   flex: 1;
   backdrop-filter: blur(10px);
 }
+
+.hidden {
+  visibility: hidden;
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
