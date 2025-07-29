@@ -69,9 +69,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isAuthenticated()) {
-      this.generateCalendar();
-    }
+    this.generateCalendar();
   }
 
   get selectedMonthName(): string {
