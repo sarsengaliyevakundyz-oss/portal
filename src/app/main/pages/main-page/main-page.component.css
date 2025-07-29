@@ -93,3 +93,24 @@
   height: 0;
   overflow: hidden;
 }
+
+.welcome-message {
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-message h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.welcome-message p {
+  color: #555;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}

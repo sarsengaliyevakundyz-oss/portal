@@ -10,6 +10,13 @@
   </div>
 </div>
 
+<div class="welcome-message" *ngIf="!isAuthenticated()">
+  <h2>Порталға қош келдіңіз</h2>
+  <p>Қазақстан Республикасы Стратегиялық жоспарлау және реформалар агенттігі</p>
+  <p>Ұлттық статистика бюросы</p>
+  <p>«Е-статистика» интеграцияланған ақпараттық жүйе</p>
+</div>
+
 <main class="main-content" [class.hidden]="!isAuthenticated()">
   <section class="news">
     <app-news></app-news>
