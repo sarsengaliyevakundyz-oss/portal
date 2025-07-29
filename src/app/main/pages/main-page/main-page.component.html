@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<main class="main-content">
+<main class="main-content" *ngIf="isAuthenticated()">
   <section class="news">
     <app-news></app-news>
     <div class="news-list-more">
