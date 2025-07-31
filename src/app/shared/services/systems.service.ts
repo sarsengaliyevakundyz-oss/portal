@@ -37,7 +37,7 @@ export class SystemsService extends BaseApi {
   }
 
   getSystemsList(): Observable<ResultModel<SystemChildInfoModel[]>> {
-    return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/systems/list', null);
+    return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/admin/systems/list', null);
   }
 
   addSystem(form: SystemModel): Observable<any> {
