@@ -65,6 +65,7 @@ export class CurrentUserService {
     }
  
   private async onMessage(event: MessageEvent) {
+    console.log("event event - ", event)
     const data = event.data;
   if (data?.type === 'AUTH_SECRET_CODE') {
     const receivedCode = data.secretCode;
