@@ -181,6 +181,7 @@ export class CurrentUserService {
   setUser(token: string, refresh: string): void {
     console.log(token)
     console.log(refresh)
+    const secretCode = localStorage.getItem(this.secretCodeKey);
     try {
       const decoded: any = jwtDecode(token);
       this.currentUser = {
@@ -192,7 +193,9 @@ export class CurrentUserService {
         email: decoded.email,
         preferred_username: decoded.preferred_username
       } as UserTokenInfo;
-      localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
+      if (secretCode) {
+        localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
+      }
     } catch (error) {
       console.log("error error - ", error)
 
