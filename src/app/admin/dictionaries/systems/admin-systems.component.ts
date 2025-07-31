@@ -53,7 +53,7 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   private loadData() {
-    this.service.getAllSystems().subscribe((res) => {
+    this.service.getSystemsList().subscribe((res) => {
       this.tableData = res.result;
       this.updatePagination();
     })
