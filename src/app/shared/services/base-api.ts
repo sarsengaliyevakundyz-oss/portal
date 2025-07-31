@@ -68,8 +68,6 @@ export class BaseApi {
       localStorage.removeItem('iinKey');
       localStorage.removeItem('vip_lang');
     }
-
-    window.location.reload();
     return throwError(() => err);
   }
 
