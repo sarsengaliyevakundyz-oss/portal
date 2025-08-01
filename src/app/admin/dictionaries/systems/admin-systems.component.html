@@ -18,17 +18,17 @@
     </thead>
     <tbody>
     <tr *ngFor="let system of paginatedData">
-      <td>{{ system.id }}</td>
-      <td>{{ system.codeName }}</td>
-      <td>{{ system.nameRu | nameTranslate }}</td>
-      <td [innerHTML]="system.descriptionRu | nameTranslate"></td>
+      <td>{{ system.systemInfo.id }}</td>
+      <td>{{ system.systemInfo.codeName }}</td>
+      <td>{{ system.systemInfo.name | nameTranslate }}</td>
+      <td [innerHTML]="system.systemInfo.description | nameTranslate"></td>
       <td>
-          <span *ngFor="let k of system.kurator; let last = last">
+          <span *ngFor="let k of system.systemInfo.kurator; let last = last">
             {{ k.name | nameTranslate }}<span *ngIf="!last">, </span>
           </span>
       </td>
       <td>
-        <img *ngIf="system.fullImgPath" [src]="environment.storageUrl + (system.systemInfo.pathImg | nameTranslate)" alt="System Image" width="50">
+        <img *ngIf="system.systemInfo.pathImg" [src]="environment.storageUrl + (system.systemInfo.pathImg | nameTranslate)" alt="System Image" width="50">
       </td>
       <td>
         <button *ngIf="system.children.length>0" nz-button nzType="primary" nzShape="circle" (click)="openChild(system)">
