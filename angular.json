@@ -75,7 +75,20 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "baseHref": "/internalportalfront/",
+              "deployUrl": "/internalportalfront/"
+            },
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "outputHashing": "all",
+              "baseHref": "/internalportalfront/",
+              "deployUrl": "/internalportalfront/",
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }]
             }
           },
           "defaultConfiguration": "production"
