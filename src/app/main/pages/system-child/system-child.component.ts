@@ -43,6 +43,11 @@ export class SystemChildComponent implements OnInit{
     const langStorage = localStorage.getItem("vip_lang");
     const lang = (langStorage === "kz" ? "kk" : "ru");
   
+    if (!url) {
+      console.error('URL is undefined or empty');
+      return;
+    }
+
     const newWin = window.open(url, '_blank');
     if (!newWin) {
       console.error('Не удалось открыть окно для модуля:', url);
