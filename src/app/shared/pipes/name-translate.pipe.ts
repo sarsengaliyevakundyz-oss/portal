@@ -35,7 +35,7 @@ export class NameTranslatePipe implements PipeTransform {
 export interface ITranslateName {
   ru: string;
   kz: string;
-  en: string;
+  en?: string;
 }
 
 export enum Lang {

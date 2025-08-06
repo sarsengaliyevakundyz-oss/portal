@@ -3,7 +3,7 @@ import {NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SystemsService} from '../../../shared/services/systems.service';
-import {SystemChildInfoModel} from '../../../shared/models/system.model';
+import {SystemChildInfoModel, SystemListModel} from '../../../shared/models/system.model';
 import {SharedModule} from '../../../shared/shared.module';
 import {environment} from '../../../../environments/environment';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -53,11 +53,33 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   private loadData() {
-    this.service.getAllSystems().subscribe((res) => {
-      console.log("res - ", res)
-      this.tableData = res.result;
-      this.updatePagination();
-    })
+    this.service.getSystemsList().subscribe({
+      next: (res) => {
+        this.tableData = res.result.map(system => this.mapSystemListToChildInfo(system));
+        this.updatePagination();
+      },
+      error: (err) => console.error('Error loading systems:', err)
+    });
+  }
+
+  private mapSystemListToChildInfo(system: SystemListModel): SystemChildInfoModel {
+    const imgPath = system.fullImgPath || '';
+    
+    return {
+      systemInfo: {
+        id: system.id,
+        codeName: system.codeName,
+        name: { ru: system.nameRu, kz: system.nameKz, en: '' },
+        description: { ru: system.descriptionRu, kz: system.descriptionKz, en: '' },
+        kurator: system.kurator.map(k => ({
+          name: { ru: k.kuratorNameRu, kz: k.kuratorNameKz, en: '' },
+          department: { ru: k.kuratorDepartmentRu, kz: k.kuratorDepartmentKz, en: '' }
+        })),
+        pathImg: { ru: imgPath, kz: imgPath, en: '' },
+        fullPathImg: imgPath
+      },
+      children: []
+    };
   }
 
   protected readonly environment = environment;

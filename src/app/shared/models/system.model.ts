@@ -27,6 +27,22 @@ export interface SystemChildInfoModel {
   children: SystemChildModel[]
 }
 
+export interface SystemListModel {
+  id: number;
+  codeName: string;
+  nameKz: string;
+  nameRu: string;
+  descriptionKz: string;
+  descriptionRu: string;
+  fullImgPath: string;
+  kurator: {
+    kuratorNameRu: string;
+    kuratorNameKz: string;
+    kuratorDepartmentRu: string;
+    kuratorDepartmentKz: string;
+  }[];
+  active: boolean;
+}
 
 export interface KuratorModel{
   name:ITranslateName

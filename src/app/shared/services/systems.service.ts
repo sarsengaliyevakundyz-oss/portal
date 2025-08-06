@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BaseApi} from './base-api';
-import {SystemChildInfoModel, SystemModel} from '../models/system.model';
+import {SystemChildInfoModel, SystemModel, SystemListModel } from '../models/system.model';
 import {ResultModel} from '../models/result.model';
 import {Role, UserInfo} from '../models/user.model';
 import { AdminAccessMap } from '../models/admin-access.model';
@@ -36,8 +36,8 @@ export class SystemsService extends BaseApi {
     return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/systems/allSystems', null);
   }
 
-  getSystemsList(): Observable<ResultModel<SystemChildInfoModel[]>> {
-    return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/admin/systems/list', null);
+  getSystemsList(): Observable<ResultModel<SystemListModel[]>> {
+    return this.getData<ResultModel<SystemListModel[]>>(this.apiUrl + '/internalportal/admin/systems/list', null);
   }
 
   addSystem(form: SystemModel): Observable<any> {
