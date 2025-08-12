@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --live-reload=false --port=4000 --proxy-config proxy-local.conf.json",
+    "start": "ng build --configuration development --base-href /internalportalfront/ --deploy-url /internalportalfront/",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
