@@ -24,7 +24,7 @@ COPY . .
 RUN node --max-old-space-size=10240 ./node_modules/@angular/cli/bin/ng build --configuration development --base-href /internalportalfront/ --deploy-url /internalportalfront/
 RUN ls -la /app
 RUN ls -la /app/dist/
-
+RUN ls -la /app/dist/vip/
 
 FROM 172.16.18.94:5000/nginx-1.21.3
 
