@@ -117,12 +117,12 @@ export class AdminSystemsComponent implements OnInit {
       next: (res: any) => {
         console.log('Полный ответ API:', res);
         
-        if (res && res.result) {
+        if (res) {
           this.editSystemData = this.convertApiResponseToSystemChildInfo(res);
           console.log('После преобразования:', this.editSystemData);
         } else {
-          console.error('Пустой ответ от API или отсутствует result');
-          this.message.error('Неверный формат ответа от сервера');
+          console.error('Пустой ответ от API');
+          this.message.error('Пустой ответ от сервера');
         }
         
         this.isLoading = false;
@@ -136,9 +136,7 @@ export class AdminSystemsComponent implements OnInit {
     });
   }
 
-  private convertApiResponseToSystemChildInfo(apiResponse: any): SystemChildInfoModel {
-    const apiData = apiResponse.result;
-    
+  private convertApiResponseToSystemChildInfo(apiData: any): SystemChildInfoModel {
     return {
       systemInfo: {
         id: apiData.id,
