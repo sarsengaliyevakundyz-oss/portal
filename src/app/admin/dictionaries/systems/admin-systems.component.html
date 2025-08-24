@@ -30,7 +30,7 @@
           </span>
       </td>
       <td>
-        <img *ngIf="system.systemInfo.pathImg" [src]="environment.storageUrl + (system.systemInfo.pathImg | nameTranslate)" alt="System Image" width="50">
+        <img *ngIf="system.systemInfo.fullPathImg" [src]="system.systemInfo.fullPathImg" alt="System Image" width="50">
       </td>
       <td>
         <button *ngIf="system.children.length>0" nz-button nzType="primary" nzShape="circle" (click)="openChild(system)">
