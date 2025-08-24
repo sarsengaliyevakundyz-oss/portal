@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
+import {NgForOf, NgIf, NgTemplateOutlet, JsonPipe} from '@angular/common'; 
 import {TranslatePipe} from '@ngx-translate/core';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SystemsService} from '../../../shared/services/systems.service';
@@ -29,6 +29,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzButtonComponent,
     NzModalComponent,
     NgTemplateOutlet,
+    JsonPipe,
     AddSystemComponent,
     NzIconModule,
     NzFormModule,
@@ -114,8 +115,9 @@ export class AdminSystemsComponent implements OnInit {
 
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res) => {
-        this.editSystemData = res.result;
+        this.editSystemData = this.mapSystemListToChildInfo(res.result);
         this.isLoading = false;
+        console.log('Загруженные данные:', this.editSystemData);
       },
       error: (err) => {
         console.error('Error loading system data:', err);

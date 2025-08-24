@@ -71,6 +71,11 @@
       <nz-spin nzSimple></nz-spin>
     </div>
     
+    <div *ngIf="editSystemData" style="background: #f5f5f5; padding: 10px; margin-bottom: 15px;">
+      <strong>Отладка:</strong> 
+      editSystemData = {{ editSystemData | json }}
+    </div>
+    
     <div *ngIf="editSystemData">
       <h3>Редактирование: {{ editSystemData.systemInfo.name | nameTranslate }}</h3>
       
