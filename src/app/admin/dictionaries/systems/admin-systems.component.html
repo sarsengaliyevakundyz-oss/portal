@@ -13,13 +13,13 @@
       <th>{{ 'system.name' | translate }}</th>
       <th>{{ 'system.description' | translate }}</th>
       <th>{{ 'system.kurator' | translate }}</th>
-      <th>{{ 'system.pathImg' | translate }}</th>
+      <th>{{ 'system.fullImgPath' | translate }}</th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let system of paginatedData">
-      <td>{{ getRowNumber(i) }}</td>
+    <tr *ngFor="let system of paginatedData; let i = index">
+      <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
       <td>{{ system.systemInfo.id }}</td>
       <td>{{ system.systemInfo.codeName }}</td>
       <td>{{ system.systemInfo.name | nameTranslate }}</td>

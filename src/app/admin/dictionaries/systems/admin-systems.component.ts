@@ -52,10 +52,6 @@ export class AdminSystemsComponent implements OnInit {
     this.paginatedData = this.tableData.slice(startIndex, endIndex);
   }
 
-  getRowNumber(index: number): number {
-    return (this.currentPage - 1) * this.pageSize + index + 1;
-  }
-
   private loadData() {
     this.service.getSystemsList().subscribe({
       next: (res) => {
