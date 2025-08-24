@@ -6,8 +6,7 @@ import {SystemsService} from '../../../shared/services/systems.service';
 import {SystemChildInfoModel, SystemListModel} from '../../../shared/models/system.model';
 import {SharedModule} from '../../../shared/shared.module';
 import {environment} from '../../../../environments/environment';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {NzModalService} from 'ng-zorro-antd/modal';
 import {AddSystemComponent} from './add-ssytem/add-system.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -28,8 +27,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     TranslatePipe,
     NzPaginationComponent,
     SharedModule,
-    NzButtonComponent,
-    NzModalComponent,
+    NzButtonModule,
+    NzModalModule,
     NgTemplateOutlet,
     JsonPipe,
     AddSystemComponent,
@@ -40,7 +39,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     FormsModule,
     NzSpinModule
   ],
-  providers: [NzModalService, NzMessageService],
+  providers: [NzMessageService],
   templateUrl: './admin-systems.component.html',
   styleUrl: './admin-systems.component.css'
 })
