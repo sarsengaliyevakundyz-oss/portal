@@ -107,12 +107,12 @@ export class AdminSystemsComponent implements OnInit {
     };
   }
 
-  openEditModal(systemId: string): void {
+  openEditModal(systemId: number): void {
     this.isEditModalVisible = true;
     this.isLoading = true;
     this.editSystemData = null;
 
-    this.service.getSystemById(systemId).subscribe({
+    this.service.getSystemById(systemId.toString()).subscribe({
       next: (res) => {
         this.editSystemData = res.result;
         this.isLoading = false;
