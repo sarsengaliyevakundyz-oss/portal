@@ -112,18 +112,20 @@ export class AdminSystemsComponent implements OnInit {
     this.isEditModalVisible = true;
     this.isLoading = true;
     this.editSystemData = null;
-
+  
     this.service.getSystemById(systemId.toString()).subscribe({
-      next: (res) => {
-        this.editSystemData = res.result;
-        this.isLoading = false;
-        console.log('Загруженные данные:', this.editSystemData);
-      
-        if (this.editSystemData) {
-          console.log('systemInfo:', this.editSystemData.systemInfo);
-          console.log('name:', this.editSystemData.systemInfo.name);
-          console.log('active:', this.editSystemData.systemInfo.active);
+      next: (res: any) => {
+        console.log('Полный ответ API:', res);
+        
+        if (res) {
+          this.editSystemData = this.convertApiResponseToSystemChildInfo(res);
+          console.log('После преобразования:', this.editSystemData);
+        } else {
+          console.error('Пустой ответ от API');
+          this.message.error('Пустой ответ от сервера');
         }
+        
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading system data:', err);
@@ -132,6 +134,45 @@ export class AdminSystemsComponent implements OnInit {
         this.isEditModalVisible = false;
       }
     });
+  }
+
+  private convertApiResponseToSystemChildInfo(apiData: any): SystemChildInfoModel {
+    return {
+      systemInfo: {
+        id: apiData.id,
+        codeName: apiData.codeName,
+        name: { 
+          ru: apiData.nameRu || '', 
+          kz: apiData.nameKz || '', 
+          en: '' 
+        },
+        description: { 
+          ru: apiData.descriptionRu || '', 
+          kz: apiData.descriptionKz || '', 
+          en: '' 
+        },
+        kurator: (apiData.kurator || []).map((k: any) => ({
+          name: { 
+            ru: k.kuratorNameRu || '', 
+            kz: k.kuratorNameKz || '', 
+            en: '' 
+          },
+          department: { 
+            ru: k.kuratorDepartmentRu || '', 
+            kz: k.kuratorDepartmentKz || '', 
+            en: '' 
+          }
+        })),
+        pathImg: { 
+          ru: apiData.fullImgPath || '', 
+          kz: apiData.fullImgPath || '', 
+          en: '' 
+        },
+        fullPathImg: apiData.fullImgPath || '',
+        active: apiData.active
+      },
+      children: []
+    };
   }
 
   handleEditCancel(): void {
