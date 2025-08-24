@@ -109,19 +109,20 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   openEditModal(systemId: number): void {
+    this.isEditModalVisible = true;
     this.isLoading = true;
-    
+    this.editSystemData = null;
+  
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res: any) => {
         console.log('Полный ответ API:', res);
         
         if (res && res.result) {
-          this.editSystemData = this.convertApiResponseToSystemChildInfo(res.result);
+          this.editSystemData = this.convertApiResponseToSystemChildInfo(res);
           console.log('После преобразования:', this.editSystemData);
-          this.isEditModalVisible = true;
         } else {
-          console.error('Пустой ответ от API');
-          this.message.error('Пустой ответ от сервера');
+          console.error('Пустой ответ от API или отсутствует result');
+          this.message.error('Неверный формат ответа от сервера');
         }
         
         this.isLoading = false;
@@ -130,29 +131,29 @@ export class AdminSystemsComponent implements OnInit {
         console.error('Error loading system data:', err);
         this.message.error('Ошибка загрузки данных системы');
         this.isLoading = false;
+        this.isEditModalVisible = false;
       }
     });
   }
 
-  private convertApiResponseToSystemChildInfo(apiData: any): SystemChildInfoModel {
-    // Добавьте проверку на наличие вложенного result
-    const data = apiData.result || apiData;
+  private convertApiResponseToSystemChildInfo(apiResponse: any): SystemChildInfoModel {
+    const apiData = apiResponse.result;
     
     return {
       systemInfo: {
-        id: data.id,
-        codeName: data.codeName,
+        id: apiData.id,
+        codeName: apiData.codeName,
         name: { 
-          ru: data.nameRu || '', 
-          kz: data.nameKz || '', 
+          ru: apiData.nameRu || '', 
+          kz: apiData.nameKz || '', 
           en: '' 
         },
         description: { 
-          ru: data.descriptionRu || '', 
-          kz: data.descriptionKz || '', 
+          ru: apiData.descriptionRu || '', 
+          kz: apiData.descriptionKz || '', 
           en: '' 
         },
-        kurator: (data.kurator || []).map((k: any) => ({
+        kurator: (apiData.kurator || []).map((k: any) => ({
           name: { 
             ru: k.kuratorNameRu || '', 
             kz: k.kuratorNameKz || '', 
@@ -165,14 +166,14 @@ export class AdminSystemsComponent implements OnInit {
           }
         })),
         pathImg: { 
-          ru: data.fullImgPath || '', 
-          kz: data.fullImgPath || '', 
+          ru: apiData.fullImgPath || '', 
+          kz: apiData.fullImgPath || '', 
           en: '' 
         },
-        fullPathImg: data.fullImgPath || '',
-        active: data.active
+        fullPathImg: apiData.fullImgPath || '',
+        active: apiData.active
       },
-      children: data.children || []
+      children: apiData.children || []
     };
   }
 
