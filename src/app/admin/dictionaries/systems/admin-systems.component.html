@@ -65,7 +65,7 @@
   nzTitle="Тестовая модалка"
   nzWidth="400px">
   
-  <ng-template #modalContent>
+  <ng-template *nzModalContent>
     <p>Простой текст для теста</p>
     <p>isEditModalVisible: {{ isEditModalVisible }}</p>
     <button nz-button (click)="isEditModalVisible = false">Закрыть</button>
