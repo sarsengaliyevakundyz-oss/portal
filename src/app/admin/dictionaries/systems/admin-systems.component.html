@@ -34,10 +34,10 @@
       </td>
       <td style="text-align: center;">
         <span *ngIf="system.systemInfo.active; else inactiveEye">
-          <i nz-icon nzType="eye" nzTheme="outline" style="color: green; font-size: 18px;"></i>
+          <i nz-icon nzType="eye" nzTheme="outline" style="font-size: 18px;"></i>
         </span>
         <ng-template #inactiveEye>
-          <i nz-icon nzType="eye-invisible" nzTheme="outline" style="color: red; font-size: 18px; text-decoration: line-through;"></i>
+          <i nz-icon nzType="eye-invisible" nzTheme="outline" style="font-size: 18px; text-decoration: line-through;"></i>
         </ng-template>
       </td>
     </tr>
