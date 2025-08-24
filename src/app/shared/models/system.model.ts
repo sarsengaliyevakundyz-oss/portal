@@ -9,6 +9,7 @@ export interface SystemModel {
   description: ITranslateName
   kurator: KuratorModel[]
   pathImg: ITranslateName
+  active: boolean;
 }
 
 

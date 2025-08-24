@@ -8,7 +8,7 @@
     <thead>
     <tr>
       <th>№</th>
-      <th>Id</th>
+      <!-- <th>Id</th> -->
       <th>{{ 'system.codeName' | translate }}</th>
       <th>{{ 'system.name' | translate }}</th>
       <th>{{ 'system.description' | translate }}</th>
@@ -20,7 +20,7 @@
     <tbody>
     <tr *ngFor="let system of paginatedData; let i = index">
       <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-      <td>{{ system.systemInfo.id }}</td>
+      <!-- <td>{{ system.systemInfo.id }}</td> -->
       <td>{{ system.systemInfo.codeName }}</td>
       <td>{{ system.systemInfo.name | nameTranslate }}</td>
       <td [innerHTML]="system.systemInfo.description | nameTranslate"></td>
@@ -33,9 +33,12 @@
         <img *ngIf="system.systemInfo.fullPathImg" [src]="system.systemInfo.fullPathImg" alt="System Image" width="50">
       </td>
       <td>
-        <button *ngIf="system.children.length>0" nz-button nzType="primary" nzShape="circle" (click)="openChild(system)">
-          +
-        </button>
+        <span *ngIf="system.systemInfo.isActiv; else inactiveEye">
+          <i nz-icon nzType="eye" nzTheme="outline" style="color: green; font-size: 18px;"></i>
+        </span>
+        <ng-template #inactiveEye>
+          <i nz-icon nzType="eye-invisible" nzTheme="outline" style="color: red; font-size: 18px; text-decoration: line-through;"></i>
+        </ng-template>
       </td>
     </tr>
     </tbody>

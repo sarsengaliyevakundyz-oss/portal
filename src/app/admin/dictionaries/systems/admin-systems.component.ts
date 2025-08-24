@@ -9,6 +9,7 @@ import {environment} from '../../../../environments/environment';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {AddSystemComponent} from './add-ssytem/add-system.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-roles',
@@ -22,7 +23,8 @@ import {AddSystemComponent} from './add-ssytem/add-system.component';
     NzButtonComponent,
     NzModalComponent,
     NgTemplateOutlet,
-    AddSystemComponent
+    AddSystemComponent,
+    NzIconModule
   ],
   providers: [NzModalService],
   templateUrl: './admin-systems.component.html',
@@ -76,7 +78,8 @@ export class AdminSystemsComponent implements OnInit {
           department: { ru: k.kuratorDepartmentRu, kz: k.kuratorDepartmentKz, en: '' }
         })),
         pathImg: { ru: imgPath, kz: imgPath, en: '' },
-        fullPathImg: imgPath
+        fullPathImg: imgPath,
+        active: system.active 
       },
       children: []
     };
