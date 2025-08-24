@@ -7,6 +7,7 @@
   <table class="styled-table">
     <thead>
     <tr>
+      <th>№</th>
       <th>Id</th>
       <th>{{ 'system.codeName' | translate }}</th>
       <th>{{ 'system.name' | translate }}</th>
@@ -18,6 +19,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let system of paginatedData">
+      <td>{{ getRowNumber(i) }}</td>
       <td>{{ system.systemInfo.id }}</td>
       <td>{{ system.systemInfo.codeName }}</td>
       <td>{{ system.systemInfo.name | nameTranslate }}</td>
