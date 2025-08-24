@@ -115,9 +115,15 @@ export class AdminSystemsComponent implements OnInit {
 
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res) => {
-        this.editSystemData = this.mapSystemListToChildInfo(res.result);
+        this.editSystemData = res.result;
         this.isLoading = false;
         console.log('Загруженные данные:', this.editSystemData);
+      
+        if (this.editSystemData) {
+          console.log('systemInfo:', this.editSystemData.systemInfo);
+          console.log('name:', this.editSystemData.systemInfo.name);
+          console.log('active:', this.editSystemData.systemInfo.active);
+        }
       },
       error: (err) => {
         console.error('Error loading system data:', err);

@@ -69,11 +69,15 @@
   <div *nzModalContent>
     <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
       <nz-spin nzSimple></nz-spin>
+      Загрузка данных...
     </div>
     
     <div *ngIf="editSystemData" style="background: #f5f5f5; padding: 10px; margin-bottom: 15px;">
       <strong>Отладка:</strong> 
-      editSystemData = {{ editSystemData | json }}
+      <div>editSystemData: {{ editSystemData | json }}</div>
+      <div>systemInfo: {{ editSystemData.systemInfo | json }}</div>
+      <div>name: {{ editSystemData.systemInfo.name | json }}</div>
+      <div>active: {{ editSystemData.systemInfo.active }}</div>
     </div>
     
     <div *ngIf="editSystemData">
