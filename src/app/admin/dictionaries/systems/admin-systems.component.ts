@@ -109,17 +109,16 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   openEditModal(systemId: number): void {
-    this.isEditModalVisible = true;
     this.isLoading = true;
-    this.editSystemData = null;
-  
+    
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res: any) => {
         console.log('Полный ответ API:', res);
         
-        if (res) {
-          this.editSystemData = this.convertApiResponseToSystemChildInfo(res);
+        if (res && res.result) {
+          this.editSystemData = this.convertApiResponseToSystemChildInfo(res.result);
           console.log('После преобразования:', this.editSystemData);
+          this.isEditModalVisible = true;
         } else {
           console.error('Пустой ответ от API');
           this.message.error('Пустой ответ от сервера');
@@ -131,27 +130,29 @@ export class AdminSystemsComponent implements OnInit {
         console.error('Error loading system data:', err);
         this.message.error('Ошибка загрузки данных системы');
         this.isLoading = false;
-        this.isEditModalVisible = false;
       }
     });
   }
 
   private convertApiResponseToSystemChildInfo(apiData: any): SystemChildInfoModel {
+    // Добавьте проверку на наличие вложенного result
+    const data = apiData.result || apiData;
+    
     return {
       systemInfo: {
-        id: apiData.id,
-        codeName: apiData.codeName,
+        id: data.id,
+        codeName: data.codeName,
         name: { 
-          ru: apiData.nameRu || '', 
-          kz: apiData.nameKz || '', 
+          ru: data.nameRu || '', 
+          kz: data.nameKz || '', 
           en: '' 
         },
         description: { 
-          ru: apiData.descriptionRu || '', 
-          kz: apiData.descriptionKz || '', 
+          ru: data.descriptionRu || '', 
+          kz: data.descriptionKz || '', 
           en: '' 
         },
-        kurator: (apiData.kurator || []).map((k: any) => ({
+        kurator: (data.kurator || []).map((k: any) => ({
           name: { 
             ru: k.kuratorNameRu || '', 
             kz: k.kuratorNameKz || '', 
@@ -164,14 +165,14 @@ export class AdminSystemsComponent implements OnInit {
           }
         })),
         pathImg: { 
-          ru: apiData.fullImgPath || '', 
-          kz: apiData.fullImgPath || '', 
+          ru: data.fullImgPath || '', 
+          kz: data.fullImgPath || '', 
           en: '' 
         },
-        fullPathImg: apiData.fullImgPath || '',
-        active: apiData.active
+        fullPathImg: data.fullImgPath || '',
+        active: data.active
       },
-      children: []
+      children: data.children || []
     };
   }
 

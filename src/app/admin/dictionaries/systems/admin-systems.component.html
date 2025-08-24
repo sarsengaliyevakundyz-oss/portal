@@ -64,24 +64,25 @@
   [(nzVisible)]="isEditModalVisible"
   nzTitle="Редактирование системы"
   nzWidth="800px"
-  [nzFooter]="null">
+  [nzFooter]="null"
+  (nzOnCancel)="handleEditCancel()">
   
   <div *nzModalContent>
     <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
       <nz-spin nzSimple></nz-spin>
       Загрузка данных...
     </div>
-    <div>editSystemData: {{ editSystemData | json }}</div>
-    <div *ngIf="editSystemData" style="background: #f5f5f5; padding: 10px; margin-bottom: 15px;">
+
+    <div style="background: #f5f5f5; padding: 10px; margin-bottom: 15px;">
       <strong>Отладка:</strong> 
+      <div>isEditModalVisible: {{ isEditModalVisible }}</div>
+      <div>isLoading: {{ isLoading }}</div>
       <div>editSystemData: {{ editSystemData | json }}</div>
-      <div>systemInfo: {{ editSystemData.systemInfo | json }}</div>
-      <div>name: {{ editSystemData.systemInfo.name | json }}</div>
-      <div>active: {{ editSystemData.systemInfo.active }}</div>
+      <div *ngIf="editSystemData">systemInfo exists: {{ !!editSystemData.systemInfo }}</div>
     </div>
     
-    <div *ngIf="editSystemData">
-      <h3>Редактирование: {{ editSystemData.systemInfo.name | nameTranslate }}</h3>
+    <div *ngIf="editSystemData && editSystemData.systemInfo">
+      <h3>Редактирование: {{ editSystemData.systemInfo.name.ru || 'No name' }}</h3>
       
       <nz-form-item>
         <nz-form-label>ID</nz-form-label>
