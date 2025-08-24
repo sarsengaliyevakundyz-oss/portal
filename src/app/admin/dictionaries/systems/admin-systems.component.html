@@ -81,7 +81,7 @@
       <div *ngIf="editSystemData">systemInfo exists: {{ !!editSystemData.systemInfo }}</div>
     </div>
     
-    <div *ngIf="editSystemData && editSystemData.systemInfo">
+    <div *ngIf="editSystemData">
       <h3>Редактирование: {{ editSystemData.systemInfo.name.ru || 'No name' }}</h3>
       
       <nz-form-item>
