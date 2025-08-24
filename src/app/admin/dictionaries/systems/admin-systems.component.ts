@@ -10,6 +10,12 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {AddSystemComponent} from './add-ssytem/add-system.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { FormsModule } from '@angular/forms';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-roles',
@@ -24,20 +30,36 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzModalComponent,
     NgTemplateOutlet,
     AddSystemComponent,
-    NzIconModule
+    NzIconModule,
+    NzFormModule,
+    NzInputModule,
+    NzSwitchModule,
+    FormsModule,
+    NzSpinModule
   ],
-  providers: [NzModalService],
+  providers: [NzModalService, NzMessageService],
   templateUrl: './admin-systems.component.html',
   styleUrl: './admin-systems.component.css'
 })
 export class AdminSystemsComponent implements OnInit {
-  constructor(private service: SystemsService) {
+  constructor(
+    private service: SystemsService,
+    private message: NzMessageService
+  ) {
   }
 
-  pageSize = 10; // Количество элементов на странице
+  pageSize = 10;
   currentPage = 1;
   paginatedData : SystemChildInfoModel[] = [];
   tableData: SystemChildInfoModel[] = [];
+
+  isEditModalVisible = false;
+  isShowCreateForm = false;
+  isLoading = false;
+  isSaving = false;
+  
+  editSystemData: SystemChildInfoModel | null = null;
+  selectedSystem: SystemChildInfoModel | null = null;
 
   ngOnInit(): void {
     this.loadData();
@@ -85,10 +107,49 @@ export class AdminSystemsComponent implements OnInit {
     };
   }
 
+  openEditModal(systemId: string): void {
+    this.isEditModalVisible = true;
+    this.isLoading = true;
+    this.editSystemData = null;
+
+    this.service.getSystemById(systemId).subscribe({
+      next: (res) => {
+        this.editSystemData = res.result;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading system data:', err);
+        this.message.error('Ошибка загрузки данных системы');
+        this.isLoading = false;
+        this.isEditModalVisible = false;
+      }
+    });
+  }
+
+  handleEditCancel(): void {
+    this.isEditModalVisible = false;
+    this.editSystemData = null;
+    this.isSaving = false;
+  }
+
+  handleEditSubmit(): void {
+    if (this.editSystemData) {
+      this.isSaving = true;
+      
+      console.log('Данные для сохранения:', this.editSystemData);
+      
+      setTimeout(() => {
+        this.isSaving = false;
+        this.isEditModalVisible = false;
+        this.message.success('Изменения успешно сохранены');
+        this.loadData();
+      }, 1000);
+    }
+  }
+
   protected readonly environment = environment;
 
   isModalVisible = false;
-  selectedSystem: SystemChildInfoModel | null = null;
 
   openChild(system: SystemChildInfoModel): void {
     this.selectedSystem = system;
@@ -98,8 +159,6 @@ export class AdminSystemsComponent implements OnInit {
   handleCancel(): void {
     this.isModalVisible = false;
   }
-
-  isShowCreateForm = false;
   openCreateModal() {
     this.isShowCreateForm = true;
   }

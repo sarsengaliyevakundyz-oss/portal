@@ -15,6 +15,7 @@
       <th>{{ 'system.kurator' | translate }}</th>
       <th>{{ 'system.fullImgPath' | translate }}</th>
       <th>{{ 'system.isActiv' | translate  }}</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -40,6 +41,11 @@
           <i nz-icon nzType="eye-invisible" nzTheme="outline" style="font-size: 18px; text-decoration: line-through;"></i>
         </ng-template>
       </td>
+      <td style="text-align: center;">
+        <button nz-button nzType="default" nzShape="circle" (click)="openEditModal(system)">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>
@@ -55,45 +61,80 @@
 
 
 <nz-modal
-  [(nzVisible)]="isModalVisible" nzWidth="1200px"
-  [nzTitle]="selectedSystem?.systemInfo?.name | nameTranslate"
-  [nzContent]="contentTemplate"
-  (nzOnCancel)="handleCancel()"
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Редактирование системы"
+  nzWidth="800px"
   [nzFooter]="null">
+  
+  <div *nzModalContent>
+    <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+      <nz-spin nzSimple></nz-spin>
+    </div>
+    
+    <div *ngIf="!isLoading && editSystemData">
+      <h3>Редактирование: {{ editSystemData.systemInfo.name | nameTranslate }}</h3>
+      
+      <nz-form-item>
+        <nz-form-label>ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input [value]="editSystemData.systemInfo.id" disabled>
+        </nz-form-control>
+      </nz-form-item>
 
-  <ng-template #contentTemplate>
-    <table class="styled-table">
-      <thead>
-      <tr>
-        <th>{{ 'system.id' | translate }}</th>
-        <th>{{ 'system.codeName' | translate }}</th>
-        <th>{{ 'system.name' | translate }}</th>
-        <th>{{ 'system.description' | translate }}</th>
-<!--        <th>{{ 'system.img' | translate }}</th>-->
-        <th>Url</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let child of selectedSystem?.children">
-        <td>{{ child.id }}</td>
-        <td>{{ child.codeName }}</td>
-        <td>{{ child.name | nameTranslate }}</td>
-        <td>{{ child.description | nameTranslate }}</td>
-<!--        <td>-->
-<!--          <img *ngIf="environment.storageUrl + (child.img | )" [src]="child.img" alt="Image" width="50">-->
-<!--        </td>-->
-        <td>
-          <a [href]="child.url.ru" target="_blank">
-            {{ child.url.ru }}
-          </a> <br>
-          <a [href]="child.url.kz" target="_blank">
-            {{ child.url.kz }}
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </ng-template>
+      <nz-form-item>
+        <nz-form-label>Code Name</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="editSystemData.systemInfo.codeName">
+        </nz-form-control>
+      </nz-form-item>
 
-  <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      <nz-form-item>
+        <nz-form-label>Название (RU)</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="editSystemData.systemInfo.name.ru">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Название (KZ)</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="editSystemData.systemInfo.name.kz">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Описание (RU)</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input [(ngModel)]="editSystemData.systemInfo.description.ru" rows="3"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Описание (KZ)</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input [(ngModel)]="editSystemData.systemInfo.description.kz" rows="3"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Активна</nz-form-label>
+        <nz-form-control>
+          <nz-switch [(ngModel)]="editSystemData.systemInfo.active"></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div style="text-align: right; margin-top: 20px;">
+        <button nz-button (click)="handleEditCancel()" style="margin-right: 8px;">
+          Отменить
+        </button>
+        <button nz-button nzType="primary" (click)="handleEditSubmit()" [nzLoading]="isSaving">
+          Сохранить
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !editSystemData" style="text-align: center; color: red;">
+      Ошибка загрузки данных
+    </div>
+  </div>
 </nz-modal>
