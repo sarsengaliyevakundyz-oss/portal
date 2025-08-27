@@ -12,11 +12,20 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { FormsModule } from '@angular/forms';
+import { 
+  FormBuilder, 
+  FormGroup, 
+  FormArray, 
+  Validators, 
+  ReactiveFormsModule,
+  FormsModule 
+} from '@angular/forms';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 @Component({
   selector: 'app-roles',
@@ -37,17 +46,33 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzInputModule,
     NzSwitchModule,
     FormsModule,
-    NzSpinModule
+    NzSpinModule,
+    ReactiveFormsModule,
+    NzDividerModule,
+    NzAlertModule,
   ],
   providers: [NzMessageService],
   templateUrl: './admin-systems.component.html',
   styleUrl: './admin-systems.component.css'
 })
 export class AdminSystemsComponent implements OnInit {
+  editForm: FormGroup;
+
   constructor(
     private service: SystemsService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private fb: FormBuilder
   ) {
+    this.editForm = this.fb.group({
+      codeName: ['', Validators.required],
+      nameRu: ['', Validators.required],
+      nameKz: [''],
+      descriptionRu: [''],
+      descriptionKz: [''],
+      fullImgPath: [''],
+      active: [true],
+      kurator: this.fb.array([])
+    });
   }
 
   pageSize = 10;
@@ -109,23 +134,32 @@ export class AdminSystemsComponent implements OnInit {
     };
   }
 
+  get kuratorControls(): FormArray {
+    return this.editForm.get('kurator') as FormArray;
+  }
+  
+  addKurator(kurator?: any): void {
+    const kuratorGroup = this.fb.group({
+      nameKz: [kurator?.name?.kz || ''],
+      nameRu: [kurator?.name?.ru || ''],
+      departmentKz: [kurator?.department?.kz || ''],
+      departmentRu: [kurator?.department?.ru || '']
+    });
+    
+    this.kuratorControls.push(kuratorGroup);
+  }
+  
+  removeKurator(index: number): void {
+    this.kuratorControls.removeAt(index);
+  }
+
   openEditModal(systemId: number): void {
     this.isEditModalVisible = true;
     this.isLoading = true;
-    this.editSystemData = null;
   
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res: any) => {
-        console.log('Полный ответ API:', res);
-        
-        if (res) {
-          this.editSystemData = this.convertApiResponseToSystemChildInfo(res);
-          console.log('После преобразования:', this.editSystemData);
-        } else {
-          console.error('Пустой ответ от API');
-          this.message.error('Пустой ответ от сервера');
-        }
-        
+        this.populateEditForm(res);
         this.isLoading = false;
       },
       error: (err) => {
@@ -137,43 +171,22 @@ export class AdminSystemsComponent implements OnInit {
     });
   }
 
-  private convertApiResponseToSystemChildInfo(apiData: any): SystemChildInfoModel {
-    return {
-      systemInfo: {
-        id: apiData.id,
-        codeName: apiData.codeName,
-        name: { 
-          ru: apiData.nameRu || '', 
-          kz: apiData.nameKz || '', 
-          en: '' 
-        },
-        description: { 
-          ru: apiData.descriptionRu || '', 
-          kz: apiData.descriptionKz || '', 
-          en: '' 
-        },
-        kurator: (apiData.kurator || []).map((k: any) => ({
-          name: { 
-            ru: k.kuratorNameRu || '', 
-            kz: k.kuratorNameKz || '', 
-            en: '' 
-          },
-          department: { 
-            ru: k.kuratorDepartmentRu || '', 
-            kz: k.kuratorDepartmentKz || '', 
-            en: '' 
-          }
-        })),
-        pathImg: { 
-          ru: apiData.fullImgPath || '', 
-          kz: apiData.fullImgPath || '', 
-          en: '' 
-        },
-        fullPathImg: apiData.fullImgPath || '',
-        active: apiData.active
-      },
-      children: apiData.children || []
-    };
+  private populateEditForm(systemData: any): void {
+    this.editForm.patchValue({
+      codeName: systemData.codeName,
+      nameRu: systemData.nameRu,
+      nameKz: systemData.nameKz,
+      descriptionRu: systemData.descriptionRu,
+      descriptionKz: systemData.descriptionKz,
+      fullImgPath: systemData.fullImgPath,
+      active: systemData.active
+    });
+    this.kuratorControls.clear();
+    if (systemData.kurator && systemData.kurator.length > 0) {
+      systemData.kurator.forEach((k: any) => {
+        this.addKurator(k);
+      });
+    }
   }
 
   handleEditCancel(): void {
@@ -183,17 +196,10 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   handleEditSubmit(): void {
-    if (this.editSystemData) {
+    if (this.editForm.valid) {
       this.isSaving = true;
       
-      console.log('Данные для сохранения:', this.editSystemData);
-      
-      setTimeout(() => {
-        this.isSaving = false;
-        this.isEditModalVisible = false;
-        this.message.success('Изменения успешно сохранены');
-        this.loadData();
-      }, 1000);
+      const formData = this.editForm.value; 
     }
   }
 

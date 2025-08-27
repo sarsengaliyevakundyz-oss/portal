@@ -60,13 +60,92 @@
 </div>
 
 
-<nz-modal
-  [(nzVisible)]="isEditModalVisible"
-  nzTitle="Тестовая модалка"
-  nzWidth="400px"
-  [nzFooter]="null">
-  
-  <p>Простой текст для теста</p>
-  <p>isEditModalVisible: {{ isEditModalVisible }}</p>
-  <button nz-button (click)="isEditModalVisible = false">Закрыть</button>
+<nz-modal 
+  [(nzVisible)]="isEditModalVisible" 
+  [nzTitle]="'Редактирование системы' | translate" 
+  [nzOkText]="'action.save' | translate" 
+  [nzCancelText]="'action.cancel' | translate"
+  (nzOnCancel)="handleEditCancel()" 
+  (nzOnOk)="handleEditSubmit()" 
+  [nzWidth]="800"
+  [nzContent]="editContentTemplate">
+
+  <ng-template #editContentTemplate>
+    <div *ngIf="isLoading" class="loading-spinner">
+      <nz-spin nzSimple></nz-spin>
+    </div>
+
+    <form *ngIf="!isLoading" [formGroup]="editForm" (ngSubmit)="handleEditSubmit()">
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="12">
+          <label>{{ 'system.codeName' | translate }}:</label>
+          <input nz-input formControlName="codeName" />
+        </div>
+        <div nz-col nzSpan="12">
+          <label>{{ 'system.isActiv' | translate }}:</label>
+          <nz-switch formControlName="active"></nz-switch>
+        </div>
+      </div>
+
+      <h3>{{ 'system.name' | translate }}</h3>
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.kazakh' | translate }}:</label>
+          <input nz-input formControlName="nameKz" />
+        </div>
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.russian' | translate }}:</label>
+          <input nz-input formControlName="nameRu" />
+        </div>
+      </div>
+
+      <h3>{{ 'system.description' | translate }}</h3>
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.kazakh' | translate }}:</label>
+          <textarea nz-input formControlName="descriptionKz" rows="3"></textarea>
+        </div>
+        <div nz-col nzSpan="12">
+          <label>{{ 'modal.russian' | translate }}:</label>
+          <textarea nz-input formControlName="descriptionRu" rows="3"></textarea>
+        </div>
+      </div>
+
+      <h3>{{ 'system.fullImgPath' | translate }}</h3>
+      <div nz-row [nzGutter]="16">
+        <div nz-col nzSpan="24">
+          <input nz-input formControlName="fullImgPath" placeholder="URL изображения" />
+        </div>
+      </div>
+
+      <h3>{{ 'system.kurator' | translate }}</h3>
+      <div formArrayName="kurator">
+        <div *ngFor="let kurator of kuratorControls.controls; let i = index" [formGroupName]="i">
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.department' | translate }} (KZ):</label>
+              <input nz-input formControlName="departmentKz" />
+            </div>
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.department' | translate }} (RU):</label>
+              <input nz-input formControlName="departmentRu" />
+            </div>
+          </div>
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.kurator' | translate }} (KZ):</label>
+              <input nz-input formControlName="nameKz" />
+            </div>
+            <div nz-col nzSpan="12">
+              <label>{{ 'modal.kurator' | translate }} (RU):</label>
+              <input nz-input formControlName="nameRu" />
+            </div>
+          </div>
+          <button nz-button nzDanger (click)="removeKurator(i)">Удалить</button>
+          <hr style="margin: 16px 0;">
+        </div>
+        <button nz-button nzType="dashed" (click)="addKurator()">+ Добавить куратора</button>
+      </div>
+    </form>
+  </ng-template>
 </nz-modal>
