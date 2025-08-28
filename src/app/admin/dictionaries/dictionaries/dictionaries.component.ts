@@ -51,10 +51,10 @@ export class DictionariesComponent implements OnInit {
         this.allowedSections = ADMIN_SECTIONS.filter(sec => access[sec.key]);
         this.isLoading = false;
         
-        // const systemsSection = this.allowedSections.find(sec => sec.key === 'systems');
-        // if (systemsSection) {
-        //   this.router.navigate([systemsSection.route]);
-        // }
+        const systemsSection = this.allowedSections.find(sec => sec.key === 'systems');
+        if (systemsSection) {
+          this.router.navigate([systemsSection.route]);
+        }
       },
       error: () => {
         this.isLoading = false;

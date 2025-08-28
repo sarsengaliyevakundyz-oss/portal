@@ -37,6 +37,6 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     // Add HashLocationStrategy to use # in routing
-    // { provide: LocationStrategy, useClass: HashLocationStrategy }
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };
