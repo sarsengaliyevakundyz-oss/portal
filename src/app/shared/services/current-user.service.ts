@@ -119,15 +119,18 @@ export class CurrentUserService {
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
     if (!this.currentUser){
-      console.log("!this.currentUser - ", !this.currentUser)
-      // @ts-ignore
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      if(!userInfo){
-        this.logout();
+      const userInfoStr = localStorage.getItem(this.authResponseKey);
+      if (!userInfoStr) {
+        console.log("No user info in localStorage");
         return null;
       }
-      else{
+      
+      try {
+        const userInfo = JSON.parse(userInfoStr) as UserTokenInfo;
         this.setUser(userInfo.accessToken, userInfo.refreshToken);
+      } catch (error) {
+        console.error("Error parsing user info:", error);
+        return null;
       }
     };
     return this.currentUser;
@@ -137,26 +140,58 @@ export class CurrentUserService {
     return this.permissions;
   }
 
+  checkAuthAndRedirect(): boolean {
+    const isAuth = this.isAuthenticated();
+    
+    if (!isAuth && !this.hasLoggedOut) {
+      const hasAnyAuthData = localStorage.getItem(this.authResponseKey) || 
+                            localStorage.getItem(this.secretCodeKey) ||
+                            localStorage.getItem(this.iinKey);
+      
+      if (!hasAnyAuthData) {
+        setTimeout(() => {
+          if (!this.hasLoggedOut) {
+            this.logout();
+          }
+        }, 500);
+      }
+    }
+    
+    return isAuth;
+  }
+
   // Method to check if the user is authenticated
   isAuthenticated(): boolean {
-    if (!this.currentUser){
-      // @ts-ignore
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      console.log("userInfo - ", userInfo)
-      if(!userInfo){
-        console.log("userInfo logout ")
-        this.logout();
-        return false;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken);
-      }
-    };
+  const userInfoStr = localStorage.getItem(this.authResponseKey);
+  const secretCode = localStorage.getItem(this.secretCodeKey);
+  
+  if (!userInfoStr || !secretCode) {
+    return false;
+  }
+
+  try {
+    const userInfo = JSON.parse(userInfoStr) as UserTokenInfo;
+    
+    if (!this.currentUser) {
+      this.setUser(userInfo.accessToken, userInfo.refreshToken);
+    }
 
     const decodedToken: any = jwtDecode(this.currentUser.accessToken);
     const expiry = decodedToken.exp * 1000;
-    return Date.now() < expiry;
+    const isValid = Date.now() < expiry;
+
+    if (!isValid) {
+      console.log("Token expired");
+      return false;
+    }
+
+    return true;
+
+  } catch (error) {
+    console.error("Error checking authentication:", error);
+    return false;
   }
+}
 
 
   async logout() {

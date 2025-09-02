@@ -28,10 +28,14 @@ export class LayoutComponent {
     public currentUser: CurrentUserService
   ) {}
 
-  isAuthenticated(): boolean {
-    return this.currentUser.isAuthenticated() && 
-           !!localStorage.getItem(this.currentUser.getAuthResponseKey()) && 
-           !!localStorage.getItem(this.currentUser.getSecretCodeKey());
+ ngOnInit() {
+    setTimeout(() => {
+      this.currentUser.checkAuthAndRedirect();
+    }, 1000);
+  }
+
+    isAuthenticated(): boolean {
+    return this.currentUser.isAuthenticated();
   }
 
   toggleProfileMenu(): void {
