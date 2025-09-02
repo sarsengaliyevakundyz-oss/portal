@@ -28,18 +28,10 @@ export class LayoutComponent {
     public currentUser: CurrentUserService
   ) {}
 
- ngOnInit() {
-  console.log('LayoutComponent initialized');
-    this.currentUser.checkAuthAndRedirect();
-  
-  setTimeout(() => {
-    console.log('Secondary auth check after 1s');
-    this.currentUser.checkAuthAndRedirect();
-  }, 1000);
-}
-
-    isAuthenticated(): boolean {
-    return this.currentUser.isAuthenticated();
+  isAuthenticated(): boolean {
+    return this.currentUser.isAuthenticated() && 
+           !!localStorage.getItem(this.currentUser.getAuthResponseKey()) && 
+           !!localStorage.getItem(this.currentUser.getSecretCodeKey());
   }
 
   toggleProfileMenu(): void {

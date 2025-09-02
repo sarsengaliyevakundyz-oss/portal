@@ -119,18 +119,15 @@ export class CurrentUserService {
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
     if (!this.currentUser){
-      const userInfoStr = localStorage.getItem(this.authResponseKey);
-      if (!userInfoStr) {
-        console.log("No user info in localStorage");
+      console.log("!this.currentUser - ", )
+      // @ts-ignore
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      if(!userInfo){
+        this.logout();
         return null;
       }
-      
-      try {
-        const userInfo = JSON.parse(userInfoStr) as UserTokenInfo;
+      else{
         this.setUser(userInfo.accessToken, userInfo.refreshToken);
-      } catch (error) {
-        console.error("Error parsing user info:", error);
-        return null;
       }
     };
     return this.currentUser;
@@ -140,63 +137,26 @@ export class CurrentUserService {
     return this.permissions;
   }
 
-  checkAuthAndRedirect(): void {
-  console.log('checkAuthAndRedirect called');
-  
-  const isAuth = this.isAuthenticated();
-  console.log('isAuthenticated:', isAuth);
-  console.log('hasLoggedOut:', this.hasLoggedOut);
-  
-  if (!isAuth && !this.hasLoggedOut) {
-    const hasAnyAuthData = localStorage.getItem(this.authResponseKey) || 
-                          localStorage.getItem(this.secretCodeKey) ||
-                          localStorage.getItem(this.iinKey);
-    
-    console.log('hasAnyAuthData:', !!hasAnyAuthData);
-    
-    if (!hasAnyAuthData) {
-      console.log('No auth data found, calling logout...');
-      this.logout();
-    } else {
-      console.log('Auth data exists but authentication failed');
-    }
-  } else if (this.hasLoggedOut) {
-    console.log('Already logged out, skipping redirect');
-  }
-}
-
   // Method to check if the user is authenticated
   isAuthenticated(): boolean {
-  const userInfoStr = localStorage.getItem(this.authResponseKey);
-  const secretCode = localStorage.getItem(this.secretCodeKey);
-  
-  if (!userInfoStr || !secretCode) {
-    return false;
-  }
-
-  try {
-    const userInfo = JSON.parse(userInfoStr) as UserTokenInfo;
-    
-    if (!this.currentUser) {
-      this.setUser(userInfo.accessToken, userInfo.refreshToken);
-    }
+    if (!this.currentUser){
+      // @ts-ignore
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      console.log("userInfo - ", userInfo)
+      if(!userInfo){
+        console.log("userInfo logout ")
+        this.logout();
+        return false;
+      }
+      else{
+        this.setUser(userInfo.accessToken, userInfo.refreshToken);
+      }
+    };
 
     const decodedToken: any = jwtDecode(this.currentUser.accessToken);
     const expiry = decodedToken.exp * 1000;
-    const isValid = Date.now() < expiry;
-
-    if (!isValid) {
-      console.log("Token expired");
-      return false;
-    }
-
-    return true;
-
-  } catch (error) {
-    console.error("Error checking authentication:", error);
-    return false;
+    return Date.now() < expiry;
   }
-}
 
 
   async logout() {
