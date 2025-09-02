@@ -29,10 +29,14 @@ export class LayoutComponent {
   ) {}
 
  ngOnInit() {
-    setTimeout(() => {
-      this.currentUser.checkAuthAndRedirect();
-    }, 1000);
-  }
+  console.log('LayoutComponent initialized');
+    this.currentUser.checkAuthAndRedirect();
+  
+  setTimeout(() => {
+    console.log('Secondary auth check after 1s');
+    this.currentUser.checkAuthAndRedirect();
+  }, 1000);
+}
 
     isAuthenticated(): boolean {
     return this.currentUser.isAuthenticated();

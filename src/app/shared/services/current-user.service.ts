@@ -140,25 +140,30 @@ export class CurrentUserService {
     return this.permissions;
   }
 
-  checkAuthAndRedirect(): boolean {
-    const isAuth = this.isAuthenticated();
+  checkAuthAndRedirect(): void {
+  console.log('checkAuthAndRedirect called');
+  
+  const isAuth = this.isAuthenticated();
+  console.log('isAuthenticated:', isAuth);
+  console.log('hasLoggedOut:', this.hasLoggedOut);
+  
+  if (!isAuth && !this.hasLoggedOut) {
+    const hasAnyAuthData = localStorage.getItem(this.authResponseKey) || 
+                          localStorage.getItem(this.secretCodeKey) ||
+                          localStorage.getItem(this.iinKey);
     
-    if (!isAuth && !this.hasLoggedOut) {
-      const hasAnyAuthData = localStorage.getItem(this.authResponseKey) || 
-                            localStorage.getItem(this.secretCodeKey) ||
-                            localStorage.getItem(this.iinKey);
-      
-      if (!hasAnyAuthData) {
-        setTimeout(() => {
-          if (!this.hasLoggedOut) {
-            this.logout();
-          }
-        }, 500);
-      }
+    console.log('hasAnyAuthData:', !!hasAnyAuthData);
+    
+    if (!hasAnyAuthData) {
+      console.log('No auth data found, calling logout...');
+      this.logout();
+    } else {
+      console.log('Auth data exists but authentication failed');
     }
-    
-    return isAuth;
+  } else if (this.hasLoggedOut) {
+    console.log('Already logged out, skipping redirect');
   }
+}
 
   // Method to check if the user is authenticated
   isAuthenticated(): boolean {
