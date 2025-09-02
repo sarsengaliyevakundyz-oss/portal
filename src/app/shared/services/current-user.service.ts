@@ -121,6 +121,7 @@ export class CurrentUserService {
     if (!this.currentUser){
       // @ts-ignore
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      console.log("!this.currentUser - ", !this.currentUser)
       if(!userInfo){
         this.logout();
         return null;
