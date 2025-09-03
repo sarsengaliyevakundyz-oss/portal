@@ -119,11 +119,9 @@ export class CurrentUserService {
   // Method to get the current authenticated user's details
   getCurrentUser(): UserTokenInfo | null {
     if (!this.currentUser){
-      console.log("!this.currentUser - ", )
-      // @ts-ignore
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
-        this.logout();
+        this.redirectToSSO();
         return null;
       }
       else{
@@ -140,12 +138,9 @@ export class CurrentUserService {
   // Method to check if the user is authenticated
   isAuthenticated(): boolean {
     if (!this.currentUser){
-      // @ts-ignore
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey)) as UserTokenInfo;
-      console.log("userInfo - ", userInfo)
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
-        console.log("userInfo logout ")
-        this.logout();
+        this.redirectToSSO();
         return false;
       }
       else{
@@ -155,24 +150,32 @@ export class CurrentUserService {
 
     const decodedToken: any = jwtDecode(this.currentUser.accessToken);
     const expiry = decodedToken.exp * 1000;
-    return Date.now() < expiry;
+    
+    if (Date.now() >= expiry) {
+      this.redirectToSSO();
+      return false;
+    }
+    
+    return true;
   }
 
-
-  async logout() {
+  private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
-
-    // await this.deactivateToken();
-    console.log("this.hasLoggedOut - ", this.hasLoggedOut)
+    
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
+    
     window.open(
-      `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-      '_blank'
-    );
+        `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+        '_blank'
+      );
     this.hasLoggedOut = true;
-    console.log("ssointernalfrontnew redirect")
+  }
+
+  async logout() {
+    if (this.hasLoggedOut) return;
+    this.redirectToSSO();
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
@@ -181,9 +184,6 @@ export class CurrentUserService {
 
 
   setUser(token: string, refresh: string): void {
-    console.log(token)
-    console.log(refresh)
-    const secretCode = localStorage.getItem(this.secretCodeKey);
     try {
       const decoded: any = jwtDecode(token);
       this.currentUser = {
@@ -195,14 +195,14 @@ export class CurrentUserService {
         email: decoded.email,
         preferred_username: decoded.preferred_username
       } as UserTokenInfo;
+      
+      const secretCode = localStorage.getItem(this.secretCodeKey);
       if (secretCode) {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
     } catch (error) {
-      console.log("error error - ", error)
-
-      // localStorage.removeItem(this.authResponseKey);
-      // this.logout();
+      console.error("Error setting user:", error);
+      this.redirectToSSO();
     }
   }
 
