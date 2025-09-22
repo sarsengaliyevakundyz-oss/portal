@@ -67,9 +67,24 @@ export class BaseApi {
       localStorage.removeItem('secretCode');
       localStorage.removeItem('iinKey');
       localStorage.removeItem('vip_lang');
+
+      this.redirectToSSO();
     }
     return throwError(() => err);
   }
+
+  private redirectToSSO(): void {
+  if (window.location.href.includes('ssointernalfrontnew')) {
+    return;
+  }
+  
+  // Открываем SSO в новом окне/вкладке
+  window.open(
+    `${window.location.origin}/ssointernalfrontnew?client-id=2`,
+    '_blank'
+  );
+  
+}
 
   protected GetFile(uri: string, params: any = null): void {
     const pars = this.getUrlParams(params);
