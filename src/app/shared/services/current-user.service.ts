@@ -136,28 +136,34 @@ export class CurrentUserService {
   }
 
   // Method to check if the user is authenticated
-  isAuthenticated(): boolean {
-    if (!this.currentUser){
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if(!userInfo){
-        this.redirectToSSO();
-        return false;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken);
-      }
-    };
-
+ isAuthenticated(): boolean {
+  if (this.currentUser) {
     const decodedToken: any = jwtDecode(this.currentUser.accessToken);
-    const expiry = decodedToken.exp * 1000;
+    return decodedToken.exp * 1000 > Date.now();
+  }
+
+  const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+  
+  if (!userInfo) {
+    return false;
+  }
+
+  try {
+    const decodedToken: any = jwtDecode(userInfo.accessToken);
+    const isValid = decodedToken.exp * 1000 > Date.now();
     
-    if (Date.now() >= expiry) {
+    if (isValid) {
+      this.setUser(userInfo.accessToken, userInfo.refreshToken);
+    } else {
       this.redirectToSSO();
-      return false;
     }
     
-    return true;
+    return isValid;
+  } catch (error) {
+    this.redirectToSSO();
+    return false;
   }
+}
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;

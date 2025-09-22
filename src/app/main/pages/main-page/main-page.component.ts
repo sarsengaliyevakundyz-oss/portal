@@ -20,11 +20,19 @@ import { NgIf } from '@angular/common';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent {
+  isAuthChecked = false;
+  isAuthenticated = false;
 
-    protected readonly window = window;
-    constructor(public currentUser: CurrentUserService) {}
+  constructor(public currentUser: CurrentUserService) {}
 
-    isAuthenticated(): boolean {
-      return this.currentUser.isAuthenticated();
-    }
+  ngOnInit() {
+    this.checkAuthentication();
+  }
+
+  async checkAuthentication() {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    this.isAuthenticated = this.currentUser.isAuthenticated();
+    this.isAuthChecked = true;
+  }
 }
