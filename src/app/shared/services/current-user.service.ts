@@ -25,6 +25,7 @@ export class CurrentUserService {
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
+  private isAuthChecked = false;
 
   constructor(
     private router: Router, 
@@ -96,7 +97,8 @@ export class CurrentUserService {
           )
         );
         this.setUser(response.access_token, response.refresh_token);
-
+        this.isAuthChecked = true;
+        
         this.router.navigateByUrl('/').then(() => window.location.reload());
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
@@ -137,14 +139,15 @@ export class CurrentUserService {
 
   // Method to check if the user is authenticated
  isAuthenticated(): boolean {
-  if (this.currentUser) {
-    const decodedToken: any = jwtDecode(this.currentUser.accessToken);
-    return decodedToken.exp * 1000 > Date.now();
-  }
+  if (this.isAuthChecked && this.currentUser) {
+      const decodedToken: any = jwtDecode(this.currentUser.accessToken);
+      return decodedToken.exp * 1000 > Date.now();
+    }
 
   const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
   
   if (!userInfo) {
+    this.isAuthChecked = true;
     return false;
   }
 
@@ -158,12 +161,18 @@ export class CurrentUserService {
       this.redirectToSSO();
     }
     
+    this.isAuthChecked = true;
     return isValid;
   } catch (error) {
     this.redirectToSSO();
+    this.isAuthChecked = true;
     return false;
   }
 }
+
+   getIsAuthChecked(): boolean {
+    return this.isAuthChecked;
+  }
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
@@ -206,6 +215,7 @@ export class CurrentUserService {
       if (secretCode) {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
+      this.isAuthChecked = true;
     } catch (error) {
       console.error("Error setting user:", error);
       this.redirectToSSO();
