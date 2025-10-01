@@ -18,6 +18,6 @@ export class AuthService{
       'Authorization':  "secretCode",
     });
 
-    return this.http.get<AuthResult>('/internalportal/getToken', { headers });
+    return this.http.get<AuthResult>('/internalportal/getTokennn', { headers });
   }
 }
