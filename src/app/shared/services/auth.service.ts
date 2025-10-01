@@ -15,7 +15,7 @@ export class AuthService{
   refreshToken(refreshToken: string, secretCode: string ): Observable<AuthResult> {
     const headers = new HttpHeaders({
       'RefreshToken': this.currentUser.getCurrentUser()?.refreshToken!,
-      'Authorization':  secretCode,
+      'Authorization':  "secretCode",
     });
 
     return this.http.get<AuthResult>('/internalportal/getToken', { headers });
