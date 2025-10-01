@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {RoleEnum, UserTokenInfo} from '../models/user.model';
 import {jwtDecode} from 'jwt-decode';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 
 interface SsoTokenResponse {
@@ -25,7 +25,12 @@ export class CurrentUserService {
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
-  private isAuthChecked = false;
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
+  isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
+  
 
   constructor(
     private router: Router, 
@@ -37,7 +42,35 @@ export class CurrentUserService {
       this.secretCode = savedCode;
       console.log('Loaded secretCode from localStorage:', savedCode);
     }
+
+    this.checkInitialAuthenticationState();
   }
+
+  private checkInitialAuthenticationState(): void {
+    const isAuthenticated = this.checkAuthenticationStatus();
+    this.isAuthenticatedSubject.next(isAuthenticated);
+    this.isAuthCheckedSubject.next(true);
+  }
+
+  private checkAuthenticationStatus(): boolean {
+    const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+    
+    if (!userInfo) {
+      return false;
+    }
+
+    try {
+      const decodedToken: any = jwtDecode(userInfo.accessToken);
+      const isValid = decodedToken.exp * 1000 > Date.now();
+      
+      if (isValid) {
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
+      } 
+      return isValid;
+    } catch (error) {
+      return false;
+    }
+  }
 
     async deactivateToken(): Promise<void> {
       console.log("deactivateToken run")
@@ -97,9 +130,7 @@ export class CurrentUserService {
           )
         );
         this.setUser(response.access_token, response.refresh_token);
-        this.isAuthChecked = true;
         
-        this.router.navigateByUrl('/').then(() => window.location.reload());
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
       }
@@ -118,61 +149,32 @@ export class CurrentUserService {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
-  // Method to get the current authenticated user's details
-  getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if(!userInfo){
-        this.redirectToSSO();
-        return null;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken);
-      }
-    };
-    return this.currentUser;
-  }
+  getCurrentUser(): UserTokenInfo | null {
+    if (!this.currentUser){
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+      if(!userInfo){
+        this.redirectToSSO();
+        return null;
+      }
+      else{
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
+      }
+    };
+    return this.currentUser;
+  }
 
   getPermissions(): RoleEnum[]{
     return this.permissions;
   }
 
-  // Method to check if the user is authenticated
+
  isAuthenticated(): boolean {
-  if (this.isAuthChecked && this.currentUser) {
-      const decodedToken: any = jwtDecode(this.currentUser.accessToken);
-      return decodedToken.exp * 1000 > Date.now();
-    }
-
-  const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-  
-  if (!userInfo) {
-    this.isAuthChecked = true;
-    return false;
-  }
-
-  try {
-    const decodedToken: any = jwtDecode(userInfo.accessToken);
-    const isValid = decodedToken.exp * 1000 > Date.now();
-    
-    if (isValid) {
-      this.setUser(userInfo.accessToken, userInfo.refreshToken);
-    } else {
-      this.redirectToSSO();
-    }
-    
-    this.isAuthChecked = true;
-    return isValid;
-  } catch (error) {
-    this.redirectToSSO();
-    this.isAuthChecked = true;
-    return false;
-  }
+  return this.isAuthenticatedSubject.value; 
 }
 
-   getIsAuthChecked(): boolean {
-    return this.isAuthChecked;
-  }
+  getIsAuthChecked(): boolean {
+    return this.isAuthCheckedSubject.value;
+  }
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
@@ -180,6 +182,9 @@ export class CurrentUserService {
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
+    
+    this.isAuthenticatedSubject.next(false);
+    this.isAuthCheckedSubject.next(true);
     
     window.open(
         `${window.location.origin}/ssointernalfrontnew?client-id=2`,
@@ -198,7 +203,7 @@ export class CurrentUserService {
   }
 
 
-  setUser(token: string, refresh: string): void {
+  setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
       const decoded: any = jwtDecode(token);
       this.currentUser = {
@@ -215,7 +220,10 @@ export class CurrentUserService {
       if (secretCode) {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
-      this.isAuthChecked = true;
+      if (updateAuthStatus) {
+        this.isAuthenticatedSubject.next(true);
+        this.isAuthCheckedSubject.next(true);
+      }
     } catch (error) {
       console.error("Error setting user:", error);
       this.redirectToSSO();
@@ -225,20 +233,22 @@ export class CurrentUserService {
 
   isExpired(token: string): boolean {
     const payload = jwtDecode(token);
-
-    // exp is in seconds since the epoch
     const currentTime = Math.floor(Date.now() / 1000);
     return payload.exp! < currentTime;
   }
 
-  minutesToExpire(): number {
-    const payload = jwtDecode(this.currentUser.accessToken);
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    // time until expiration in seconds
-    const timeUntilExpire = payload.exp! - currentTime;
-
-    // convert seconds to minutes
-    return Math.floor(timeUntilExpire / 60);
-  }
+   minutesToExpire(): number {
+    if (!this.currentUser || !this.currentUser.accessToken) {
+      return 0;
+    }
+    try {
+      const payload = jwtDecode(this.currentUser.accessToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      const timeUntilExpire = payload.exp! - currentTime;
+      return Math.floor(timeUntilExpire / 60);
+    } catch (e) {
+      console.error("Error decoding token for minutesToExpire", e);
+      return 0;
+    }
+  }
 }
