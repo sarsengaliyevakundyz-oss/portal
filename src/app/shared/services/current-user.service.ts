@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Router} from "@angular/router";
-import {RoleEnum, UserTokenInfo} from '../models/user.model';
-import {jwtDecode} from 'jwt-decode';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import * as CryptoJS from 'crypto-js';
+import { HttpClient, HttpHeaders } from "@angular/common/http"
+import { Injectable } from "@angular/core"
+import { Router } from "@angular/router"
+import * as CryptoJS from 'crypto-js'
+import { jwtDecode } from 'jwt-decode'
+import { BehaviorSubject, firstValueFrom } from 'rxjs'
+import { RoleEnum, UserTokenInfo } from '../models/user.model'
 
 interface SsoTokenResponse {
   access_token: string;
