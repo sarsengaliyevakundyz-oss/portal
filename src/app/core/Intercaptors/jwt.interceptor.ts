@@ -16,6 +16,11 @@ export class JwtInterceptor implements HttpInterceptor {
     const authToken = this.currentUserService.getCurrentUser()?.accessToken;
     const refreshToken = this.currentUserService.getCurrentUser()?.refreshToken;
     const secretCode = this.currentUserService.getSecretCode();
+
+    if (req.url.includes('/internalportal/getToken')) {
+        return next.handle(req); 
+    }
+
     if (authToken) {
         if(this.currentUserService.minutesToExpire()<15 && !this.tokenIsUpdating){
           this.tokenIsUpdating = true;
@@ -25,7 +30,7 @@ export class JwtInterceptor implements HttpInterceptor {
           });
         }
         const authReq = req.clone({
-          headers: req.headers.set('Authorization', `${authToken}`)
+          headers: req.headers.set('Authorization', `Bearer ${authToken}`)
         });
         return next.handle(authReq);
     }
