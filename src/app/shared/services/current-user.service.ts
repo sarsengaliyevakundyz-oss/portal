@@ -124,7 +124,7 @@ export class CurrentUserService {
             {
               headers: new HttpHeaders({
                 'Accept': 'application/json',
-                'Authorization': this.secretCode!
+                'secretCode': this.secretCode!
               })
             }
           )
