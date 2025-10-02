@@ -99,7 +99,6 @@ export class CurrentUserService {
     }
  
   private async onMessage(event: MessageEvent) {
-    console.log("event event - ", event)
     const data = event.data;
   if (data?.type === 'AUTH_SECRET_CODE') {
     const receivedCode = data.secretCode;
@@ -110,7 +109,6 @@ export class CurrentUserService {
 
     if (data.iin && !localStorage.getItem(this.iinKey)) {
       localStorage.setItem(this.iinKey, data.iin);
-      console.log('Saved IIN to localStorage:', data.iin);
     }
 
     this.secretCode = receivedCode;
@@ -129,7 +127,9 @@ export class CurrentUserService {
             }
           )
         );
-        this.setUser('', response.refresh_token);
+        const TEMP_TOKEN = 'temporary_token_please_refresh'; 
+        this.setUser(TEMP_TOKEN, response.refresh_token, false);
+        this.getCurrentUser(); 
         
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
@@ -205,7 +205,11 @@ export class CurrentUserService {
 
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
-      const decoded: any = jwtDecode(token);
+      let decoded: any = {};
+      if (token !== 'temporary_token_please_refresh') { 
+          decoded = jwtDecode(token);
+      }
+
       this.currentUser = {
         accessToken: token,
         refreshToken: refresh,
