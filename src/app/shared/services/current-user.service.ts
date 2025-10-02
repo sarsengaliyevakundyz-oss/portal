@@ -5,7 +5,7 @@ import * as CryptoJS from 'crypto-js'
 import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
-// import { AuthService } from "./auth.service"
+import { AuthService } from "./auth.service"
 
 interface SsoTokenResponse {
   access_token: string;
@@ -35,7 +35,8 @@ export class CurrentUserService {
 
   constructor(
     private router: Router, 
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
     const savedCode = localStorage.getItem(this.secretCodeKey);
@@ -129,7 +130,11 @@ export class CurrentUserService {
           )
         );
 
-        this.setUser(response.access_token, response.refresh_token);
+        const newTokenResponse = await firstValueFrom(
+          this.authService.refreshToken(response.refresh_token, this.secretCode!)
+        );
+
+        this.setUser(newTokenResponse.access_token, newTokenResponse.refresh_token);
 
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
@@ -205,16 +210,17 @@ export class CurrentUserService {
 
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
-      const decoded: any = jwtDecode(token);
+      const isJwt = token && token.split('.').length === 3;
+      const decoded: any = isJwt ? jwtDecode(token) : {}
 
       this.currentUser = {
         accessToken: token,
         refreshToken: refresh,
-        full_name: decoded.name,
-        family_name: decoded.family_name,
-        given_name: decoded.given_name,
-        email: decoded.email,
-        preferred_username: decoded.preferred_username
+        full_name: decoded.name || '',
+        family_name: decoded.family_name || '',
+        given_name: decoded.given_name || '',
+        email: decoded.email || '',
+        preferred_username: decoded.preferred_username || ''
       } as UserTokenInfo;
       
       const secretCode = localStorage.getItem(this.secretCodeKey);
