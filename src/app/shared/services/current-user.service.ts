@@ -26,12 +26,12 @@ export class CurrentUserService {
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private initialStatus = this.getInitialAuthenticationStatus();
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
-  isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
-  
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
+  isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
     private router: Router, 
@@ -49,17 +49,14 @@ export class CurrentUserService {
   }
 
   private checkInitialAuthenticationState(): void {
-    const isAuthenticated = this.checkAuthenticationStatus();
+    const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
     
-    if (!isAuthenticated && !hasSecretCode) {
+    if (!isAuthenticated && !hasSecretCode) {
         this.redirectToSSO();
         return; 
-    }
-    
-    this.isAuthenticatedSubject.next(isAuthenticated);
-    this.isAuthCheckedSubject.next(true);
-  }
+    }
+  }
 
   private checkAuthenticationStatus(): boolean {
     const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
@@ -160,6 +157,7 @@ export class CurrentUserService {
     if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
+//         this.redirectToSSO();
         return null;
       }
       else{
@@ -181,6 +179,21 @@ export class CurrentUserService {
   getIsAuthChecked(): boolean {
     return this.isAuthCheckedSubject.value;
   }
+
+  private getInitialAuthenticationStatus(): { isAuthenticated: boolean, isAuthChecked: boolean } {
+    const isAuthenticated = this.checkAuthenticationStatus();
+    const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
+    
+    if (isAuthenticated) {
+        return { isAuthenticated: true, isAuthChecked: true };
+    }
+    
+    if (!hasSecretCode) {
+        return { isAuthenticated: false, isAuthChecked: true }; 
+    }
+    
+    return { isAuthenticated: false, isAuthChecked: false };
+}
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
