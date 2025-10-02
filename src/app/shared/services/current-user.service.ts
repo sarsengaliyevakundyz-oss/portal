@@ -5,6 +5,7 @@ import * as CryptoJS from 'crypto-js'
 import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
+import { AuthService } from "./auth.service"
 
 interface SsoTokenResponse {
   access_token: string;
@@ -34,7 +35,8 @@ export class CurrentUserService {
 
   constructor(
     private router: Router, 
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
     const savedCode = localStorage.getItem(this.secretCodeKey);
@@ -129,8 +131,12 @@ export class CurrentUserService {
         );
         const TEMP_TOKEN = 'temporary_token_please_refresh'; 
         this.setUser(TEMP_TOKEN, response.refresh_token, false);
-        this.getCurrentUser(); 
-        
+
+        const newTokenResponse = await firstValueFrom(
+            this.authService.refreshToken(response.refresh_token, this.secretCode!)
+        );
+
+        this.setUser(newTokenResponse.access_token, newTokenResponse.refresh_token, true);
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
       }
