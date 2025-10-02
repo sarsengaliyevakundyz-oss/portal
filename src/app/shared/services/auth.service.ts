@@ -3,14 +3,14 @@ import { Observable } from 'rxjs';
 import {AuthResult} from '../models/result.model';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {CurrentUserService} from './current-user.service';
+// import {CurrentUserService} from './current-user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService{
 
-  constructor(private http: HttpClient, private currentUser: CurrentUserService) {}
+  constructor(private http: HttpClient) {}
 
   refreshToken(refreshToken: string, secretCode: string ): Observable<AuthResult> {
     const headers = {
