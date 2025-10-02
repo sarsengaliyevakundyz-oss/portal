@@ -63,7 +63,7 @@ export class JwtInterceptor implements HttpInterceptor {
                     return next.handle(req);
                 }
                 const refreshedReq = req.clone({
-                    headers: req.headers.set('Authorization', `Bearer ${newAuthToken}`)
+                    headers: req.headers.set('Authorization', `${newAuthToken}`)
                 });
                 return next.handle(refreshedReq);
             })
@@ -71,7 +71,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     const authReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${authToken}`)
+      headers: req.headers.set('Authorization', `${authToken}`)
     });
     return next.handle(authReq);
   }
