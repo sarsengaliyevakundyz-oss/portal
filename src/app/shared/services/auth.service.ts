@@ -13,10 +13,10 @@ export class AuthService{
   constructor(private http: HttpClient, private currentUser: CurrentUserService) {}
 
   refreshToken(refreshToken: string, secretCode: string ): Observable<AuthResult> {
-    const headers = new HttpHeaders({
+    const headers = {
       'RefreshToken': this.currentUser.getCurrentUser()?.refreshToken!,
       'secretCode':  secretCode,
-    });
+    };
 
     return this.http.get<AuthResult>('/internalportal/getToken', { headers });
   }
