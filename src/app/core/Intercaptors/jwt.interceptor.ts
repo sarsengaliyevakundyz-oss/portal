@@ -9,17 +9,21 @@ import { BehaviorSubject } from 'rxjs';
 export class JwtInterceptor implements HttpInterceptor {
 
   tokenIsUpdating = false;
+  private readonly AUTH_EXCLUSION_URLS = [
+    '/internalportal/getToken',
+    '/internalportal/getSsoToken'
+  ];
   constructor(private currentUserService: CurrentUserService, private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (this.AUTH_EXCLUSION_URLS.some(url => req.url.includes(url))) {
+      return next.handle(req); 
+    }
+    
     const user = this.currentUserService.getCurrentUser();
     const authToken = this.currentUserService.getCurrentUser()?.accessToken;
     const refreshToken = this.currentUserService.getCurrentUser()?.refreshToken;
     const secretCode = this.currentUserService.getSecretCode();
-
-    if (req.url.includes('/internalportal/getToken')) {
-        return next.handle(req); 
-    }
 
     if (authToken) {
         if(this.currentUserService.minutesToExpire()<15 && !this.tokenIsUpdating){

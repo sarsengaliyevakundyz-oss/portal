@@ -14,7 +14,7 @@ export class AuthService{
 
   refreshToken(refreshToken: string, secretCode: string ): Observable<AuthResult> {
     const headers = {
-      'RefreshToken': this.currentUser.getCurrentUser()?.refreshToken!,
+      'RefreshToken': refreshToken,
       'secretCode':  secretCode,
     };
 
