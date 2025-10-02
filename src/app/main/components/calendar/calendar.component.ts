@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
 import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -27,7 +28,7 @@ import { CurrentUserService } from '../../../shared/services/current-user.servic
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   months = [
     'Month.January', 'Month.February', 'Month.March', 'Month.April',
     'Month.May', 'Month.June', 'Month.July', 'Month.August',
@@ -58,6 +59,7 @@ export class CalendarComponent implements OnInit {
   
   isLoading: boolean = false;
   isShowAllEvents: boolean = false;
+  private authSubscription: Subscription | undefined;
 
   constructor(
     private service: CalendarService,
@@ -69,7 +71,21 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.generateCalendar();
+    this.authSubscription = this.currentUser.isAuthChecked$.subscribe(isReady => {
+        if (isReady) {
+            if (this.currentUser.isAuthenticated()) {
+              this.generateCalendar();
+            } else {
+              this.isLoading = false;
+            }
+        }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+        this.authSubscription.unsubscribe();
+    }
   }
 
   get selectedMonthName(): string {
@@ -111,6 +127,11 @@ export class CalendarComponent implements OnInit {
     this.nextEvents = [];
     this.isLoading = true;
     
+    if (!this.currentUser.isAuthenticated()) {
+      this.isLoading = false;
+      return;
+    }
+
     this.service.getList(this.query).subscribe({
       next: (res: any) => {
         if (!res) {
