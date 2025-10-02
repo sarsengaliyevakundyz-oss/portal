@@ -50,6 +50,13 @@ export class CurrentUserService {
 
   private checkInitialAuthenticationState(): void {
     const isAuthenticated = this.checkAuthenticationStatus();
+    const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
+    
+    if (!isAuthenticated && !hasSecretCode) {
+        this.redirectToSSO();
+        return; 
+    }
+    
     this.isAuthenticatedSubject.next(isAuthenticated);
     this.isAuthCheckedSubject.next(true);
   }
@@ -153,7 +160,6 @@ export class CurrentUserService {
     if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
-        this.redirectToSSO();
         return null;
       }
       else{
