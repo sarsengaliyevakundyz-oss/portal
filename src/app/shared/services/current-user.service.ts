@@ -129,7 +129,7 @@ export class CurrentUserService {
             }
           )
         );
-        this.setUser(response.access_token, response.refresh_token);
+        this.setUser('', response.refresh_token);
         
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
