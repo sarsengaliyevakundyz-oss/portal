@@ -129,8 +129,6 @@ export class CurrentUserService {
             }
           )
         );
-        const TEMP_TOKEN = 'temporary_token_please_refresh'; 
-        this.setUser(TEMP_TOKEN, response.refresh_token, false);
 
         const newTokenResponse = await firstValueFrom(
             this.authService.refreshToken(response.refresh_token, this.secretCode!)
@@ -211,10 +209,7 @@ export class CurrentUserService {
 
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
-      let decoded: any = {};
-      if (token !== 'temporary_token_please_refresh') { 
-          decoded = jwtDecode(token);
-      }
+      const decoded: any = jwtDecode(token);
 
       this.currentUser = {
         accessToken: token,
