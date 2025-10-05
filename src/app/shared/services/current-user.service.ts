@@ -70,7 +70,7 @@ export class CurrentUserService {
       const isValid = decodedToken.exp * 1000 > Date.now();
       
       if (isValid) {
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
       } 
       return isValid;
     } catch (error) {
