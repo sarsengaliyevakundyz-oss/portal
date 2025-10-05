@@ -27,10 +27,10 @@ export class CurrentUserService {
   private iinKey = 'iin';
   private hasLoggedOut = false;
   private initialStatus = this.getInitialAuthenticationStatus();
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
