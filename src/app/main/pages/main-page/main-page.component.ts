@@ -28,10 +28,13 @@ export class MainPageComponent implements OnInit, OnDestroy {
   constructor(public currentUser: CurrentUserService) {}
 
   ngOnInit() {
+    console.log('MainPageComponent ngOnInit - initial isAuthChecked:', this.currentUser.getIsAuthChecked());
+    
     this.authSubscription = combineLatest([
         this.currentUser.isAuthenticated$, 
         this.currentUser.isAuthChecked$
     ]).subscribe(([isAuthenticated, isAuthChecked]) => {
+        console.log('Auth status changed - authenticated:', isAuthenticated, 'checked:', isAuthChecked);
         this.isAuthenticated = isAuthenticated;
         this.isAuthChecked = isAuthChecked;
     });
