@@ -48,6 +48,11 @@ export class CurrentUserService {
     this.checkInitialAuthenticationState();
   }
 
+  public initializeAuthState(): void {
+    console.log('=== MANUAL initializeAuthState called ===');
+    this.checkInitialAuthenticationState();
+  }
+
   private checkInitialAuthenticationState(): void {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
