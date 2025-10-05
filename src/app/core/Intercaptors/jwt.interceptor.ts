@@ -46,9 +46,15 @@ export class JwtInterceptor implements HttpInterceptor {
             this.currentUserService.setUser(res.access_token, res.refresh_token);
         })
         .catch(err => {
-          if (err?.error?.includes?.('invalid_grant') || err?.message?.includes?.('Token is not active')) {
-            this.currentUserService.logout();
-            return Promise.reject(err);
+          console.log("err err - ", err)
+          if (err?.error?.includes?.('invalid_grant') || 
+              err?.message?.includes?.('Token is not active') ||
+              err?.error?.message?.includes?.('invalid_grant')) {
+
+              localStorage.removeItem(this.currentUserService.getAuthResponseKey());
+              localStorage.removeItem(this.currentUserService.getSecretCodeKey());
+              localStorage.removeItem('iinKey');
+              localStorage.removeItem('vip_lang');
           }
           this.currentUserService.logout();
           throw err;
