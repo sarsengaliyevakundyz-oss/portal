@@ -161,7 +161,7 @@ export class CurrentUserService {
         return null;
       }
       else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
       }
     };
     return this.currentUser;
