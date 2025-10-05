@@ -52,9 +52,16 @@ export class CurrentUserService {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
     
-    if (!isAuthenticated && !hasSecretCode) {
+    if (isAuthenticated) {
+        this.isAuthenticatedSubject.next(true);
+        this.isAuthCheckedSubject.next(true);
+    } else if (!hasSecretCode) {
+        this.isAuthenticatedSubject.next(false);
+        this.isAuthCheckedSubject.next(true);
         this.redirectToSSO();
-        return; 
+    } else {
+        this.isAuthenticatedSubject.next(false);
+        this.isAuthCheckedSubject.next(false);
     }
   }
 
