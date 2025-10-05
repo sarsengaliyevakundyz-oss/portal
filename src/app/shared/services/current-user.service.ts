@@ -27,10 +27,10 @@ export class CurrentUserService {
   private iinKey = 'iin';
   private hasLoggedOut = false;
   private initialStatus = this.getInitialAuthenticationStatus();
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
@@ -48,25 +48,13 @@ export class CurrentUserService {
     this.checkInitialAuthenticationState();
   }
 
-  public initializeAuthState(): void {
-    console.log('=== MANUAL initializeAuthState called ===');
-    this.checkInitialAuthenticationState();
-  }
-
   private checkInitialAuthenticationState(): void {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
     
-    if (isAuthenticated) {
-        this.isAuthenticatedSubject.next(true);
-        this.isAuthCheckedSubject.next(true);
-    } else if (!hasSecretCode) {
-        this.isAuthenticatedSubject.next(false);
-        this.isAuthCheckedSubject.next(true);
-        this.redirectToSSO();
-    } else {
-        this.isAuthenticatedSubject.next(false);
-        this.isAuthCheckedSubject.next(false);
+    if (!isAuthenticated && !hasSecretCode) {
+      this.redirectToSSO();
+        return; 
     }
   }
 
