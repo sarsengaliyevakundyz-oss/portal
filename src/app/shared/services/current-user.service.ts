@@ -27,10 +27,12 @@ export class CurrentUserService {
   private iinKey = 'iin';
   private hasLoggedOut = false;
   private initialStatus = this.getInitialAuthenticationStatus();
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
+  // private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
+  // private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
@@ -70,7 +72,7 @@ export class CurrentUserService {
       const isValid = decodedToken.exp * 1000 > Date.now();
       
       if (isValid) {
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
       } 
       return isValid;
     } catch (error) {
@@ -157,11 +159,11 @@ export class CurrentUserService {
     if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
-        this.redirectToSSO();
+//         this.redirectToSSO();
         return null;
       }
       else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
       }
     };
     return this.currentUser;
