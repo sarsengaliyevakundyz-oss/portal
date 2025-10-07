@@ -26,11 +26,10 @@ export class CurrentUserService {
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
-  private initialStatus = this.getInitialAuthenticationStatus();
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
@@ -70,7 +69,7 @@ export class CurrentUserService {
       const isValid = decodedToken.exp * 1000 > Date.now();
       
       if (isValid) {
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, false); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
       } 
       return isValid;
     } catch (error) {
