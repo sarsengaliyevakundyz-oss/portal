@@ -157,7 +157,7 @@ export class CurrentUserService {
     if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
-//         this.redirectToSSO();
+        this.redirectToSSO();
         return null;
       }
       else{
