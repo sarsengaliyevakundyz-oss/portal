@@ -26,13 +26,11 @@ export class CurrentUserService {
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
-  private initialStatus = this.getInitialAuthenticationStatus();
+  // private initialStatus = this.getInitialAuthenticationStatus();
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
-  // private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthenticated);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  // private isAuthCheckedSubject = new BehaviorSubject<boolean>(this.initialStatus.isAuthChecked);
+  private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
@@ -41,22 +39,30 @@ export class CurrentUserService {
     private authService: AuthService
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
-    const savedCode = localStorage.getItem(this.secretCodeKey);
-    if (savedCode) {
-      this.secretCode = savedCode;
-      console.log('Loaded secretCode from localStorage:', savedCode);
-    }
 
     this.checkInitialAuthenticationState();
   }
 
   private checkInitialAuthenticationState(): void {
-    const isAuthenticated = this.checkAuthenticationStatus();
+    const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+
+    if (userInfo && userInfo.accessToken) {
+      try {
+        const decodedToken: any = jwtDecode(userInfo.accessToken);
+        const isTokenValid = decodedToken.exp * 1000 > Date.now();
+
+        if (isTokenValid) {
+          this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to decode token on init, clearing auth data.", error);
+        localStorage.removeItem(this.authResponseKey);
+      }
+    }
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
-    
-    if (!isAuthenticated && !hasSecretCode) {
+    if (!hasSecretCode) {
       this.redirectToSSO();
-        return; 
     }
   }
 
@@ -137,6 +143,7 @@ export class CurrentUserService {
         );
 
         this.setUser(response.access_token, response.refresh_token);
+        window.location.href = '/'; 
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
       }
@@ -156,18 +163,8 @@ export class CurrentUserService {
   }
 
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if(!userInfo){
-//         this.redirectToSSO();
-        return null;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
-      }
-    };
-    return this.currentUser;
-  }
+    return this.currentUser ?? null;
+  }
 
   getPermissions(): RoleEnum[]{
     return this.permissions;
@@ -227,7 +224,7 @@ export class CurrentUserService {
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
       const isJwt = token && token.split('.').length === 3;
-      const decoded: any = isJwt ? jwtDecode(token) : {}
+      const decoded: any = isJwt ? jwtDecode(token) : {};
 
       this.currentUser = {
         accessToken: token,
@@ -238,15 +235,16 @@ export class CurrentUserService {
         email: decoded.email || '',
         preferred_username: decoded.preferred_username || ''
       } as UserTokenInfo;
-      
+
       const secretCode = localStorage.getItem(this.secretCodeKey);
       if (secretCode) {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
+
       if (updateAuthStatus) {
-        this.isAuthenticatedSubject.next(true);
-        this.isAuthCheckedSubject.next(true);
-      }
+        this.isAuthenticatedSubject.next(true);
+        this.isAuthCheckedSubject.next(true);
+      }
     } catch (error) {
       console.error("Error setting user:", error);
       this.redirectToSSO();
