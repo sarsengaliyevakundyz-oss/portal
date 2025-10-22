@@ -3,7 +3,6 @@ import {Observable} from 'rxjs';
 import {BaseApi} from './base-api';
 import {News, NewsCategory, NewsCategoryQuery, NewsDetail, NewsQuery} from '../models/news.model';
 import {PaginationResultModel} from '../models/pagination.model';
-import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -12,16 +11,7 @@ import { map } from 'rxjs/operators';
 export class NewsService extends BaseApi {
 
   getList(query: NewsQuery): Observable<PaginationResultModel<News>> {
-    return this.getData<PaginationResultModel<News>>(this.apiUrl + '/internalportal/news/getNews', query)
-      .pipe(
-        map(response => ({
-          ...response,
-          response: response.response.map(news => ({
-            ...news,
-            publishDate: new Date(news.publishDate) // Convert string to Date
-          }))
-        }))
-      );
+    return this.getData<PaginationResultModel<News>>(this.apiUrl + '/internalportal/news/getNews', query);
   }
 
   getCategories(query: NewsCategoryQuery): Observable<NewsCategory[]> {
@@ -33,12 +23,6 @@ export class NewsService extends BaseApi {
   }
 
   getById(id: string): Observable<NewsDetail> {
-    return this.getData<NewsDetail>(this.apiUrl + '/internalportal/news/getNewsById?id='+id, null)
-      .pipe(
-        map(newsDetail => ({
-          ...newsDetail,
-          publishDate: new Date(newsDetail.publishDate)
-        }))
-      );
+    return this.getData<NewsDetail>(this.apiUrl + '/internalportal/news/getNewsById?id='+id, null);
   }
 }
