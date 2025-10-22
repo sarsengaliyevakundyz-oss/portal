@@ -46,7 +46,6 @@ export class JwtInterceptor implements HttpInterceptor {
             this.currentUserService.setUser(res.access_token, res.refresh_token);
         })
         .catch(err => {
-          console.log("err err - ", err)
           this.currentUserService.logout();
           throw err; 
         })

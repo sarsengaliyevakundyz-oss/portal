@@ -41,7 +41,6 @@ export class CurrentUserService {
     const savedCode = localStorage.getItem(this.secretCodeKey);
     if (savedCode) {
       this.secretCode = savedCode;
-      console.log('Loaded secretCode from localStorage:', savedCode);
     }
 
     this.checkInitialAuthenticationState();
@@ -118,7 +117,6 @@ export class CurrentUserService {
 
     this.secretCode = receivedCode;
     localStorage.setItem(this.secretCodeKey, receivedCode);
-    console.log('Получили secretCode через postMessage:', receivedCode);
     
       try {
         const response = await firstValueFrom(

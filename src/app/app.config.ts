@@ -16,7 +16,6 @@ import {environment} from '../environments/environment';
 // Factory function for the loader
 registerLocaleData(ru);
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  console.log("http - ", http)
   return new TranslateHttpLoader(http, '/internalportal/locale/', '');
 }
 
