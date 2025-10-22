@@ -114,12 +114,28 @@ export class NewsComponent implements OnInit {
  
   }
  
-    protected readonly window = window;
+  private parseDate(dateString: string | Date): Date {
+    if (dateString instanceof Date) {
+      return dateString;
+    }
+    if (typeof dateString === 'string' && /^\d{2}\.\d{2}\.\d{4}$/.test(dateString)) {
+      const [day, month, year] = dateString.split('.');
+      return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    }
+
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? new Date() : date;
+  }
+
+  protected readonly window = window;
   protected readonly CalendarTypeEnum = CalendarTypeEnum;
  
   loadData() {
     this.newsService.getList(this.query).subscribe(response => {
-      this.news = response.response;
+      this.news = response.response.map(item => ({
+        ...item,
+        publishDate: this.parseDate(item.publishDate)
+      }));
     })
   }
  
