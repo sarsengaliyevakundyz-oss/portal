@@ -5,7 +5,7 @@ export interface News {
   description: string
   id: number
   imageDescription: string
-  publishDate: Date
+  publishDate: Date | string
   title: string
   vipCategory: string
 }
@@ -23,7 +23,7 @@ export interface PaginationResultModel<T> {
 export interface NewsDetail {
   id: number
   categoryId: number
-  publishDate: Date
+  publishDate: Date | string
   title: string
   content: string
   imageContent: string
