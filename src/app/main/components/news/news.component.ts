@@ -51,13 +51,13 @@ export class NewsComponent implements OnInit {
     this.authSubscription = this.currentUser.isAuthChecked$.pipe(
       take(1)
     ).subscribe(isReady => {
-        console.log('isReady:', isReady);
-        if (isReady) {
-            console.log('isAuthenticated:', this.currentUser.isAuthenticated())
-            if (this.currentUser.isAuthenticated()) {
-              this.loadCategories();
-            }
-        }
+      console.log('isReady in news:', isReady);
+      if (isReady) {
+        console.log('isAuthenticated in news:', this.currentUser.isAuthenticated())
+        if (this.currentUser.isAuthenticated()) {
+          this.loadCategories();
+          }
+      }
     });
   }
 

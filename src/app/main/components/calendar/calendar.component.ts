@@ -74,13 +74,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.authSubscription = this.currentUser.isAuthChecked$.pipe(
       take(1)
     ).subscribe(isReady => {
-        if (isReady) {
-            if (this.currentUser.isAuthenticated()) {
-              this.generateCalendar();
-            } else {
-              this.isLoading = false;
-            }
+      console.log('isReady in calendar:', isReady);
+      if (isReady) {
+        console.log('isAuthenticated in calendar:', this.currentUser.isAuthenticated())
+        if (this.currentUser.isAuthenticated()) {
+          this.generateCalendar();
+        } else {
+          this.isLoading = false;
         }
+      }
     });
   }
 
