@@ -11,7 +11,8 @@ import {SharedModule} from '../../../shared/shared.module';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
- 
+import { Subscription } from 'rxjs'; 
+
 @Component({
   selector: 'app-news',
   standalone: true,
@@ -35,6 +36,8 @@ export class NewsComponent implements OnInit {
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
   currentCategoryIndex = 0;
+  private authSubscription: Subscription | undefined;
+
   constructor(
     private newsService: NewsService,
     public currentUser: CurrentUserService
@@ -45,10 +48,14 @@ export class NewsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.currentUser.isAuthenticated()) {
-      this.loadCategories();
-    }
-  }
+    this.authSubscription = this.currentUser.isAuthChecked$.subscribe(isReady => {
+        if (isReady) {
+            if (this.currentUser.isAuthenticated()) {
+              this.loadCategories();
+            }
+        }
+    });
+  }
 
   private loadCategories(): void {
     this.newsService.getCategories({ isActive: true }).subscribe(response => {
@@ -60,6 +67,12 @@ export class NewsComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+        this.authSubscription.unsubscribe();
+    }
+  }
  
   months = [
     'Month.January', 'Month.February', 'Month.March', 'Month.April',
