@@ -49,7 +49,7 @@ export class NewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.authSubscription = this.currentUser.isAuthChecked$.pipe(
-      take(1)
+      take(2)
     ).subscribe(isReady => {
       console.log('isReady in news:', isReady);
       if (isReady) {
