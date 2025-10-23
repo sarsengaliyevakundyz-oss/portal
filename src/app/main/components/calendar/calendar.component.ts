@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
-import { Subscription, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -71,18 +71,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.currentUser.isAuthChecked$.pipe(
-      take(1)
-    ).subscribe(isReady => {
-      console.log('isReady in calendar:', isReady);
-      if (isReady) {
-        console.log('isAuthenticated in calendar:', this.currentUser.isAuthenticated())
-        if (this.currentUser.isAuthenticated()) {
-          this.generateCalendar();
-        } else {
-          this.isLoading = false;
+    this.authSubscription = this.currentUser.isAuthChecked$.subscribe(isReady => {
+        if (isReady) {
+            if (this.currentUser.isAuthenticated()) {
+              this.generateCalendar();
+            } else {
+              this.isLoading = false;
+            }
         }
-      }
     });
   }
 
