@@ -45,7 +45,7 @@ export class NewsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isAuthenticated()) {
+    if (this.currentUser.isAuthenticated()) {
       this.loadCategories();
     }
   }
