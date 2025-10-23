@@ -67,12 +67,6 @@ export class NewsComponent implements OnInit {
       }
     });
   }
-
-  ngOnDestroy(): void {
-    if (this.authSubscription) {
-        this.authSubscription.unsubscribe();
-    }
-  }
  
   months = [
     'Month.January', 'Month.February', 'Month.March', 'Month.April',
