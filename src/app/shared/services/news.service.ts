@@ -25,4 +25,18 @@ export class NewsService extends BaseApi {
   getById(id: string): Observable<NewsDetail> {
     return this.getData<NewsDetail>(this.apiUrl + '/internalportal/news/getNewsById?id='+id, null);
   }
+
+  addNews(body: {
+    categoryId: number;
+    content: string;
+    description: string;
+    imageContent: string;
+    imageDescription: string;
+    lang: string;
+    loginCreated?: string;
+    publishDate: string;
+    title: string;
+  }): Observable<void> {
+    return this.postData<void>(this.apiUrl + '/internalportal/news/addNews', body);
+  }
 }

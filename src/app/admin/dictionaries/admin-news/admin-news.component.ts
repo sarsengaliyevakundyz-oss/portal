@@ -3,6 +3,7 @@ import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {NewsService} from '../../../shared/services/news.service';
 
 @Component({
   selector: 'app-admin-news',
@@ -30,7 +31,8 @@ export class AdminNewsComponent implements OnInit {
   uploadedRusFileName: string = '';
   selectedIndex: number | null = null;
 
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(private readonly formBuilder: FormBuilder,
+              private readonly newsService: NewsService) {
   }
 
   ngOnInit(): void {
@@ -94,13 +96,21 @@ export class AdminNewsComponent implements OnInit {
       this.addForm.markAllAsTouched();
       return;
     }
-    const payload = {
-      ...this.addForm.value,
-      kazFileName: this.uploadedKazFileName,
-      rusFileName: this.uploadedRusFileName
-    };
-    console.log('Сохранить новость', payload);
-    this.onCancelAdd();
+    const v = this.addForm.value as any;
+    this.newsService.addNews({
+      categoryId: v.category,
+      content: v.mainText || '',
+      description: v.shortDescription || '',
+      imageContent: '',
+      imageDescription: '',
+      lang: v.locale || '',
+      loginCreated: '',
+      publishDate: v.date,
+      title: v.title
+    }).subscribe({
+      next: () => { this.onCancelAdd(); this.loadList(); },
+      error: () => {}
+    });
   }
 
   onKazFileChange(event: Event): void {
@@ -163,56 +173,26 @@ export class AdminNewsComponent implements OnInit {
     return `${dd}.${mm}.${yyyy}`;
   }
 
-  tableData = [
-    {
-      category: 'META',
-      date: '12.12.2024',
-      locale: '',
-      title: '',
-      shortDescription: 'Наименование',
-      mainText: '',
-      hidden: false,
-      updatedAt: '12.12.2024',
-    },
-    {
-      category: 'META',
-      date: '12.12.2024',
-      locale: '',
-      title: '',
-      shortDescription: 'Наименование',
-      mainText: '',
-      hidden: true,
-      updatedAt: '12.12.2024',
-    },
-    {
-      category: 'META',
-      date: '12.12.2024',
-      locale: '',
-      title: '',
-      shortDescription: 'Наименование',
-      mainText: '',
-      hidden: false,
-      updatedAt: '12.12.2024',
-    },
-    {
-      category: 'META',
-      date: '12.12.2024',
-      locale: '',
-      title: '',
-      shortDescription: 'Наименование',
-      mainText: '',
-      hidden: true,
-      updatedAt: '12.12.2024',
-    },
-    {
-      category: 'META',
-      date: '12.12.2024',
-      locale: '',
-      title: '',
-      shortDescription: 'Наименование',
-      mainText: '',
-      hidden: true,
-      updatedAt: '12.12.2024',
-    }
-  ];
+  tableData: any[] = [];
+
+  ngAfterViewInit(): void {
+    this.loadList();
+  }
+
+  private loadList(): void {
+    this.newsService.getList({ page: 1, limit: 25, categoryId: undefined as any, year: undefined as any } as any)
+      .subscribe(res => {
+      const items = res?.response || [];
+      this.tableData = items.map((n: any) => ({
+        category: n.vipCategory,
+        date: this.fromIsoDate(typeof n.publishDate === 'string' ? n.publishDate.substring(0,10) : ''),
+        locale: '',
+        title: n.title,
+        shortDescription: n.description,
+        mainText: '',
+        hidden: false,
+        updatedAt: this.fromIsoDate(typeof n.publishDate === 'string' ? n.publishDate.substring(0,10) : '')
+      }));
+    });
+  }
 }
