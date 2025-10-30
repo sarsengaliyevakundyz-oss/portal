@@ -42,8 +42,19 @@
 }
 
 .row-selected {
-  background: #eef2ff;
+  background: #949596;
 }
+
+.row-selected td {
+  background: #949596;
+}
+
+/* hover для строк таблицы (кроме выбранной) */
+.styled-table tbody tr:not(.row-selected):hover td {
+  background: #e5e7eb;
+}
+
+.styled-table tbody tr { cursor: pointer; }
 
 .modal-overlay {
   position: fixed;
