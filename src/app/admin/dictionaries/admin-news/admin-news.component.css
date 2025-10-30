@@ -49,7 +49,6 @@
   background: #949596;
 }
 
-/* hover для строк таблицы (кроме выбранной) */
 .styled-table tbody tr:not(.row-selected):hover td {
   background: #e5e7eb;
 }

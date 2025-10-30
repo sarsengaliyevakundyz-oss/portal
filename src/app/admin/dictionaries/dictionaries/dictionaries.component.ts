@@ -17,7 +17,7 @@ const ADMIN_SECTIONS: AdminSection[] = [
   { key: 'systems',       labelKey: 'admin.sections.systems',       route: '/admin/dic/systems',       iconName: 'layers' },
   { key: 'localization',  labelKey: 'admin.sections.localization',  route: '/admin/dic/trans',    iconName: 'translate' },
   { key: 'news',          labelKey: 'admin.sections.news',          route: '/admin/dic/news',          iconName: 'announcement' },
-  { key: 'newsCategories',labelKey: 'admin.sections.categories',    route: '/admin/news-categories',iconName: 'category' },
+  { key: 'newsCategories',labelKey: 'admin.sections.categories',    route: '/admin/dic/categories', iconName: 'category' },
   { key: 'instructions',  labelKey: 'admin.sections.instructions',  route: '/admin/instructions',  iconName: 'menu_book' },
   { key: 'roles',         labelKey: 'admin.sections.roles',         route: '/admin/dic/roles',  iconName: 'menu_book' },
 ];

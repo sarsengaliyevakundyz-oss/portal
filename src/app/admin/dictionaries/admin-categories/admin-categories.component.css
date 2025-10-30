@@ -1,0 +1,27 @@
+@import url('../admin-news/admin-news.component.css');
+
+.styled-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.styled-table thead th {
+  text-align: left;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 12px;
+  padding: 0 12px 8px 12px;
+}
+
+.styled-table tbody td {
+  background: #fff;
+  padding: 14px 12px;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.styled-table tbody tr td:first-child { border-left: 1px solid #e5e7eb; border-radius: 8px 0 0 8px; }
+.styled-table tbody tr td:last-child  { border-right: 1px solid #e5e7eb; border-radius: 0 8px 8px 0; }
+
+

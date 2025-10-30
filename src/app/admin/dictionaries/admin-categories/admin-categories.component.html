@@ -1,0 +1,129 @@
+<div>
+  <h2>Категории</h2>
+  <div class="actions">
+    <button class="btn btn-add" title="Добавить" aria-label="Добавить" (click)="onAdd()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/>
+      </svg>
+    </button>
+    <button class="btn btn-edit" title="Редактировать" aria-label="Редактировать" (click)="onEdit()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/>
+      </svg>
+    </button>
+    <button class="btn btn-delete" title="Удалить" aria-label="Удалить" (click)="onDelete()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/>
+      </svg>
+    </button>
+  </div>
+
+  <table class="styled-table">
+    <thead>
+    <tr>
+      <th>№</th>
+      <th>Наименование на рус</th>
+      <th>Наименование на каз</th>
+      <th>Иконка</th>
+      <th>Статус</th>
+      <th>Дата изменения</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of tableData; let i = index" (click)="onRowSelect(i)" [class.row-selected]="i === selectedIndex">
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.nameRu }}</td>
+      <td>{{ item.nameKz }}</td>
+      <td>{{ item.icon }}</td>
+      <td>
+        <span *ngIf="item.active">Активна</span>
+        <span *ngIf="!item.active">Скрыта</span>
+      </td>
+      <td>{{ item.updatedAt }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="showAddModal" class="modal-overlay" (click)="onCancelAdd()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Добавить категорию</h3>
+    </div>
+    <form [formGroup]="addForm" class="modal-body" (ngSubmit)="onSaveAdd()">
+      <div class="form-field">
+        <label>Наименование (RU)</label>
+        <input type="text" formControlName="nameRu" />
+      </div>
+      <div class="form-field">
+        <label>Наименование (KZ)</label>
+        <input type="text" formControlName="nameKz" />
+      </div>
+      <div class="form-field">
+        <label>Иконка</label>
+        <input type="text" formControlName="icon" />
+      </div>
+      <div class="form-field">
+        <label>Статус</label>
+        <select formControlName="active">
+          <option [ngValue]="true">Активна</option>
+          <option [ngValue]="false">Скрыта</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-light" (click)="onCancelAdd()">Отмена</button>
+        <button type="submit" class="btn-primary">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showEditModal" class="modal-overlay" (click)="onCancelEdit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Редактировать категорию</h3>
+    </div>
+    <form [formGroup]="editForm" class="modal-body" (ngSubmit)="onSaveEdit()">
+      <div class="form-field">
+        <label>Наименование (RU)</label>
+        <input type="text" formControlName="nameRu" />
+      </div>
+      <div class="form-field">
+        <label>Наименование (KZ)</label>
+        <input type="text" formControlName="nameKz" />
+      </div>
+      <div class="form-field">
+        <label>Иконка</label>
+        <input type="text" formControlName="icon" />
+      </div>
+      <div class="form-field">
+        <label>Статус</label>
+        <select formControlName="active">
+          <option [ngValue]="true">Активна</option>
+          <option [ngValue]="false">Скрыта</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-light" (click)="onCancelEdit()">Отмена</button>
+        <button type="submit" class="btn-primary">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="cancelDelete()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Удалить категорию</h3>
+    </div>
+    <div class="modal-body">
+      Вы уверены, что хотите удалить выбранную категорию?
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-light" (click)="cancelDelete()">Отмена</button>
+      <button type="button" class="btn-primary" (click)="confirmDelete()">Удалить</button>
+    </div>
+  </div>
+</div>
+
+
