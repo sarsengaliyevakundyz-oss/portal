@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AdminCategoriesService} from '../../../shared/services/admin-categories.service';
+import {NewsCategory} from '../../../shared/models/news.model';
 
 @Component({
   selector: 'app-admin-categories',
@@ -18,7 +20,11 @@ export class AdminCategoriesComponent implements OnInit {
   editForm!: FormGroup;
   selectedIndex: number | null = null;
 
-  constructor(private readonly formBuilder: FormBuilder) {}
+  loading: boolean = false;
+  tableData: NewsCategory[] = [];
+
+  constructor(private readonly formBuilder: FormBuilder,
+              private readonly service: AdminCategoriesService) {}
 
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
@@ -34,6 +40,18 @@ export class AdminCategoriesComponent implements OnInit {
       icon: [''],
       active: [true, Validators.required]
     });
+    this.loadCategories();
+  }
+
+  private loadCategories(): void {
+    this.loading = true;
+    this.service.getCategories({ isActive: true }).subscribe({
+      next: (res) => {
+        this.tableData = res;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
+    });
   }
 
   onAdd(): void { this.showAddModal = true; }
@@ -42,9 +60,9 @@ export class AdminCategoriesComponent implements OnInit {
     if (this.selectedIndex === null) return;
     const item = this.tableData[this.selectedIndex];
     this.editForm.setValue({
-      nameRu: item.nameRu,
-      nameKz: item.nameKz,
-      icon: item.icon,
+      nameRu: item.name?.ru ?? '',
+      nameKz: item.name?.kz ?? '',
+      icon: '',
       active: item.active
     });
     this.showEditModal = true;
@@ -69,12 +87,16 @@ export class AdminCategoriesComponent implements OnInit {
       this.addForm.markAllAsTouched();
       return;
     }
-    const payload = {
-      ...this.addForm.value,
-      updatedAt: this.today()
-    };
-    this.tableData = [payload, ...this.tableData];
-    this.onCancelAdd();
+    const v = this.addForm.value;
+    this.service.addCategory({
+      imagePath: '',
+      loginCreated: '',
+      nameKk: v.nameKz,
+      nameRu: v.nameRu
+    }).subscribe({
+      next: () => { this.onCancelAdd(); this.loadCategories(); },
+      error: () => {}
+    });
   }
 
   onCancelEdit(): void { this.showEditModal = false; }
@@ -84,20 +106,29 @@ export class AdminCategoriesComponent implements OnInit {
       this.editForm.markAllAsTouched();
       return;
     }
-    const updated = {
-      ...this.tableData[this.selectedIndex],
-      ...this.editForm.value,
-      updatedAt: this.today()
-    };
-    this.tableData = this.tableData.map((x, i) => i === this.selectedIndex ? updated : x);
-    this.showEditModal = false;
+    const id = this.tableData[this.selectedIndex].id;
+    const v = this.editForm.value;
+    this.service.updateCategory({
+      categoryId: id,
+      imagePath: '',
+      loginUpdated: '',
+      nameKk: v.nameKz,
+      nameRu: v.nameRu
+    }).subscribe({
+      next: () => { this.showEditModal = false; this.loadCategories(); },
+      error: () => {}
+    });
   }
 
   confirmDelete(): void {
     if (this.selectedIndex === null) return;
-    this.tableData = this.tableData.filter((_, i) => i !== this.selectedIndex);
-    this.selectedIndex = null;
-    this.showDeleteModal = false;
+    const id = this.tableData[this.selectedIndex].id;
+    const currentlyActive = this.tableData[this.selectedIndex].active;
+    this.service.toggleActive({ categoryId: id, isActive: currentlyActive, loginDeleted: '' })
+      .subscribe({
+        next: () => { this.selectedIndex = null; this.showDeleteModal = false; this.loadCategories(); },
+        error: () => {}
+      });
   }
 
   cancelDelete(): void { this.showDeleteModal = false; }
@@ -110,13 +141,7 @@ export class AdminCategoriesComponent implements OnInit {
     return `${dd}.${mm}.${yyyy}`;
   }
 
-  tableData = [
-    { nameRu: 'Наименование', nameKz: 'Наименование', icon: 'category', active: true,  updatedAt: '12.12.2024' },
-    { nameRu: 'Наименование', nameKz: 'Наименование', icon: 'category', active: false, updatedAt: '12.12.2024' },
-    { nameRu: 'Наименование', nameKz: 'Наименование', icon: 'category', active: true,  updatedAt: '12.12.2024' },
-    { nameRu: 'Наименование', nameKz: 'Наименование', icon: 'category', active: true,  updatedAt: '12.12.2024' },
-    { nameRu: 'Наименование', nameKz: 'Наименование', icon: 'category', active: false, updatedAt: '12.12.2024' }
-  ];
+  // данные приходят из API через loadCategories
 }
 
 

@@ -32,14 +32,14 @@
     <tbody>
     <tr *ngFor="let item of tableData; let i = index" (click)="onRowSelect(i)" [class.row-selected]="i === selectedIndex">
       <td>{{ i + 1 }}</td>
-      <td>{{ item.nameRu }}</td>
-      <td>{{ item.nameKz }}</td>
-      <td>{{ item.icon }}</td>
+      <td>{{ item.name?.ru }}</td>
+      <td>{{ item.name?.kz }}</td>
+      <td></td>
       <td>
         <span *ngIf="item.active">Активна</span>
         <span *ngIf="!item.active">Скрыта</span>
       </td>
-      <td>{{ item.updatedAt }}</td>
+      <td></td>
     </tr>
     </tbody>
   </table>
