@@ -32,7 +32,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let item of tableData; let i = index">
+    <tr *ngFor="let item of tableData; let i = index" (click)="onRowSelect(i)" [class.row-selected]="i === selectedIndex">
       <td>{{ i + 1 }}</td>
       <td>{{ item.category }}</td>
       <td>{{ item.date }}</td>
@@ -52,7 +52,7 @@
     </tr>
     </tbody>
   </table>
-</div>
+ </div>
 
 <div *ngIf="showAddModal" class="modal-overlay" (click)="onCancelAdd()">
   <div class="modal" (click)="$event.stopPropagation()">
@@ -123,5 +123,68 @@
         <button type="submit" class="btn btn-primary">Сохранить</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div *ngIf="showEditModal" class="modal-overlay" (click)="onCancelEdit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Редактировать Новость</h3>
+    </div>
+    <form [formGroup]="editForm" class="modal-body" (ngSubmit)="onSaveEdit()">
+      <div class="form-field">
+        <label>Категория</label>
+        <select formControlName="category">
+          <option value="META">META</option>
+          <option value="EVENT">EVENT</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Дата</label>
+        <input type="date" formControlName="date" />
+      </div>
+
+      <div class="form-field">
+        <label>Локаль</label>
+        <input type="text" formControlName="locale" />
+      </div>
+
+      <div class="form-field">
+        <label>Заголовок</label>
+        <input type="text" formControlName="title" />
+      </div>
+
+      <div class="form-field">
+        <label>Краткое описание</label>
+        <input type="text" formControlName="shortDescription" />
+      </div>
+
+      <div class="form-field">
+        <label>Основной текст</label>
+        <textarea formControlName="mainText"></textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="onCancelEdit()">Отменить</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="cancelDelete()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Удалить запись?</h3>
+    </div>
+    <div class="modal-body">
+      <p>Вы действительно хотите удалить выбранную новость?<br>
+      Номер: {{ selectedIndex !== null ? (selectedIndex + 1) : '-' }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="cancelDelete()">Отменить</button>
+      <button type="button" class="btn btn-primary" (click)="confirmDelete()">Удалить</button>
+    </div>
   </div>
 </div>

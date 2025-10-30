@@ -41,7 +41,10 @@
   fill: currentColor;
 }
 
-/* Modal */
+.row-selected {
+  background: #eef2ff;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;

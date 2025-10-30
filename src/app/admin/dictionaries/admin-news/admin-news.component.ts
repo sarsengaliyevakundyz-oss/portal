@@ -22,15 +22,28 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 export class AdminNewsComponent implements OnInit {
 
   showAddModal: boolean = false;
+  showEditModal: boolean = false;
+  showDeleteModal: boolean = false;
   addForm!: FormGroup;
+  editForm!: FormGroup;
   uploadedKazFileName: string = '';
   uploadedRusFileName: string = '';
+  selectedIndex: number | null = null;
 
   constructor(private readonly formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
+      category: ['', Validators.required],
+      date: ['', Validators.required],
+      locale: [''],
+      title: ['', Validators.required],
+      shortDescription: [''],
+      mainText: ['']
+    });
+
+    this.editForm = this.formBuilder.group({
       category: ['', Validators.required],
       date: ['', Validators.required],
       locale: [''],
@@ -45,11 +58,28 @@ export class AdminNewsComponent implements OnInit {
   }
 
   onEdit(): void {
-    console.log('Редактировать запись');
+    if (this.selectedIndex === null) {
+      console.warn('Не выбрана запись для редактирования');
+      return;
+    }
+    const item = this.tableData[this.selectedIndex];
+    this.editForm.setValue({
+      category: item.category,
+      date: this.toIsoDate(item.date),
+      locale: item.locale,
+      title: item.title,
+      shortDescription: item.shortDescription,
+      mainText: item.mainText
+    });
+    this.showEditModal = true;
   }
 
   onDelete(): void {
-    console.log('Удалить запись');
+    if (this.selectedIndex === null) {
+      console.warn('Не выбрана запись для удаления');
+      return;
+    }
+    this.showDeleteModal = true;
   }
 
   onCancelAdd(): void {
@@ -87,6 +117,51 @@ export class AdminNewsComponent implements OnInit {
 
   removeKazFile(): void { this.uploadedKazFileName = ''; }
   removeRusFile(): void { this.uploadedRusFileName = ''; }
+
+  onRowSelect(index: number): void {
+    this.selectedIndex = index === this.selectedIndex ? null : index;
+  }
+
+  onCancelEdit(): void {
+    this.showEditModal = false;
+  }
+
+  onSaveEdit(): void {
+    if (this.editForm.invalid || this.selectedIndex === null) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+    const updated = {
+      ...this.tableData[this.selectedIndex],
+      ...this.editForm.value,
+      date: this.fromIsoDate(this.editForm.value.date)
+    };
+    this.tableData = this.tableData.map((x, i) => i === this.selectedIndex ? updated : x);
+    this.showEditModal = false;
+  }
+
+  confirmDelete(): void {
+    if (this.selectedIndex === null) return;
+    this.tableData = this.tableData.filter((_, i) => i !== this.selectedIndex);
+    this.selectedIndex = null;
+    this.showDeleteModal = false;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+  }
+
+  private toIsoDate(d: string): string {
+    const [dd, mm, yyyy] = d.split('.');
+    if (!yyyy) return d;
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  private fromIsoDate(d: string): string {
+    const [yyyy, mm, dd] = d.split('-');
+    if (!dd) return d;
+    return `${dd}.${mm}.${yyyy}`;
+  }
 
   tableData = [
     {
