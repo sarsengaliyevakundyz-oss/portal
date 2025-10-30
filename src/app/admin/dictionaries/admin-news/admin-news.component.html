@@ -53,3 +53,75 @@
     </tbody>
   </table>
 </div>
+
+<div *ngIf="showAddModal" class="modal-overlay" (click)="onCancelAdd()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Добавить Новость</h3>
+    </div>
+    <form [formGroup]="addForm" class="modal-body" (ngSubmit)="onSaveAdd()">
+      <div class="form-field">
+        <label>Категория</label>
+        <select formControlName="category">
+          <option value="" disabled>Выберите</option>
+          <option value="META">META</option>
+          <option value="EVENT">EVENT</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Дата</label>
+        <input type="date" formControlName="date" />
+      </div>
+
+      <div class="form-field">
+        <label>Локаль</label>
+        <input type="text" formControlName="locale" placeholder="Введите" />
+      </div>
+
+      <div class="form-field">
+        <label>Заголовок</label>
+        <input type="text" formControlName="title" placeholder="Введите" />
+      </div>
+
+      <div class="form-field">
+        <label>Краткое описание</label>
+        <input type="text" formControlName="shortDescription" placeholder="Введите" />
+      </div>
+
+      <div class="form-field">
+        <label>Основной текст</label>
+        <textarea formControlName="mainText" placeholder="Введите"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label>Загрузить файл каз</label>
+        <div class="file-row">
+          <label class="btn btn-secondary">
+            <input type="file" (change)="onKazFileChange($event)" hidden />
+            Загрузить файл
+          </label>
+          <span class="file-name" *ngIf="uploadedKazFileName">{{ uploadedKazFileName }}</span>
+          <button type="button" class="icon-button" *ngIf="uploadedKazFileName" (click)="removeKazFile()" aria-label="Удалить файл">✕</button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Загрузить файл рус</label>
+        <div class="file-row">
+          <label class="btn btn-secondary">
+            <input type="file" (change)="onRusFileChange($event)" hidden />
+            Загрузить файл
+          </label>
+          <span class="file-name" *ngIf="uploadedRusFileName">{{ uploadedRusFileName }}</span>
+          <button type="button" class="icon-button" *ngIf="uploadedRusFileName" (click)="removeRusFile()" aria-label="Удалить файл">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="onCancelAdd()">Отменить</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 8px 0 16px;
+  margin: 0;
 }
 
 .btn {
@@ -32,10 +32,105 @@
 .btn-edit:hover { color: #111827; }
 
 
-/* SVG-иконки внутри кнопок: размер и наследование цвета */
 .btn svg {
   width: 18px;
   height: 18px;
   fill: currentColor;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  z-index: 1000;
+}
+
+.modal {
+  width: 640px;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-body {
+  padding: 16px 20px 4px;
+  display: grid;
+  gap: 12px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  outline: none;
+}
+
+.form-field textarea { min-height: 90px; resize: vertical; }
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-name { font-size: 13px; color: #111827; }
+
+.icon-button {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 20px 20px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+
+.btn-light {
+  background: #f3f4f6;
+  color: #111827;
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
 }
 
