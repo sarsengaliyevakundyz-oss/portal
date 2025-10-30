@@ -1,0 +1,33 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6b7280; /* gray-500 */
+}
+
+.btn:hover { color: #374151; /* gray-700 */ }
+
+.btn-add {
+  background-color: #2563eb; /* blue-600 */
+  color: #ffffff;
+  border-radius: 50%;
+}
+
+.btn-add:hover { background-color: #1d4ed8; }
+
+.btn-delete:hover { color: #ef4444; }
+
+.btn-edit:hover { color: #111827; }
+

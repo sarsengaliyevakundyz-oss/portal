@@ -23,7 +23,18 @@ export class AdminNewsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      throw new Error('Method not implemented.');
+  }
+
+  onAdd(): void {
+    console.log('Добавить запись');
+  }
+
+  onEdit(): void {
+    console.log('Редактировать запись');
+  }
+
+  onDelete(): void {
+    console.log('Удалить запись');
   }
 
   tableData = [

@@ -1,5 +1,16 @@
 <div>
   <h2>Новости</h2>
+  <div class="actions">
+    <button class="btn btn-add" title="Добавить" (click)="onAdd()">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button class="btn btn-edit" title="Редактировать" (click)="onEdit()">
+      <i class="fa fa-pencil"></i>
+    </button>
+    <button class="btn btn-delete" title="Удалить" (click)="onDelete()">
+      <i class="fa fa-trash"></i>
+    </button>
+  </div>
   <table class="styled-table">
     <thead>
     <tr>
