@@ -9,18 +9,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border: none;
   background: transparent;
   cursor: pointer;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
 }
 
-.btn:hover { color: #374151; /* gray-700 */ }
+.btn:hover { color: #374151; }
 
 .btn-add {
-  background-color: #2563eb; /* blue-600 */
+  background-color: #2563eb; 
   color: #ffffff;
   border-radius: 50%;
 }
@@ -30,4 +30,12 @@
 .btn-delete:hover { color: #ef4444; }
 
 .btn-edit:hover { color: #111827; }
+
+
+/* SVG-иконки внутри кнопок: размер и наследование цвета */
+.btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
 

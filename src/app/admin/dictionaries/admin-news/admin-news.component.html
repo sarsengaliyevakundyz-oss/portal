@@ -1,14 +1,20 @@
 <div>
   <h2>Новости</h2>
   <div class="actions">
-    <button class="btn btn-add" title="Добавить" (click)="onAdd()">
-      <i class="fa fa-plus"></i>
+    <button class="btn btn-add" title="Добавить" aria-label="Добавить" (click)="onAdd()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/>
+      </svg>
     </button>
-    <button class="btn btn-edit" title="Редактировать" (click)="onEdit()">
-      <i class="fa fa-pencil"></i>
+    <button class="btn btn-edit" title="Редактировать" aria-label="Редактировать" (click)="onEdit()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/>
+      </svg>
     </button>
-    <button class="btn btn-delete" title="Удалить" (click)="onDelete()">
-      <i class="fa fa-trash"></i>
+    <button class="btn btn-delete" title="Удалить" aria-label="Удалить" (click)="onDelete()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/>
+      </svg>
     </button>
   </div>
   <table class="styled-table">
