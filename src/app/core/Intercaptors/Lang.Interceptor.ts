@@ -5,24 +5,18 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class LangParamInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Check if it's a GET request from the translate service
-    // For example, all translate files are in `/assets/i18n/`
-    const isTranslateRequest = req.method === 'GET';
+    if (req.method === 'GET') {
+      const existingHasLang = /[?&]lang=/.test(req.url);
+      const isRelativeUrl = req.url.startsWith('/');
+      if (!existingHasLang && isRelativeUrl) {
+        const langFromStorage = localStorage.getItem('vip_lang');
+        const safeLang = langFromStorage && langFromStorage.trim().length > 0 ? langFromStorage : 'kz';
 
-    if (isTranslateRequest) {
-      const lang = localStorage.getItem("vip_lang")
-
-      let newUrl = req.url;
-      if (newUrl.includes('?')) {
-        // Already has query parameters
-        newUrl = `${newUrl}&lang=${lang}`;
-      } else {
-        // No query parameters yet
-        newUrl = `${newUrl}?lang=${lang}`;
+        const separator = req.url.includes('?') ? '&' : '?';
+        const newUrl = `${req.url}${separator}lang=${safeLang}`;
+        const modifiedReq = req.clone({ url: newUrl });
+        return next.handle(modifiedReq);
       }
-
-      const modifiedReq = req.clone({ url: newUrl });
-      return next.handle(modifiedReq);
     }
 
     return next.handle(req);
