@@ -4,6 +4,8 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NewsService} from '../../../shared/services/news.service';
+import {AdminCategoriesService} from '../../../shared/services/admin-categories.service';
+import {NewsCategory} from '../../../shared/models/news.model';
 
 @Component({
   selector: 'app-admin-news',
@@ -31,8 +33,11 @@ export class AdminNewsComponent implements OnInit {
   uploadedRusFileName: string = '';
   selectedIndex: number | null = null;
 
+  categories: NewsCategory[] = [];
+
   constructor(private readonly formBuilder: FormBuilder,
-              private readonly newsService: NewsService) {
+              private readonly newsService: NewsService,
+              private readonly categoriesService: AdminCategoriesService) {
   }
 
   ngOnInit(): void {
@@ -53,6 +58,9 @@ export class AdminNewsComponent implements OnInit {
       shortDescription: [''],
       mainText: ['']
     });
+
+    this.loadList();
+    this.loadCategories();
   }
 
   onAdd(): void {
@@ -193,6 +201,13 @@ export class AdminNewsComponent implements OnInit {
         hidden: false,
         updatedAt: this.fromIsoDate(typeof n.publishDate === 'string' ? n.publishDate.substring(0,10) : '')
       }));
+    });
+  }
+
+  private loadCategories(): void {
+    this.categoriesService.getCategories({ isActive: true }).subscribe({
+      next: (res) => { this.categories = res; },
+      error: () => { }
     });
   }
 }

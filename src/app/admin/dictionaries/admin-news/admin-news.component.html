@@ -64,8 +64,7 @@
         <label>Категория</label>
         <select formControlName="category">
           <option value="" disabled>Выберите</option>
-          <option value="META">META</option>
-          <option value="EVENT">EVENT</option>
+          <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name?.ru }}</option>
         </select>
       </div>
 
@@ -135,8 +134,8 @@
       <div class="form-field">
         <label>Категория</label>
         <select formControlName="category">
-          <option value="META">META</option>
-          <option value="EVENT">EVENT</option>
+          <option value="" disabled>Выберите</option>
+          <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name?.ru }}</option>
         </select>
       </div>
 
