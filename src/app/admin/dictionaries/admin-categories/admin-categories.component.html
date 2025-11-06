@@ -34,7 +34,9 @@
       <td>{{ i + 1 }}</td>
       <td>{{ item.name?.ru }}</td>
       <td>{{ item.name?.kz }}</td>
-      <td></td>
+      <td>
+        <img *ngIf="item.imagePath" [src]="item.imagePath" alt="Иконка" class="icon-preview" />
+      </td>
       <td>
         <span *ngIf="item.active">Активна</span>
         <span *ngIf="!item.active">Скрыта</span>
@@ -61,7 +63,17 @@
       </div>
       <div class="form-field">
         <label>Иконка</label>
-        <input type="text" formControlName="icon" />
+        <div class="file-row">
+          <label class="btn btn-secondary">
+            <input type="file" (change)="onIconFileChange($event, 'add')" accept="image/*" hidden />
+            Загрузить файл
+          </label>
+          <span class="file-name" *ngIf="uploadedIconFileName">{{ uploadedIconFileName }}</span>
+          <button type="button" class="icon-button" *ngIf="uploadedIconFileName" (click)="removeIconFile('add')" aria-label="Удалить файл">✕</button>
+        </div>
+        <div *ngIf="iconFilePreview" class="file-preview">
+          <img [src]="iconFilePreview" alt="Предпросмотр" class="icon-preview" />
+        </div>
       </div>
       <div class="form-field">
         <label>Статус</label>
@@ -94,7 +106,21 @@
       </div>
       <div class="form-field">
         <label>Иконка</label>
-        <input type="text" formControlName="icon" />
+        <div class="file-row">
+          <label class="btn btn-secondary">
+            <input type="file" (change)="onIconFileChange($event, 'edit')" accept="image/*" hidden />
+            Загрузить файл
+          </label>
+          <span class="file-name" *ngIf="editIconFileName">{{ editIconFileName }}</span>
+          <button type="button" class="icon-button" *ngIf="editIconFileName" (click)="removeIconFile('edit')" aria-label="Удалить файл">✕</button>
+        </div>
+        <div *ngIf="editIconPreview" class="file-preview">
+          <img [src]="editIconPreview" alt="Предпросмотр" class="icon-preview" />
+        </div>
+        <div *ngIf="currentIconUrl && !editIconPreview" class="file-preview">
+          <img [src]="currentIconUrl" alt="Текущая иконка" class="icon-preview" />
+          <span class="current-file-text">Текущая иконка</span>
+        </div>
       </div>
       <div class="form-field">
         <label>Статус</label>
@@ -125,5 +151,3 @@
     </div>
   </div>
 </div>
-
-

@@ -141,7 +141,6 @@ export class AdminCategoriesComponent implements OnInit {
     return `${dd}.${mm}.${yyyy}`;
   }
 
-  // данные приходят из API через loadCategories
 }
 
 
