@@ -1,14 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import {BaseApi} from './base-api';
 import {News, NewsCategory, NewsCategoryQuery, NewsDetail, NewsQuery} from '../models/news.model';
 import {PaginationResultModel} from '../models/pagination.model';
-
+import { SystemsService } from './systems.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService extends BaseApi {
+  constructor(http: HttpClient, private systemsService: SystemsService) {
+    super(http);
+  }
 
   getList(query: NewsQuery): Observable<PaginationResultModel<News>> {
     return this.getData<PaginationResultModel<News>>(this.apiUrl + '/internalportal/news/getNews', query);
@@ -37,6 +42,11 @@ export class NewsService extends BaseApi {
     publishDate: string;
     title: string;
   }): Observable<void> {
-    return this.postData<void>(this.apiUrl + '/internalportal/news/addNews', body);
+    return this.systemsService.getAdminInfo().pipe(
+      switchMap(info => {
+        const bodyWithLogin = { ...body, loginCreated: info.username };
+        return this.postData<void>(this.apiUrl + '/internalportal/news/addNews', bodyWithLogin);
+      })
+    );
   }
 }

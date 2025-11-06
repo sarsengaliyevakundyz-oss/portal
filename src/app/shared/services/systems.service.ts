@@ -32,6 +32,10 @@ export class SystemsService extends BaseApi {
     return this.getData<AdminAccessMap>(this.apiUrl + '/internalportal/infoSystems/adminAccessMap', null);
   }
 
+  getAdminInfo(): Observable<AdminAccessMap> {
+    return this.getАdminInfo();
+  }
+
   getAllSystems(): Observable<ResultModel<SystemChildInfoModel[]>> {
     return this.getData<ResultModel<SystemChildInfoModel[]>>(this.apiUrl + '/internalportal/systems/allSystems', null);
   }
