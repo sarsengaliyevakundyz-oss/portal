@@ -23,6 +23,13 @@ export class AdminCategoriesComponent implements OnInit {
   loading: boolean = false;
   tableData: NewsCategory[] = [];
 
+  uploadedIconFileName: string | null = null;
+  iconFilePreview: string | null = null;
+
+  editIconFileName: string | null = null;
+  editIconPreview: string | null = null;
+  currentIconUrl: string | null = null;
+
   constructor(private readonly formBuilder: FormBuilder,
               private readonly service: AdminCategoriesService) {}
 
@@ -65,6 +72,9 @@ export class AdminCategoriesComponent implements OnInit {
       icon: '',
       active: item.active
     });
+    this.currentIconUrl = (item as any).imagePath ?? null;
+    this.editIconFileName = null;
+    this.editIconPreview = null;
     this.showEditModal = true;
   }
 
@@ -80,6 +90,8 @@ export class AdminCategoriesComponent implements OnInit {
   onCancelAdd(): void {
     this.showAddModal = false;
     this.addForm.reset({ active: true });
+    this.uploadedIconFileName = null;
+    this.iconFilePreview = null;
   }
 
   onSaveAdd(): void {
@@ -89,7 +101,7 @@ export class AdminCategoriesComponent implements OnInit {
     }
     const v = this.addForm.value;
     this.service.addCategory({
-      imagePath: '',
+      imagePath: this.iconFilePreview ?? '',
       loginCreated: '',
       nameKk: v.nameKz,
       nameRu: v.nameRu
@@ -99,7 +111,12 @@ export class AdminCategoriesComponent implements OnInit {
     });
   }
 
-  onCancelEdit(): void { this.showEditModal = false; }
+  onCancelEdit(): void {
+    this.showEditModal = false;
+    this.editIconFileName = null;
+    this.editIconPreview = null;
+    this.currentIconUrl = null;
+  }
 
   onSaveEdit(): void {
     if (this.editForm.invalid || this.selectedIndex === null) {
@@ -110,7 +127,7 @@ export class AdminCategoriesComponent implements OnInit {
     const v = this.editForm.value;
     this.service.updateCategory({
       categoryId: id,
-      imagePath: '',
+      imagePath: this.editIconPreview ?? '',
       loginUpdated: '',
       nameKk: v.nameKz,
       nameRu: v.nameRu
@@ -132,6 +149,36 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   cancelDelete(): void { this.showDeleteModal = false; }
+
+  onIconFileChange(event: Event, mode: 'add' | 'edit'): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files && input.files.length > 0 ? input.files[0] : null;
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : null;
+      if (mode === 'add') {
+        this.uploadedIconFileName = file.name;
+        this.iconFilePreview = result;
+      } else {
+        this.editIconFileName = file.name;
+        this.editIconPreview = result;
+        this.currentIconUrl = null;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeIconFile(mode: 'add' | 'edit'): void {
+    if (mode === 'add') {
+      this.uploadedIconFileName = null;
+      this.iconFilePreview = null;
+    } else {
+      this.editIconFileName = null;
+      this.editIconPreview = null;
+    }
+  }
 
   private today(): string {
     const d = new Date();

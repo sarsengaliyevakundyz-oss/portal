@@ -35,6 +35,7 @@ export interface NewsCategory {
   id: number
   name: ITranslateName
   active: boolean
+  imagePath?: string
 }
 
 export interface NewsCategoryQuery {
