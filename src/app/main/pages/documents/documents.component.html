@@ -1,0 +1,65 @@
+<div class="documents-container">
+  <div class="breadcrumbs">
+    <span class="breadcrumb-link">Документы</span> / <span class="breadcrumb-current">Инструкции</span>
+  </div>
+
+  <h1>Документы</h1>
+
+  <div class="page-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">Инструкции</h3>
+        <nz-radio-group [(ngModel)]="selectedType" class="radio-group">
+          <label nz-radio nzValue="type1">Тип инструкции 1</label>
+          <label nz-radio nzValue="type2">Тип инструкции 2</label>
+        </nz-radio-group>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="search-area">
+        <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+          <input type="text" nz-input placeholder="Поиск" [(ngModel)]="searchValue" />
+        </nz-input-group>
+        <ng-template #suffixIconSearch>
+          <span nz-icon nzType="search"></span>
+        </ng-template>
+        <button nz-button nzType="primary" class="search-btn" (click)="search()">Поиск</button>
+      </div>
+
+      <nz-table #basicTable [nzData]="items" [nzShowPagination]="false" nzBordered="false">
+        <thead>
+          <tr>
+            <th nzWidth="50px">№</th>
+            <th>
+              Компонент Е-статистики
+              <label nz-checkbox [(ngModel)]="isComponentChecked" class="header-checkbox"></label>
+            </th>
+            <th>Подсистема</th>
+            <th>Наименование</th>
+            <th>Дата изменения</th>
+            <th nzWidth="120px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ data.component }}</td>
+            <td>{{ data.subsystem }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.date }}</td>
+            <td>
+              <button class="download-btn" (click)="download(data)">
+                Скачать
+                <span class="file-info">{{data.fileType}} {{data.fileSize}}</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,139 @@
+.documents-container {
+  padding-bottom: 40px;
+}
+
+.breadcrumbs {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.breadcrumb-current {
+  color: #333;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.page-layout {
+  display: flex;
+  gap: 40px;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.sidebar-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radio-group label {
+  font-size: 14px;
+  color: #333;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.search-area {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.search-input {
+  max-width: 400px;
+  border-radius: 20px;
+}
+
+::ng-deep .search-input .ant-input {
+  border-radius: 20px;
+}
+
+.search-btn {
+  border-radius: 20px;
+  padding: 0 30px;
+  background-color: #4080ff; /* Adjust blue to match image */
+  border-color: #4080ff;
+}
+
+/* Table Styles */
+::ng-deep .ant-table-thead > tr > th {
+  background: transparent;
+  border-bottom: none;
+  color: #999;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+::ng-deep .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+}
+
+::ng-deep .ant-table-tbody > tr:hover > td {
+  background: #f9f9f9;
+}
+
+.header-checkbox {
+  margin-left: 8px;
+}
+
+/* Download Button */
+.download-btn {
+  background: #fff;
+  border: 1px solid #4080ff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: #4080ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.download-btn:hover {
+  background: #e6f7ff;
+}
+
+.file-info {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* Adjust table spacing */
+nz-table {
+  background: transparent;
+}
+
