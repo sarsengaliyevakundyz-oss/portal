@@ -7,10 +7,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { TranslatePipe } from '@ngx-translate/core';
-import { SystemsService } from '../../../shared/services/systems.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SharedModule } from '../../../shared/shared.module';
-import { ITranslateName } from '../../../shared/pipes/name-translate.pipe';
+import { ITranslateName, Lang } from '../../../shared/pipes/name-translate.pipe';
+import { DocumentsService } from '../../../shared/services/documents.service';
+import { InstructionModel } from '../../../shared/models/instruction.model';
 
 interface DocumentItem {
   id: number;
@@ -20,6 +21,8 @@ interface DocumentItem {
   date: string;
   fileSize: string;
   fileType: string;
+  fileRuPath: string;
+  fileKzPath: string;
 }
 
 @Component({
@@ -48,25 +51,26 @@ export class DocumentsComponent implements OnInit {
 
   isComponentChecked = true;
 
-  constructor(private systemsService: SystemsService) { }
+  constructor(private documentsService: DocumentsService, private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.loadDocuments();
   }
-  
 
   loadDocuments(): void {
-    this.systemsService.getParentSystems().subscribe({
+    this.documentsService.getInstructionsList().subscribe({
       next: (res) => {
         if (res && res.result) {
-          this.items = res.result.map(sys => ({
-            id: sys.id,
-            component: sys.codeName || '',
-            subsystem: 'Формы',
-            name: sys.name,
+          this.items = res.result.map(instruction => ({
+            id: instruction.id,
+            component: `System ${instruction.systemId}`,
+            subsystem: `Subsystem ${instruction.subsystemId}`,
+            name: { ru: instruction.titleRu, kz: instruction.titleKz },
             date: '12.12.2024',
             fileSize: '23.3 KB',
-            fileType: 'doc'
+            fileType: 'doc',
+            fileRuPath: instruction.fileRuPath,
+            fileKzPath: instruction.fileKzPath
           }));
         }
       },
@@ -81,6 +85,18 @@ export class DocumentsComponent implements OnInit {
   }
   
   download(item: DocumentItem): void {
-    console.log('Downloading:', item);
+    const lang = this.translate.currentLang;
+    let filePath = '';
+    if (lang === Lang.RU) {
+      filePath = item.fileRuPath;
+    } else if (lang === Lang.Kz) {
+      filePath = item.fileKzPath;
+    }
+    
+    if (filePath) {
+      window.open(filePath, '_blank');
+    } else {
+      console.warn('No file path available for download.');
+    }
   }
 }
