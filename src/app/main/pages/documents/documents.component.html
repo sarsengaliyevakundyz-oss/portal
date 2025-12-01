@@ -10,10 +10,20 @@
     <div class="sidebar">
       <div class="sidebar-card">
         <h3 class="sidebar-title">Инструкции</h3>
-        <nz-radio-group [(ngModel)]="selectedType" class="radio-group">
-          <label nz-radio nzValue="type1">Тип инструкции 1</label>
-          <label nz-radio nzValue="type2">Тип инструкции 2</label>
+        <nz-radio-group [(ngModel)]="selectedInstructionId" (ngModelChange)="onInstructionChange($event)" class="radio-group">
+          <label nz-radio *ngFor="let instruction of instructions" [nzValue]="instruction.id">
+            {{ instruction.titleRu }}
+          </label>
         </nz-radio-group>
+
+        <!-- Child Systems -->
+        <div *ngIf="childSystems.length > 0" class="child-systems">
+          <nz-radio-group [(ngModel)]="selectedChildSystem" class="radio-group">
+            <label nz-radio *ngFor="let child of childSystems" [nzValue]="child.id">
+              {{ child.name }}
+            </label>
+          </nz-radio-group>
+        </div>
       </div>
     </div>
 

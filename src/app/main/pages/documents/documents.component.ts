@@ -45,7 +45,10 @@ interface DocumentItem {
 })
 export class DocumentsComponent implements OnInit {
   searchValue = '';
-  selectedType = 'type1'; 
+  selectedInstructionId: number | null = null; 
+  instructions: InstructionModel[] = [];
+  childSystems: any[] = [];
+  selectedChildSystem: number | null = null; 
   
   items: DocumentItem[] = [];
 
@@ -55,6 +58,7 @@ export class DocumentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDocuments();
+    this.loadInstructions();
   }
 
   loadDocuments(): void {
@@ -78,6 +82,31 @@ export class DocumentsComponent implements OnInit {
         console.error('Error loading documents:', err);
       }
     });
+  }
+
+  loadInstructions(): void {
+    this.documentsService.getInstructionsList().subscribe({
+      next: (res) => {
+        if (res && res.result) {
+          this.instructions = res.result;
+        }
+      },
+      error: (err) => {
+        console.error('Error loading instructions:', err);
+      }
+    });
+  }
+
+  onInstructionChange(instructionId: number): void {
+    this.selectedInstructionId = instructionId;
+    this.childSystems = []; 
+    const selectedInstruction = this.instructions.find(inst => inst.id === instructionId);
+    if (selectedInstruction) {
+      this.childSystems = [
+        { id: 1, name: `Child System ${selectedInstruction.systemId}-1` },
+        { id: 2, name: `Child System ${selectedInstruction.systemId}-2` }
+      ];
+    }
   }
 
   search(): void {
