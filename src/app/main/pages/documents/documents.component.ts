@@ -47,7 +47,7 @@ export class DocumentsComponent implements OnInit {
   searchValue = '';
   selectedInstructionId: number | null = null; 
   instructions: InstructionModel[] = [];
-  childSystems: any[] = [];
+  childSystems: any[] = []; 
   selectedChildSystem: number | null = null; 
   
   items: DocumentItem[] = [];
@@ -67,14 +67,14 @@ export class DocumentsComponent implements OnInit {
         if (res && res.result) {
           this.items = res.result.map(instruction => ({
             id: instruction.id,
-            component: `System ${instruction.systemId}`,
-            subsystem: `Subsystem ${instruction.subsystemId}`,
-            name: { ru: instruction.titleRu, kz: instruction.titleKz },
-            date: '12.12.2024',
-            fileSize: '23.3 KB',
-            fileType: 'doc',
-            fileRuPath: instruction.fileRuPath,
-            fileKzPath: instruction.fileKzPath
+            component: instruction.systemName,
+            subsystem: instruction.subsystemName,
+            name: { ru: instruction.title, kz: instruction.title },
+            date: new Date(instruction.createdAt).toLocaleDateString(),
+            fileSize: instruction.size,
+            fileType: instruction.contentType.split('/')[1],
+            fileRuPath: instruction.filePath,
+            fileKzPath: instruction.filePath
           }));
         }
       },
@@ -103,8 +103,8 @@ export class DocumentsComponent implements OnInit {
     const selectedInstruction = this.instructions.find(inst => inst.id === instructionId);
     if (selectedInstruction) {
       this.childSystems = [
-        { id: 1, name: `Child System ${selectedInstruction.systemId}-1` },
-        { id: 2, name: `Child System ${selectedInstruction.systemId}-2` }
+        { id: 1, name: `Подсистема 1 для ${selectedInstruction.systemName}` },
+        { id: 2, name: `Подсистема 2 для ${selectedInstruction.systemName}` }
       ];
     }
   }

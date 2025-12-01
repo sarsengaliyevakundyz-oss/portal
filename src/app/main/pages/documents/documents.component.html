@@ -12,7 +12,7 @@
         <h3 class="sidebar-title">Инструкции</h3>
         <nz-radio-group [(ngModel)]="selectedInstructionId" (ngModelChange)="onInstructionChange($event)" class="radio-group">
           <label nz-radio *ngFor="let instruction of instructions" [nzValue]="instruction.id">
-            {{ instruction.titleRu }}
+            {{ instruction.title }}
           </label>
         </nz-radio-group>
 
