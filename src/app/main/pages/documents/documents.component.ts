@@ -63,16 +63,17 @@ export class DocumentsComponent implements OnInit {
 
   loadDocuments(): void {
     this.documentsService.getInstructionsList().subscribe({
-      next: (res) => {
-        if (res && res.result) {
-          this.items = res.result.map(instruction => ({
+      next: (res: any) => {
+        const data: InstructionModel[] | undefined = Array.isArray(res) ? res : res?.result;
+        if (Array.isArray(data)) {
+          this.items = data.map((instruction: InstructionModel) => ({
             id: instruction.id,
             component: instruction.systemName,
             subsystem: instruction.subsystemName,
             name: { ru: instruction.title, kz: instruction.title },
             date: new Date(instruction.createdAt).toLocaleDateString(),
             fileSize: instruction.size,
-            fileType: instruction.contentType.split('/')[1],
+            fileType: instruction.contentType ? instruction.contentType.split('/')[1] : '',
             fileRuPath: instruction.filePath,
             fileKzPath: instruction.filePath
           }));
@@ -86,9 +87,12 @@ export class DocumentsComponent implements OnInit {
 
   loadInstructions(): void {
     this.documentsService.getInstructionsList().subscribe({
-      next: (res) => {
-        if (res && res.result) {
-          this.instructions = res.result;
+      next: (res: any) => {
+        const data: InstructionModel[] | undefined = Array.isArray(res) ? res : res?.result;
+        if (Array.isArray(data)) {
+          this.instructions = data;
+        } else {
+          this.instructions = [];
         }
       },
       error: (err) => {
@@ -102,6 +106,7 @@ export class DocumentsComponent implements OnInit {
     this.childSystems = []; 
     const selectedInstruction = this.instructions.find(inst => inst.id === instructionId);
     if (selectedInstruction) {
+      // Имитация дочерних систем на основе systemName
       this.childSystems = [
         { id: 1, name: `Подсистема 1 для ${selectedInstruction.systemName}` },
         { id: 2, name: `Подсистема 2 для ${selectedInstruction.systemName}` }
