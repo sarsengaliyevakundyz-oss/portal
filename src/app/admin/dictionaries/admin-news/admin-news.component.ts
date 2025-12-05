@@ -188,7 +188,7 @@ export class AdminNewsComponent implements OnInit {
   }
 
   private loadList(): void {
-    this.newsService.getList({ page: 1, limit: 25, categoryId: undefined as any, year: undefined as any } as any)
+    this.newsService.getList({ page: 0, limit: 25, categoryId: undefined as any, year: undefined as any } as any)
       .subscribe(res => {
       const items = res?.response || [];
       this.tableData = items.map((n: any) => ({
