@@ -99,12 +99,33 @@ export class AdminNewsComponent implements OnInit {
     this.uploadedRusFileName = '';
   }
 
+  private formatDateForApi(dateString: string): string {
+  if (!dateString) return '';
+  
+  try {
+    const [year, month, day] = dateString.split('-');
+    if (year && month && day) {
+      return `${day}.${month}.${year}`;
+    }
+    if (dateString.includes('.')) {
+      return dateString;
+    }
+    
+    return dateString;
+  } catch (error) {
+    console.warn('Ошибка форматирования даты:', error);
+    return dateString;
+  }
+}
+
   onSaveAdd(): void {
     if (this.addForm.invalid) {
       this.addForm.markAllAsTouched();
       return;
     }
     const v = this.addForm.value as any;
+
+     const publishDate = this.formatDateForApi(v.date);
     this.newsService.addNews({
       categoryId: v.category,
       content: v.mainText || '',
@@ -113,7 +134,7 @@ export class AdminNewsComponent implements OnInit {
       imageDescription: '',
       lang: v.locale || '',
       loginCreated: '',
-      publishDate: v.date,
+      publishDate: publishDate,
       title: v.title
     }).subscribe({
       next: () => { this.onCancelAdd(); this.loadList(); },
