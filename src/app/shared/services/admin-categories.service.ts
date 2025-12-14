@@ -58,7 +58,7 @@ export class AdminCategoriesService extends BaseApi {
   }
 
   toggleActive(body: ToggleCategoryRequest): Observable<void> {
-    return this.removeData<void>(this.apiUrl + '/internalportal/news/deleteCategory', body);
+    return this.postData<void>(this.apiUrl + '/internalportal/news/deleteCategory', body);
   }
 
   uploadFile(file: File, context: string): Observable<string> {
