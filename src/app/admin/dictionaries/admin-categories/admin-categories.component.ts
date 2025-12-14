@@ -3,6 +3,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AdminCategoriesService} from '../../../shared/services/admin-categories.service';
 import {NewsCategory} from '../../../shared/models/news.model';
+import { finalize, switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-admin-categories',
@@ -29,6 +30,9 @@ export class AdminCategoriesComponent implements OnInit {
   editIconFileName: string | null = null;
   editIconPreview: string | null = null;
   currentIconUrl: string | null = null;
+
+  addFile: File | null = null;
+  editFile: File | null = null;
 
   constructor(private readonly formBuilder: FormBuilder,
               private readonly service: AdminCategoriesService) {}
@@ -99,15 +103,25 @@ export class AdminCategoriesComponent implements OnInit {
       this.addForm.markAllAsTouched();
       return;
     }
+    this.loading = true;
     const v = this.addForm.value;
-    this.service.addCategory({
-      imagePath: this.iconFilePreview ?? '',
-      loginCreated: '',
-      nameKk: v.nameKz,
-      nameRu: v.nameRu
-    }).subscribe({
+    const uploadFileObservable = this.addFile ?
+      this.service.uploadFile(this.addFile, 'category') :
+      of('');
+
+    uploadFileObservable.pipe(
+      switchMap(imagePath => {
+        return this.service.addCategory({
+          imagePath: imagePath || this.iconFilePreview || '',
+          loginCreated: '',
+          nameKk: v.nameKz,
+          nameRu: v.nameRu
+        });
+      }),
+      finalize(() => this.loading = false)
+    ).subscribe({
       next: () => { this.onCancelAdd(); this.loadCategories(); },
-      error: () => {}
+      error: (err) => { console.error('Error saving category:', err); }
     });
   }
 
@@ -123,17 +137,28 @@ export class AdminCategoriesComponent implements OnInit {
       this.editForm.markAllAsTouched();
       return;
     }
+    this.loading = true;
     const id = this.tableData[this.selectedIndex].id;
     const v = this.editForm.value;
-    this.service.updateCategory({
-      categoryId: id,
-      imagePath: this.editIconPreview ?? '',
-      loginUpdated: '',
-      nameKk: v.nameKz,
-      nameRu: v.nameRu
-    }).subscribe({
+
+    const uploadFileObservable = this.editFile ?
+      this.service.uploadFile(this.editFile, 'category') :
+      of(this.currentIconUrl || '');
+
+    uploadFileObservable.pipe(
+      switchMap(imagePath => {
+        return this.service.updateCategory({
+          categoryId: id,
+          imagePath: imagePath || this.editIconPreview || '',
+          loginUpdated: '',
+          nameKk: v.nameKz,
+          nameRu: v.nameRu
+        });
+      }),
+      finalize(() => this.loading = false)
+    ).subscribe({
       next: () => { this.showEditModal = false; this.loadCategories(); },
-      error: () => {}
+      error: (err) => { console.error('Error updating category:', err); }
     });
   }
 
@@ -161,10 +186,12 @@ export class AdminCategoriesComponent implements OnInit {
       if (mode === 'add') {
         this.uploadedIconFileName = file.name;
         this.iconFilePreview = result;
+        this.addFile = file;
       } else {
         this.editIconFileName = file.name;
         this.editIconPreview = result;
         this.currentIconUrl = null;
+        this.editFile = file;
       }
     };
     reader.readAsDataURL(file);
@@ -174,9 +201,11 @@ export class AdminCategoriesComponent implements OnInit {
     if (mode === 'add') {
       this.uploadedIconFileName = null;
       this.iconFilePreview = null;
+      this.addFile = null;
     } else {
       this.editIconFileName = null;
       this.editIconPreview = null;
+      this.editFile = null;
     }
   }
 

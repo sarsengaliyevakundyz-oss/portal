@@ -5,6 +5,7 @@ import {BaseApi} from './base-api';
 import {NewsCategory, NewsCategoryQuery} from '../models/news.model';
 import { SystemsService } from './systems.service';
 import { HttpClient } from '@angular/common/http';
+import {map} from "rxjs/operators";
 
 interface AddCategoryRequest {
   imagePath?: string;
@@ -58,6 +59,14 @@ export class AdminCategoriesService extends BaseApi {
 
   toggleActive(body: ToggleCategoryRequest): Observable<void> {
     return this.removeData<void>(this.apiUrl + '/internalportal/news/deleteCategory', body);
+  }
+
+  uploadFile(file: File, context: string): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.postData<{ filePath: string }>(`${this.apiUrl}/internalportal/filemanager/file/upload?context=${context}`, formData).pipe(
+      map(response => response.filePath)
+    );
   }
 }
 
