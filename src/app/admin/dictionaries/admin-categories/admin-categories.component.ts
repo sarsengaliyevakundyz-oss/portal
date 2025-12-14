@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {AdminCategoriesService} from '../../../shared/services/admin-categories.service';
 import {NewsCategory} from '../../../shared/models/news.model';
 import { finalize, switchMap, of } from 'rxjs';
+import { CurrentUserService } from '../../../shared/services/current-user.service';
+import { SystemsService } from '../../../shared/services/systems.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -34,8 +36,12 @@ export class AdminCategoriesComponent implements OnInit {
   addFile: File | null = null;
   editFile: File | null = null;
 
+  adminUsername: string | null = null;
+
   constructor(private readonly formBuilder: FormBuilder,
-              private readonly service: AdminCategoriesService) {}
+              private readonly service: AdminCategoriesService,
+              private readonly currentUser: CurrentUserService,
+              private readonly systemsService: SystemsService) {}
 
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
@@ -52,6 +58,9 @@ export class AdminCategoriesComponent implements OnInit {
       active: [true, Validators.required]
     });
     this.loadCategories();
+    this.systemsService.getAdminInfo().subscribe(info => {
+      this.adminUsername = info.username;
+    });
   }
 
   private loadCategories(): void {
@@ -150,7 +159,7 @@ export class AdminCategoriesComponent implements OnInit {
         return this.service.updateCategory({
           categoryId: id,
           imagePath: imagePath || this.editIconPreview || '',
-          loginUpdated: '',
+          loginUpdated: this.adminUsername || '',
           nameKk: v.nameKz,
           nameRu: v.nameRu
         });
@@ -166,7 +175,7 @@ export class AdminCategoriesComponent implements OnInit {
     if (this.selectedIndex === null) return;
     const id = this.tableData[this.selectedIndex].id;
     const currentlyActive = this.tableData[this.selectedIndex].active;
-    this.service.toggleActive({ categoryId: id, isActive: currentlyActive, loginDeleted: '' })
+    this.service.toggleActive({ categoryId: id, isActive: currentlyActive, loginDeleted: this.adminUsername || '' })
       .subscribe({
         next: () => { this.selectedIndex = null; this.showDeleteModal = false; this.loadCategories(); },
         error: () => {}
