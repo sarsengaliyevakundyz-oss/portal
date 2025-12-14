@@ -25,3 +25,6 @@
 .styled-table tbody tr td:last-child  { border-right: 1px solid #e5e7eb; border-radius: 0 8px 8px 0; }
 
 
+.icon-preview {
+  width: 100%;
+}
