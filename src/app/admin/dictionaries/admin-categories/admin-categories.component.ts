@@ -175,7 +175,7 @@ export class AdminCategoriesComponent implements OnInit {
     if (this.selectedIndex === null) return;
     const id = this.tableData[this.selectedIndex].id;
     const currentlyActive = this.tableData[this.selectedIndex].active;
-    this.service.toggleActive({ categoryId: id, isActive: currentlyActive, loginDeleted: this.adminUsername || '' })
+    this.service.toggleActive({ categoryId: id, isActive: false, loginDeleted: this.adminUsername || '' })
       .subscribe({
         next: () => { this.selectedIndex = null; this.showDeleteModal = false; this.loadCategories(); },
         error: () => {}
