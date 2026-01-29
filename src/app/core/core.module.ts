@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {LangParamInterceptor} from './Intercaptors/Lang.Interceptor';
 import {JwtInterceptor} from './Intercaptors/jwt.interceptor';
+import { BaseUrlInterceptor } from './Intercaptors/base-url.interceptor';
 
 
 
@@ -16,12 +17,17 @@ import {JwtInterceptor} from './Intercaptors/jwt.interceptor';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
+      useClass: LangParamInterceptor,
       multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: LangParamInterceptor,
+      useClass: BaseUrlInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
       multi: true
     }
   ],
