@@ -6,7 +6,6 @@ import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
 import { AuthService } from "./auth.service"
-import { environment } from '../../../environments/environment'
 
 interface SsoTokenResponse {
   access_token: string;
@@ -203,11 +202,29 @@ export class CurrentUserService {
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
     
-    const ssoUrl = new URL(environment.ssoBaseUrl ?? '/ssointernalfrontnew', window.location.origin);
-    ssoUrl.searchParams.set('client-id', String(environment.ssoClientId ?? 2));
-
-    window.open(ssoUrl.toString(), '_blank');
+    window.open(this.buildSsoRedirectUrl(), '_blank');
     this.hasLoggedOut = true;
+  }
+
+  private buildSsoRedirectUrl(): string {
+    const { protocol, hostname, port, origin } = window.location;
+    const effectivePort = port || '9999';
+
+    if (hostname === 'new.e.stat.gov.kz') {
+      const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
+      url.searchParams.set('client-id', '2');
+      return url.toString();
+    }
+
+    if (hostname === '172.16.18.182') {
+      const url = new URL(`${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew`);
+      url.searchParams.set('client-id', '2');
+      return url.toString();
+    }
+
+    const fallback = new URL('/ssointernalfrontnew', origin);
+    fallback.searchParams.set('client-id', '2');
+    return fallback.toString();
   }
 
   async logout() {

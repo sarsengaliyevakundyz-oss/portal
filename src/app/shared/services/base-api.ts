@@ -3,7 +3,6 @@ import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { formatDate } from '@angular/common';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -78,12 +77,33 @@ export class BaseApi {
   if (window.location.href.includes('ssointernalfrontnew')) {
     return;
   }
-  
-  const ssoUrl = new URL(environment.ssoBaseUrl ?? '/ssointernalfrontnew', window.location.origin);
-  ssoUrl.searchParams.set('client-id', String(environment.ssoClientId ?? 2));
 
-  window.open(ssoUrl.toString(), '_blank');
+  window.open(this.buildSsoRedirectUrl(), '_blank');
 }
+
+  private buildSsoRedirectUrl(): string {
+    const { protocol, hostname, port, origin } = window.location;
+    const effectivePort = port || '9999';
+
+    // PROD: frontend и SSO на разных host
+    if (hostname === 'new.e.stat.gov.kz') {
+      const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
+      url.searchParams.set('client-id', '2');
+      return url.toString();
+    }
+
+    // TEST: frontend и SSO на одном host
+    if (hostname === '172.16.18.182') {
+      const url = new URL(`${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew`);
+      url.searchParams.set('client-id', '2');
+      return url.toString();
+    }
+
+    // Fallback: тот же origin + путь
+    const fallback = new URL('/ssointernalfrontnew', origin);
+    fallback.searchParams.set('client-id', '2');
+    return fallback.toString();
+  }
 
   protected GetFile(uri: string, params: any = null): void {
     const pars = this.getUrlParams(params);
