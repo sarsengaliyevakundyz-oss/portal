@@ -3,6 +3,7 @@ import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { formatDate } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -78,12 +79,10 @@ export class BaseApi {
     return;
   }
   
-  // Открываем SSO в новом окне/вкладке
-  window.open(
-    `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-    '_blank'
-  );
-  
+  const ssoUrl = new URL(environment.ssoBaseUrl ?? '/ssointernalfrontnew', window.location.origin);
+  ssoUrl.searchParams.set('client-id', String(environment.ssoClientId ?? 2));
+
+  window.open(ssoUrl.toString(), '_blank');
 }
 
   protected GetFile(uri: string, params: any = null): void {

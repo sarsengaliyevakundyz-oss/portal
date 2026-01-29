@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
 import { AuthService } from "./auth.service"
+import { environment } from '../../../environments/environment'
 
 interface SsoTokenResponse {
   access_token: string;
@@ -202,10 +203,10 @@ export class CurrentUserService {
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
     
-    window.open(
-        `${window.location.origin}/ssointernalfrontnew?client-id=2`,
-        '_blank'
-      );
+    const ssoUrl = new URL(environment.ssoBaseUrl ?? '/ssointernalfrontnew', window.location.origin);
+    ssoUrl.searchParams.set('client-id', String(environment.ssoClientId ?? 2));
+
+    window.open(ssoUrl.toString(), '_blank');
     this.hasLoggedOut = true;
   }
 
