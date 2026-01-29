@@ -1,9 +1,7 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, HttpClient } from '@angular/common/http';
-
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, HttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 import { CoreModule } from './core/core.module';
 
@@ -11,7 +9,6 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import ru from '@angular/common/locales/ru';
-import {environment} from '../environments/environment';
 
 // Factory function for the loader
 registerLocaleData(ru);
@@ -25,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     importProvidersFrom(CoreModule),
     provideAnimations(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     // Import and configure TranslateModule
     importProvidersFrom(
       TranslateModule.forRoot({
