@@ -1,7 +1,6 @@
-import {Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
-import {NewsItem} from '../../../shared/models/news';
-import {TranslatePipe} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {NewsService} from '../../../shared/services/news.service';
 import {News, NewsCategory, NewsQuery} from '../../../shared/models/news.model';
 import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
@@ -30,17 +29,19 @@ import { Subscription, take } from 'rxjs';
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
   @ViewChild('categoriesScroll') categoriesScroll!: ElementRef;
   news: News[] = [];
   categories: NewsCategory[] = [];
   query = {limit: 4, page: 0, year: new Date().getFullYear(), categoryId: 22} as NewsQuery;
   currentCategoryIndex = 0;
   private authSubscription: Subscription | undefined;
+  private langSubscription: Subscription | undefined;
 
   constructor(
     private newsService: NewsService,
-    public currentUser: CurrentUserService
+    public currentUser: CurrentUserService,
+    private translate: TranslateService
   ) {}
  
   isAuthenticated(): boolean {
@@ -59,20 +60,40 @@ export class NewsComponent implements OnInit {
           }
       }
     });
+
+    this.langSubscription = this.translate.onLangChange.subscribe(() => {
+      if (!this.currentUser.isAuthenticated()) {
+        return;
+      }
+      const selectedCategoryId = this.query.categoryId;
+      if (this.categories.length) {
+        this.loadCategories(selectedCategoryId);
+        return;
+      }
+      this.loadData();
+    });
   }
 
   ngOnDestroy(): void {
     if (this.authSubscription) {
         this.authSubscription.unsubscribe();
     }
+    if (this.langSubscription) {
+      this.langSubscription.unsubscribe();
+    }
   }
 
-  private loadCategories(): void {
+  private loadCategories(selectedCategoryId?: number): void {
     this.newsService.getCategories({ isActive: true }).subscribe(response => {
       this.categories = response;
       if (this.categories.length) {
-        this.currentCategoryIndex = 0;
-        this.query.categoryId = this.categories[0].id;
+        const preferredId = selectedCategoryId ?? this.query.categoryId;
+        const idx = preferredId
+          ? this.categories.findIndex(c => c.id === preferredId)
+          : -1;
+
+        this.currentCategoryIndex = idx >= 0 ? idx : 0;
+        this.query.categoryId = this.categories[this.currentCategoryIndex].id;
         this.loadData();
       }
     });

@@ -510,6 +510,25 @@
     "hide": "Жасыру",
     "updated_at": "Өзгерту күні"
   },
+  "documents": {
+    "title": "Құжаттар",
+    "breadcrumb": {
+      "documents": "Құжаттар",
+      "instructions": "Нұсқаулықтар"
+    },
+    "search": {
+      "placeholder": "Іздеу",
+      "button": "Іздеу"
+    },
+    "table": {
+      "number": "№",
+      "component": "e-Статистика компоненті",
+      "subsystem": "Кіші жүйе",
+      "name": "Атауы",
+      "updated_at": "Өзгерту күні",
+      "download": "Жүктеп алу"
+    }
+  },
   "support": {
     "technical_support": "Пайдаланушыларға техникалық қолдау",
     "call_center": "CALL-ОРТАЛЫҒЫ",

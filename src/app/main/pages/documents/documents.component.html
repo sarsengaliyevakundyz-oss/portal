@@ -1,9 +1,11 @@
 <div class="documents-container">
   <div class="breadcrumbs">
-    <span class="breadcrumb-link">Документы</span> / <span class="breadcrumb-current">Инструкции</span>
+    <span class="breadcrumb-link">{{ 'documents.breadcrumb.documents' | translate }}</span>
+    /
+    <span class="breadcrumb-current">{{ 'documents.breadcrumb.instructions' | translate }}</span>
   </div>
 
-  <h1>Документы</h1>
+  <h1>{{ 'documents.title' | translate }}</h1>
 
   <div class="page-layout">
     <!-- Sidebar -->
@@ -30,22 +32,29 @@
     <div class="main-content">
       <div class="search-area">
         <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-          <input type="text" nz-input placeholder="Поиск" [(ngModel)]="searchValue" />
+          <input
+            type="text"
+            nz-input
+            [placeholder]="'documents.search.placeholder' | translate"
+            [(ngModel)]="searchValue"
+          />
         </nz-input-group>
         <ng-template #suffixIconSearch>
           <span nz-icon nzType="search"></span>
         </ng-template>
-        <button nz-button nzType="primary" class="search-btn" (click)="search()">Поиск</button>
+        <button nz-button nzType="primary" class="search-btn" (click)="search()">
+          {{ 'documents.search.button' | translate }}
+        </button>
       </div>
 
       <nz-table #basicTable [nzData]="items" [nzShowPagination]="false" nzBordered="false">
         <thead>
           <tr>
-            <th nzWidth="50px">№</th>
-            <th>Компонент Е-статистики</th>
-            <th>Подсистема</th>
-            <th>Наименование</th>
-            <th>Дата изменения</th>
+            <th nzWidth="50px">{{ 'documents.table.number' | translate }}</th>
+            <th>{{ 'documents.table.component' | translate }}</th>
+            <th>{{ 'documents.table.subsystem' | translate }}</th>
+            <th>{{ 'documents.table.name' | translate }}</th>
+            <th>{{ 'documents.table.updated_at' | translate }}</th>
             <th nzWidth="120px"></th>
           </tr>
         </thead>
@@ -58,7 +67,7 @@
             <td>{{ data.date }}</td>
             <td>
               <button class="download-btn" (click)="download(data)">
-                Скачать
+                {{ 'documents.table.download' | translate }}
                 <span class="file-info">{{data.fileType}} {{data.fileSize}}</span>
               </button>
             </td>

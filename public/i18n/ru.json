@@ -484,6 +484,25 @@
     "hide": "Скрыть",
     "updated_at": "Дата изменения"
   },
+  "documents": {
+    "title": "Документы",
+    "breadcrumb": {
+      "documents": "Документы",
+      "instructions": "Инструкции"
+    },
+    "search": {
+      "placeholder": "Поиск",
+      "button": "Поиск"
+    },
+    "table": {
+      "number": "№",
+      "component": "Компонент e-Статистики",
+      "subsystem": "Подсистема",
+      "name": "Наименование",
+      "updated_at": "Дата изменения",
+      "download": "Скачать"
+    }
+  },
   "support": {
     "technical_support": "Техническая поддержка пользователей",
     "call_center": "CALL-ЦЕНТР",

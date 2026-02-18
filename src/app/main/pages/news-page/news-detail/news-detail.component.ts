@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DatePipe, NgForOf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NewsService} from '../../../../shared/services/news.service';
@@ -6,6 +6,8 @@ import {News, NewsCategory, NewsDetail, NewsQuery} from '../../../../shared/mode
 import {ActivatedRoute, Router} from '@angular/router';
 import {SharedModule} from '../../../../shared/shared.module';
 import {environment} from "../../../../../environments/environment";
+import {TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,13 +21,31 @@ import {environment} from "../../../../../environments/environment";
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.css'
 })
-export class NewsDetailComponent implements OnInit {
-  constructor(private newsService: NewsService, private route: ActivatedRoute, private router: Router) {
+export class NewsDetailComponent implements OnInit, OnDestroy {
+  constructor(
+    private newsService: NewsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translate: TranslateService
+  ) {
   }
-
   ngOnInit(): void {
     this.loadFilters();
-    this.loadData();
+    this.subscriptions.add(
+      this.route.paramMap.subscribe(params => {
+        this.currentId = params.get('id') || '';
+        this.fetchById();
+      })
+    );
+    this.subscriptions.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.loadFilters();
+        this.fetchById();
+      })
+    );
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   categories: NewsCategory[] = [];
@@ -34,19 +54,18 @@ export class NewsDetailComponent implements OnInit {
 
 
   news: NewsDetail = {} as NewsDetail;
+  private currentId = '';
+  private subscriptions = new Subscription();
 
-  loadData() {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id') || '';
-      if (id) {
-        this.newsService.getById(id).subscribe(response => {
-          this.news = response;
-          this.query.year = new Date(this.news.publishDate).getFullYear();
-          this.query.categoryId = this.news.categoryId;
-        })
-      }
+  private fetchById(): void {
+    if (!this.currentId) {
+      return;
+    }
+    this.newsService.getById(this.currentId).subscribe(response => {
+      this.news = response;
+      this.query.year = new Date(this.news.publishDate).getFullYear();
+      this.query.categoryId = this.news.categoryId;
     });
-
   }
 
   private loadFilters() {

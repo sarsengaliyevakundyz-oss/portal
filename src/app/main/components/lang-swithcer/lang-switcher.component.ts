@@ -38,9 +38,9 @@ export class LangSwitcherComponent implements OnInit {
   }
 
   changeLanguage(language: string): void {
+    localStorage.setItem("vip_lang", language);
     this.translate.use(language);
     this.currentLanguage = language;
-    localStorage.setItem("vip_lang", language);
     this.isLanguageListVisible = false; // Закрываем список после выбора языка
     // location.reload()
   }

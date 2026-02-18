@@ -1,12 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {DatePipe, NgForOf} from '@angular/common';
 import {NewsService} from '../../../shared/services/news.service';
-import {News, NewsCategory, NewsCategoryQuery, NewsQuery} from '../../../shared/models/news.model';
+import {News, NewsCategory, NewsQuery} from '../../../shared/models/news.model';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SharedModule} from '../../../shared/shared.module';
 import {environment} from "../../../../environments/environment";
+import {TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-news-page',
@@ -22,12 +24,28 @@ import {environment} from "../../../../environments/environment";
   templateUrl: './news-page.component.html',
   styleUrl: './news-page.component.css'
 })
-export class NewsPageComponent implements OnInit {
-  constructor(private newsService: NewsService, private route: ActivatedRoute) { }
+export class NewsPageComponent implements OnInit, OnDestroy {
+  constructor(
+    private newsService: NewsService,
+    private route: ActivatedRoute,
+    private translate: TranslateService
+  ) { }
   ngOnInit(): void {
     this.loadFilters();
     this.preLoad();
     // this.loadData();
+
+    this.subscriptions.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.loadFilters();
+        if (this.query.categoryId != null) {
+          this.loadData();
+        }
+      })
+    );
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
   categories: NewsCategory[] = [];
   years :number[] = [];
@@ -36,6 +54,7 @@ export class NewsPageComponent implements OnInit {
 
   news: News[] = [];
   total: number = 0;
+  private subscriptions = new Subscription();
 
 
   loadData() {
@@ -56,7 +75,7 @@ export class NewsPageComponent implements OnInit {
 
 
   private preLoad() {
-    this.route.queryParamMap.subscribe(params => { // Используем queryParamMap
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => { // Используем queryParamMap
       const year = params.get('year');
       const categoryId = params.get('category');
 
@@ -68,7 +87,7 @@ export class NewsPageComponent implements OnInit {
         this.query.categoryId = Number(categoryId); // Преобразуем в число
         this.loadData(); // Вызываем loadData(), если есть categoryId
       }
-    });
+    }));
   }
 
   protected readonly window = window;
