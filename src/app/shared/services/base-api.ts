@@ -78,7 +78,7 @@ export class BaseApi {
     return;
   }
 
-  window.location.assign(this.buildSsoRedirectUrl());
+  window.open(this.buildSsoRedirectUrl(), '_blank');
 }
 
   private buildSsoRedirectUrl(): string {

@@ -48,20 +48,7 @@ export class SystemChildComponent implements OnInit{
       return;
     }
 
-    const urlWithLang = (() => {
-      try {
-        const parsed = new URL(url);
-        parsed.searchParams.set('lang', lang);
-        return parsed.toString();
-      } catch {
-        const [beforeHash, hash] = url.split('#', 2);
-        const separator = beforeHash.includes('?') ? '&' : '?';
-        const withParam = `${beforeHash}${separator}lang=${encodeURIComponent(lang)}`;
-        return hash ? `${withParam}#${hash}` : withParam;
-      }
-    })();
-
-    const newWin = window.open(urlWithLang, '_blank');
+    const newWin = window.open(url, '_blank');
     if (!newWin) {
       console.error('Не удалось открыть окно для модуля:', url);
       return;

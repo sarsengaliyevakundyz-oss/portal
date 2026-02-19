@@ -80,10 +80,7 @@ export class CurrentUserService {
       console.log("deactivateToken run")
 
       const iin = localStorage.getItem(this.iinKey);
-      if (!iin) {
-        await this.logout();
-        return;
-      }
+      if (!iin) return;
   
       try {
         const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
@@ -97,10 +94,11 @@ export class CurrentUserService {
             { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
           )
         );
+
+        this.logout();
       } catch (error) {
         console.error('Error deactivating token:', error);
-      } finally {
-        await this.logout();
+        throw error;
       }
     }
  
@@ -204,7 +202,7 @@ export class CurrentUserService {
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
     
-    window.location.assign(this.buildSsoRedirectUrl());
+    window.open(this.buildSsoRedirectUrl(), '_blank');
     this.hasLoggedOut = true;
   }
 
