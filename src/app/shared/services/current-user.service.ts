@@ -207,17 +207,11 @@ export class CurrentUserService {
   }
 
   private buildSsoRedirectUrl(): string {
-    const { protocol, hostname, port, origin } = window.location;
-    const effectivePort = port || '9999';
+    const { protocol, hostname, origin } = window.location;
+    const ssoBalancerHost = 'new.e.stat.gov.kz';
 
-    if (hostname === 'new.e.stat.gov.kz') {
-      const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
-      url.searchParams.set('client-id', '2');
-      return url.toString();
-    }
-
-    if (hostname === '172.16.18.182') {
-      const url = new URL(`${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew`);
+    if (hostname === ssoBalancerHost || hostname.startsWith('172.16.')) {
+      const url = new URL(`${protocol}//${ssoBalancerHost}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
       return url.toString();
     }
