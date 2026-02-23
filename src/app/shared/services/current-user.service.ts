@@ -211,6 +211,12 @@ export class CurrentUserService {
     const effectivePort = port || '9999';
 
     if (hostname === 'new.e.stat.gov.kz') {
+      const url = new URL(`${protocol}//new.e.stat.gov.kz:${effectivePort}/ssointernalfrontnew`);
+      url.searchParams.set('client-id', '2');
+      return url.toString();
+    }
+
+    if (hostname === '172.16.0.182') {
       const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
       return url.toString();
