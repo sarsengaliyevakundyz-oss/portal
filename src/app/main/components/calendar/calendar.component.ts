@@ -222,8 +222,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
       if (dayEvents.length > 0) {
         const eventTypes = new Set(dayEvents.map(e => e.type.toString()));
         
-        if (eventTypes.has('1')) eventType = 'region';
-        if (eventTypes.has('2')) eventType = 'respondent';
+        if (eventTypes.has(CalendarTypeEnum.Region.toString())) {
+          eventType = 'region';
+        } else if (eventTypes.has(CalendarTypeEnum.Respondent.toString())) {
+          eventType = 'respondent';
+        }
       }
   
       this.calendarDays.push({

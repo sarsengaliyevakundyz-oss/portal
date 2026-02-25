@@ -18,7 +18,7 @@ export interface CalendarQuery{
 
 
 export enum CalendarTypeEnum{
-  Region = 1,
-  Respondent = 2
+  Respondent = 1,
+  Region = 2
 
 }

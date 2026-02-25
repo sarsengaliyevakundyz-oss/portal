@@ -12,6 +12,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ITranslateName, Lang } from '../../../shared/pipes/name-translate.pipe';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { InstructionModel } from '../../../shared/models/instruction.model';
+import { environment } from '../../../../environments/environment';
 
 interface DocumentItem {
   id: number;
@@ -55,6 +56,21 @@ export class DocumentsComponent implements OnInit {
   isComponentChecked = true;
 
   constructor(private documentsService: DocumentsService, private translate: TranslateService) { }
+
+  private buildFileUrl(filePath: string): string {
+    const trimmed = (filePath ?? '').trim();
+    if (!trimmed) return '';
+
+    // Backward compatibility: if API returns absolute URL, keep it as-is.
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+
+    const base = (environment as any)?.fileBaseUrl as string | undefined;
+    if (!base) return trimmed;
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const normalizedPath = trimmed.startsWith('/') ? trimmed.slice(1) : trimmed;
+    return `${normalizedBase}${normalizedPath}`;
+  }
 
   ngOnInit(): void {
     this.loadDocuments();
@@ -127,8 +143,9 @@ export class DocumentsComponent implements OnInit {
       filePath = item.fileKzPath;
     }
     
-    if (filePath) {
-      window.open(filePath, '_blank');
+    const url = this.buildFileUrl(filePath);
+    if (url) {
+      window.open(url, '_blank');
     } else {
       console.warn('No file path available for download.');
     }

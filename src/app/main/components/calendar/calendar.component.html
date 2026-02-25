@@ -20,9 +20,14 @@
         class="custom-select"
         (ngModelChange)="generateCalendar()"
       >
-        <nz-option *ngIf="query.type!=1" [nzValue]=CalendarTypeEnum.Region nzLabel="Регион"></nz-option>
-        <nz-option *ngIf="query.type!=2" [nzValue]=CalendarTypeEnum.Respondent nzLabel="Респондент"></nz-option>
-        <nz-option  [nzValue]="1" nzLabel="Регион" nzHide></nz-option>
+        <nz-option
+          [nzValue]="CalendarTypeEnum.Respondent"
+          [nzLabel]="'calendar.respondent' | translate"
+        ></nz-option>
+        <nz-option
+          [nzValue]="CalendarTypeEnum.Region"
+          [nzLabel]="'calendar.region' | translate"
+        ></nz-option>
 
       </nz-select>
       <ng-template #arrowTemplate>
@@ -74,9 +79,9 @@
         <span class="event-month">{{ months[event.month - 1] | translate | slice:0:3 }}</span>
       </div>
       <div class="event-details">
-        <p><strong>Отрасль:</strong> {{ event.sectorName }}</p>
-        <p>Форма: {{ event.formName }}</p>
-        <p>Отчётный период: {{ event.periodKindlistName }}</p>
+        <p><strong>{{ 'calendar.sector' | translate }}:</strong> {{ event.sectorName }}</p>
+        <p>{{ 'calendar.form' | translate }}: {{ event.formName }}</p>
+        <p>{{ 'calendar.reportingPeriod' | translate }}: {{ event.periodKindlistName }}</p>
       </div>
     </div>
     <div class="event-list-more">
@@ -94,17 +99,17 @@
   nzWidth="1000px"
 >
   <ng-template #modalTitle>
-    Предстоящие события
+    {{ 'calendar.upcomingEvents' | translate }}
   </ng-template>
 
   <ng-template #modalContent>
     <nz-table #basicTable [nzData]="nextEvents">
       <thead>
       <tr>
-        <th width="100px">Дата</th>
-        <th>Отрасль</th>
-        <th>Форма</th>
-        <th>Отчётный период</th>
+        <th width="100px">{{ 'calendar.date' | translate }}</th>
+        <th>{{ 'calendar.sector' | translate }}</th>
+        <th>{{ 'calendar.form' | translate }}</th>
+        <th>{{ 'calendar.reportingPeriod' | translate }}</th>
       </tr>
       </thead>
       <tbody>
@@ -119,6 +124,6 @@
   </ng-template>
 
   <ng-template #modalFooter>
-    <button nz-button nzType="default" (click)="isShowAllEvents=false">Закрыть</button>
+    <button nz-button nzType="default" (click)="isShowAllEvents=false">{{ 'action.close' | translate }}</button>
   </ng-template>
 </nz-modal>

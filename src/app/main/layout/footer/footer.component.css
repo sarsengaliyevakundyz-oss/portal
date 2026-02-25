@@ -125,6 +125,12 @@
 .system-link img {
   max-width: 80%;
   max-height: 80%;
+  object-fit: contain;
+}
+
+.system-link img.system-link__img--lg {
+  max-width: 90%;
+  max-height: 90%;
 }
 
 

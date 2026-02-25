@@ -14,7 +14,7 @@
 
 <div class="system-links-container">
   <a *ngFor="let system of systems" [href]="system.link" class="system-link">
-    <img [src]="system.logo" [alt]="system.name" />
+    <img [src]="system.logo" [alt]="system.name" [class.system-link__img--lg]="system.largeLogo" />
     <span>{{ system.name }}</span>
   </a>
 </div>
@@ -34,13 +34,13 @@
     <div class="footer-column">
       <h4>{{ 'footer.info_service.title' | translate }}</h4>
       <p>{{ 'footer.info_service.hours' | translate }}</p>
-      <p>{{ 'footer.info_service.phones' | translate }}</p>
+      <p>{{ 'footer.info_service.bot' | translate }}</p>
     </div>
     <div class="footer-column">
       <h4>{{ 'footer.office.title' | translate }}</h4>
       <p>{{ 'footer.office.hours' | translate }}</p>
-      <p>{{ 'footer.office.phones' | translate }}</p>
-      <p>{{ 'footer.office.fax' | translate }}</p>
+      <p>{{ 'footer.office.phone' | translate }}</p>
+      <!-- <p>{{ 'footer.office.fax' | translate }}</p> -->
     </div>
   </div>
 </div>
