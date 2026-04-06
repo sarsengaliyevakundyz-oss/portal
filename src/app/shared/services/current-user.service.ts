@@ -1,9 +1,11 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http"
 import { Injectable } from "@angular/core"
+import { Router } from "@angular/router"
 import * as CryptoJS from 'crypto-js'
 import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
+import { AuthService } from "./auth.service"
 
 interface SsoTokenResponse {
   access_token: string;
@@ -23,6 +25,7 @@ export class CurrentUserService {
   private authResponseKey = 'authResponse';
   private secretCodeKey   = 'secretCode';
   private iinKey = 'iin';
+  private hasLoggedOut = false;
   // private initialStatus = this.getInitialAuthenticationStatus();
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
@@ -30,7 +33,9 @@ export class CurrentUserService {
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
+    private router: Router, 
     private http: HttpClient,
+    private authService: AuthService
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
     const savedCode = localStorage.getItem(this.secretCodeKey);
@@ -72,13 +77,12 @@ export class CurrentUserService {
   }
 
     async deactivateToken(): Promise<void> {
+      console.log("deactivateToken run")
+
       const iin = localStorage.getItem(this.iinKey);
-
+      if (!iin) return;
+  
       try {
-        if (!iin) {
-          return;
-        }
-
         const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
         const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
         const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
@@ -90,25 +94,13 @@ export class CurrentUserService {
             { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
           )
         );
+
+        this.logout();
       } catch (error) {
         console.error('Error deactivating token:', error);
-      } finally {
-        this.logout();
+        throw error;
       }
     }
-  private clearAuthState(): void {
-    localStorage.removeItem(this.authResponseKey);
-    localStorage.removeItem(this.secretCodeKey);
-    localStorage.removeItem(this.iinKey);
-
-    this.secretCode = undefined;
-    this.currentUser = {} as UserTokenInfo;
-    this.permissions = [];
-
-    this.isAuthenticatedSubject.next(false);
-    this.isAuthCheckedSubject.next(true);
-  }
-
  
   private async onMessage(event: MessageEvent) {
     const data = event.data;
@@ -201,7 +193,17 @@ export class CurrentUserService {
 }
 
   private redirectToSSO(): void {
-    window.location.assign(this.buildSsoRedirectUrl());
+    if (this.hasLoggedOut) return;
+    
+    localStorage.removeItem(this.authResponseKey);
+    localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
+    
+    this.isAuthenticatedSubject.next(false);
+    this.isAuthCheckedSubject.next(true);
+    
+    window.open(this.buildSsoRedirectUrl(), '_blank');
+    this.hasLoggedOut = true;
   }
 
   private buildSsoRedirectUrl(): string {
@@ -231,8 +233,8 @@ export class CurrentUserService {
     return fallback.toString();
   }
 
-  logout(): void {
-    this.clearAuthState();
+  async logout() {
+    if (this.hasLoggedOut) return;
     this.redirectToSSO();
   }
 
