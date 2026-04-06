@@ -133,3 +133,9 @@
 .menu-item:hover {
   background-color: #f5f5f5;
 }
+
+.menu-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #f5f5f5;
+}

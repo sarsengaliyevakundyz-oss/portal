@@ -23,6 +23,8 @@ import {TranslatePipe} from '@ngx-translate/core';
 })
 export class LayoutComponent {
   showProfileMenu = false;
+  isLoggingOut = false;
+
   constructor(
     private router: Router,
     public currentUser: CurrentUserService
@@ -37,8 +39,14 @@ export class LayoutComponent {
   toggleProfileMenu(): void {
     this.showProfileMenu = !this.showProfileMenu;
   }
+
   async deactivateToken(): Promise<void> {
-    console.log('deactivateToken called');
+    if (this.isLoggingOut) {
+      return;
+    }
+
+    this.isLoggingOut = true;
+    this.showProfileMenu = false;
     await this.currentUser.deactivateToken();
   }
 
