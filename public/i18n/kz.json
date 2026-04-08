@@ -523,6 +523,13 @@
   },
   "documents": {
     "title": "Құжаттар",
+    "fileName": "Файл аты",
+    "size": "Өлшемі",
+    "createdAt": "Жүктеу күні",
+    "createdBy": "Кім жүктеді",
+    "noDocuments": "Құжаттар жоқ",
+    "back": "Артқа",
+    "download": "Жүктеу",
     "breadcrumb": {
       "documents": "Құжаттар",
       "instructions": "Нұсқаулықтар"
@@ -539,6 +546,19 @@
       "updated_at": "Өзгерту күні",
       "download": "Жүктеп алу"
     }
+  },
+  "common": {
+    "number": "№",
+    "search": "Іздеу",
+    "reset": "Қалпына келтіру",
+    "back": "Артқа",
+    "download": "Жүктеу"
+  },
+  "administrations": {
+    "title": "Әкімшілендіру",
+    "profile": "Профиль",
+    "login": "Логин",
+    "admin": "Әкімшілендіру"
   },
   "support": {
     "technical_support": "Пайдаланушыларға техникалық қолдау",
@@ -573,4 +593,5 @@
     },
     "copyright": "Барлық құқықтар сақталған"
   }
+
 }

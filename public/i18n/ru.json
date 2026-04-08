@@ -33,6 +33,7 @@
     "document": "Документация",
     "personal_cabinet": "Личный кабинет"
   },
+
   "Month": {
     "January": "Январь",
     "February": "Февраль",
@@ -495,8 +496,16 @@
     "hide": "Скрыть",
     "updated_at": "Дата изменения"
   },
+
   "documents": {
     "title": "Документы",
+    "fileName": "Имя файла",
+    "size": "Размер",
+    "createdAt": "Дата загрузки",
+    "createdBy": "Кто загрузил",
+    "noDocuments": "Нет документов",
+    "back": "Назад",
+    "download": "Скачать",
     "breadcrumb": {
       "documents": "Документы",
       "instructions": "Инструкции"
@@ -513,6 +522,19 @@
       "updated_at": "Дата изменения",
       "download": "Скачать"
     }
+  },
+  "common": {
+    "number": "№",
+    "search": "Найти",
+    "reset": "Сбросить",
+    "back": "Назад",
+    "download": "Скачать"
+  },
+  "administrations": {
+    "title": "Администрирование",
+    "profile": "Профиль",
+    "login": "Логин",
+    "admin": "Администрирование"
   },
   "support": {
     "technical_support": "Техническая поддержка пользователей",
