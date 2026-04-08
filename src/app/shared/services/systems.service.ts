@@ -28,10 +28,13 @@ export class SystemsService extends BaseApi {
     return this.getData<Role[]>(this.apiUrl + '/internalportal/systems/roles', null);
   }
 
-  getUserInfo(): Observable<UserInfo> {
-    return this.getData<UserInfo>(this.apiUrl + '/internalportal/infoSystems/userProfile', null);
+  getUserInfo(lang?: string): Observable<UserInfo> {
+    let url = this.apiUrl + '/internalportal/infoSystems/userProfile';
+    if (lang) {
+      url += `?lang=${lang}`;
+    }
+    return this.getData<UserInfo>(url, null);
   }
-
   getАdminInfo(): Observable<AdminAccessMap> {
     return this.getData<AdminAccessMap>(this.apiUrl + '/internalportal/infoSystems/adminAccessMap', null);
   }
@@ -54,7 +57,7 @@ export class SystemsService extends BaseApi {
 
   getSystemById(id: string): Observable<any> {
     return this.getData<any>(
-      `${this.apiUrl}/internalportal/admin/systems/${id}`, 
+      `${this.apiUrl}/internalportal/admin/systems/${id}`,
       null
     );
   }

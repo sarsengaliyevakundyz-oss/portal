@@ -1,76 +1,477 @@
-.user-container {
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.user-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
+@keyframes expandSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotateArrow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes rotateArrowBack {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Заголовок */
+.profile-header {
+  margin-bottom: 24px;
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.profile-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: #0958BF;
+  border-radius: 2px;
+}
+
+/* Карточка пользователя */
+.user-card {
+  background: linear-gradient(135deg, #0958BF 0%, #1a6fd1 100%);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 4px 12px rgba(9, 88, 191, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(9, 88, 191, 0.25);
+}
+
+.user-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-card:hover .avatar-circle {
+  transform: scale(1.05);
+}
+
+.avatar-initials {
+  font-size: 32px;
+  font-weight: 600;
+  color: white;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-fullname {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 8px 0;
 }
 
 .user-login {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.system {
-  margin-top: 15px;
-  padding: 10px;
-  background: #fff;
-  border-left: 3px solid #007bff;
-  border-radius: 8px;
+/* Системы */
+.systems-container {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8e8e8;
 }
 
-.system-title,
-.child-title {
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
+.systems-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.systems-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Системы список */
+.systems-list {
+  padding: 8px 0;
+}
+
+/* Карточка системы */
+.system-card {
+  margin: 8px 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  border: 1px solid #f0f0f0;
+}
+
+.system-card.expanded {
+  background: #fafbfc;
+  border-color: #e8e8e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.system-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
-  /*background: #f1f1f1;*/
-  border-radius: 5px;
-  transition: background 0.3s ease;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.system-title:hover,
-.child-title:hover {
-  background: #e0e0e0;
+.system-header:hover {
+  background: #f5f7fa;
 }
 
-.arrow {
-  transition: transform 0.3s ease;
+.system-info {
+  flex: 1;
 }
 
-.arrow.open {
+.system-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.system-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+  color: #bfbfbf;
+  font-size: 14px;
+}
+
+.system-arrow.rotated {
   transform: rotate(180deg);
+  color: #0958BF;
 }
 
-.child {
-  margin-top: 5px;
-  padding: 8px;
-  background: #f9f9f9;
-  border-radius: 5px;
+/* Подсистемы - исправленная плавная анимация */
+.subsystems-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subsystems-wrapper.expanded {
+  grid-template-rows: 1fr;
+}
+
+.subsystems-list {
+  overflow: hidden;
+  padding: 0 20px 0 20px;
+}
+
+.subsystems-wrapper.expanded .subsystems-list {
+  padding: 8px 20px 16px 20px;
+}
+
+.subsystem-card {
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.subsystems-wrapper.expanded .subsystem-card {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Постепенное появление подсистем */
+.subsystems-wrapper.expanded .subsystem-card:nth-child(1) { transition-delay: 0.02s; }
+.subsystems-wrapper.expanded .subsystem-card:nth-child(2) { transition-delay: 0.04s; }
+.subsystems-wrapper.expanded .subsystem-card:nth-child(3) { transition-delay: 0.06s; }
+.subsystems-wrapper.expanded .subsystem-card:nth-child(4) { transition-delay: 0.08s; }
+.subsystems-wrapper.expanded .subsystem-card:nth-child(5) { transition-delay: 0.1s; }
+.subsystems-wrapper.expanded .subsystem-card:nth-child(6) { transition-delay: 0.12s; }
+
+.subsystem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+  border-radius: 8px;
+}
+
+.subsystem-header:hover {
+  background: #f5f7fa;
+  transform: translateX(4px);
+}
+
+.subsystem-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.subsystem-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+  color: #bfbfbf;
+}
+
+.subsystem-arrow.rotated {
+  transform: rotate(90deg);
+  color: #0958BF;
+}
+
+/* Роли - исправленная плавная анимация */
+.roles-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.roles-wrapper.expanded {
+  grid-template-rows: 1fr;
+}
+
+.roles-content {
+  overflow: hidden;
+  padding: 0 16px 0 16px;
+  background: #f9fafc;
+  border-top: 1px solid #f0f0f0;
+  margin-left: 16px;
+}
+
+.roles-wrapper.expanded .roles-content {
+  padding: 12px 16px 16px 16px;
 }
 
 .roles-list {
-  list-style-type: none;
-  padding: 0;
-  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.role-item {
-  display: inline-block;
-  background: #007bff;
-  color: #fff;
-  padding: 4px 8px;
-  margin: 2px;
-  border-radius: 5px;
+.roles-wrapper.expanded .roles-list {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Плавное появление ролей */
+.roles-list nz-tag {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.roles-wrapper.expanded .roles-list nz-tag {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Задержки для ролей */
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(1) { transition-delay: 0.01s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(2) { transition-delay: 0.03s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(3) { transition-delay: 0.05s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(4) { transition-delay: 0.07s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(5) { transition-delay: 0.09s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(6) { transition-delay: 0.11s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(7) { transition-delay: 0.13s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(8) { transition-delay: 0.15s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(9) { transition-delay: 0.17s; }
+.roles-wrapper.expanded .roles-list nz-tag:nth-child(10) { transition-delay: 0.19s; }
+
+.no-roles {
+  color: #bfbfbf;
   font-size: 12px;
+}
+
+/* Пустое состояние */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e8e8e8;
+}
+
+.empty-state span {
+  font-size: 48px;
+  color: #ccc;
+}
+
+.empty-state p {
+  margin-top: 16px;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .user-login {
+    justify-content: center;
+  }
+
+  .systems-header {
+    padding: 16px;
+  }
+
+  .subsystems-list {
+    padding: 0 12px 0 12px;
+  }
+
+  .subsystems-wrapper.expanded .subsystems-list {
+    padding: 8px 12px 16px 12px;
+  }
+
+  .roles-content {
+    margin-left: 8px;
+  }
+
+  .roles-wrapper.expanded .roles-content {
+    padding: 12px 12px 16px 12px;
+  }
+
+  .avatar-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-initials {
+    font-size: 24px;
+  }
+
+  .user-fullname {
+    font-size: 20px;
+  }
+}
+
+/* Дополнительная плавность */
+.system-card,
+.subsystem-card {
+  will-change: transform;
+}
+
+/* Улучшенный hover для карточек */
+.system-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Анимация для карточки пользователя */
+@keyframes cardGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Применение анимации только для карточки пользователя */
+.user-card {
+  animation: cardGlow 0.5s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+/* Анимация для систем при загрузке страницы */
+.system-card {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Задержки для каждой системы */
+.system-card:nth-child(1) { animation-delay: 0.05s; }
+.system-card:nth-child(2) { animation-delay: 0.1s; }
+.system-card:nth-child(3) { animation-delay: 0.15s; }
+.system-card:nth-child(4) { animation-delay: 0.2s; }
+.system-card:nth-child(5) { animation-delay: 0.25s; }
+.system-card:nth-child(6) { animation-delay: 0.3s; }
+.system-card:nth-child(7) { animation-delay: 0.35s; }
+.system-card:nth-child(8) { animation-delay: 0.4s; }
+.system-card:nth-child(9) { animation-delay: 0.45s; }
+.system-card:nth-child(10) { animation-delay: 0.5s; }
+
+/* Эффект пульсации для активных элементов */
+.system-header:active,
+.subsystem-header:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
 }
