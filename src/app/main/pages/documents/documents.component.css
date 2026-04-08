@@ -1,86 +1,140 @@
-.documents-container {
-  padding-bottom: 40px;
+
+/* ===================== */
+/* 🔹 КАТЕГОРИИ (GRID) */
+/* ===================== */
+
+.items-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.breadcrumbs {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 10px;
-}
-
-.breadcrumb-current {
-  color: #333;
-}
-
-h1 {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #333;
-}
-
-.page-layout {
+.item {
   display: flex;
-  gap: 40px;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-radius: 8px;
+  height: 100px;
+  padding: 0 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s ease;
 }
 
-.sidebar {
-  width: 280px;
-  flex-shrink: 0;
+.item:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
 
-.sidebar-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+.item:active {
+  transform: scale(0.97);
 }
 
-.sidebar-title {
+/* ===================== */
+/* 🔹 АНИМАЦИЯ */
+/* ===================== */
+
+.animate-item {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+
+  animation: itemAppear 0.25s ease-out forwards;
+}
+
+@keyframes itemAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ===================== */
+/* 🔹 КАРТОЧКИ */
+/* ===================== */
+
+.item-title {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 20px;
-  color: #333;
+  color: #0958BF;
+  text-transform: uppercase;
 }
 
-.radio-group {
+.item-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+/* ===================== */
+/* 🔹 HEADER */
+/* ===================== */
+
+.page-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 16px;
+  margin-bottom: 20px;
 }
 
-.radio-group label {
-  font-size: 14px;
-  color: #333;
+.back-btn {
+  border-radius: 8px;
 }
 
-.main-content {
-  flex: 1;
+.page-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
 }
+
+/* ===================== */
+/* 🔹 ПОИСК */
+/* ===================== */
 
 .search-area {
   display: flex;
-  gap: 16px;
-  margin-bottom: 30px;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: center;
 }
 
+/* длина */
 .search-input {
-  max-width: 400px;
-  border-radius: 20px;
+  flex: 1;
+  max-width: 600px;
+  border-radius: 999px !important;
 }
 
+/* 🔥 ВАЖНО — это делает его круглым */
+::ng-deep .search-input .ant-input-affix-wrapper {
+  border-radius: 20px !important;
+  height: 36px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* сам input */
 ::ng-deep .search-input .ant-input {
-  border-radius: 20px;
+  border-radius: 20px !important;
 }
 
+/* кнопка */
 .search-btn {
-  border-radius: 20px;
-  padding: 0 30px;
-  background-color: #4080ff; /* Adjust blue to match image */
-  border-color: #4080ff;
+  border-radius: 20px !important;
+  height: 36px;
+  padding: 0 20px;
 }
+/* ===================== */
+/* 🔹 ТАБЛИЦА */
+/* ===================== */
 
-/* Table Styles */
 ::ng-deep .ant-table-thead > tr > th {
   background: transparent;
   border-bottom: none;
@@ -100,40 +154,22 @@ h1 {
   background: #f9f9f9;
 }
 
-.header-checkbox {
-  margin-left: 8px;
-}
+/* ===================== */
+/* 🔹 ОБЩЕЕ */
+/* ===================== */
 
-/* Download Button */
-.download-btn {
-  background: #fff;
-  border: 1px solid #4080ff;
+.documents-container {
+  padding-bottom: 40px;
+}
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fafafa;
   border-radius: 8px;
-  padding: 6px 12px;
-  cursor: pointer;
-  color: #4080ff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.2;
-  width: 100%;
-  transition: all 0.3s;
 }
 
-.download-btn:hover {
-  background: #e6f7ff;
+.empty-state p {
+  margin-top: 16px;
+  color: #5c5858;
+  font-size: 14px;
 }
-
-.file-info {
-  font-size: 10px;
-  color: #888;
-  margin-top: 2px;
-  text-transform: uppercase;
-}
-
-/* Adjust table spacing */
-nz-table {
-  background: transparent;
-}
-

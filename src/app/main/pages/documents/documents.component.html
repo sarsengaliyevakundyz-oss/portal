@@ -1,79 +1,132 @@
 <div class="documents-container">
-  <div class="breadcrumbs">
-    <span class="breadcrumb-link">{{ 'documents.breadcrumb.documents' | translate }}</span>
-    /
-    <span class="breadcrumb-current">{{ 'documents.breadcrumb.instructions' | translate }}</span>
-  </div>
 
   <h1>{{ 'documents.title' | translate }}</h1>
 
-  <div class="page-layout">
-    <!-- Sidebar -->
-    <!-- <div class="sidebar">
-      <div class="sidebar-card">
-        <h3 class="sidebar-title">Инструкции</h3>
-        <nz-radio-group [(ngModel)]="selectedInstructionId" (ngModelChange)="onInstructionChange($event)" class="radio-group">
-          <label nz-radio *ngFor="let instruction of instructions" [nzValue]="instruction.id">
-            {{ instruction.title }}
+  <!-- 🔹 КАТЕГОРИИ -->
+  <div *ngIf="viewMode === 'menu'" class="items-container">
 
-            <div *ngIf="instruction.id === selectedInstructionId && childSystems.length > 0" class="child-systems">
-              <nz-radio-group [(ngModel)]="selectedChildSystem" class="radio-group">
-                <label nz-radio *ngFor="let child of childSystems" [nzValue]="child.id">
-                  {{ child.name }}
-                </label>
-              </nz-radio-group>
-            </div>
-          </label>
-        </nz-radio-group>
+    <div
+      class="item animate-item"
+      *ngFor="let cat of categories; let i = index"
+      (click)="openCategory(cat)"
+      [style.animation-delay]="(i * 0.08) + 's'"
+    >
+      <div class="item-title">
+        {{ cat.name }}
       </div>
-    </div> -->
 
-    <!-- Main Content --> 
+      <div class="item-icon">
+        <img src="/BDAP.png" />
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🔹 ДОКУМЕНТЫ -->
+  <div *ngIf="viewMode === 'documents'" class="page-layout">
+
+    <!-- 🔹 HEADER -->
+    <div class="page-header">
+
+      <button
+        nz-button
+        nzType="default"
+        class="back-btn"
+        (click)="goBack()"
+      >
+        ← {{ 'common.back' | translate }}
+      </button>
+
+      <h3 class="page-title">
+        {{ selectedCategory?.name }}
+      </h3>
+
+    </div>
+
     <div class="main-content">
+
+      <!-- 🔹 ПОИСК -->
       <div class="search-area">
+
         <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
           <input
             type="text"
             nz-input
-            [placeholder]="'documents.search.placeholder' | translate"
             [(ngModel)]="searchValue"
+            [placeholder]="'documents.search.placeholder' | translate"
+            (keyup.enter)="search()"
           />
         </nz-input-group>
+
         <ng-template #suffixIconSearch>
           <span nz-icon nzType="search"></span>
         </ng-template>
+
         <button nz-button nzType="primary" class="search-btn" (click)="search()">
-          {{ 'documents.search.button' | translate }}
+          {{ 'documents.search.button' | translate }}        </button>
+
+        <button nz-button *ngIf="searchValue" (click)="resetSearch()">
+          {{ 'common.reset' | translate }}
         </button>
+
       </div>
 
-      <nz-table #basicTable [nzData]="items" [nzShowPagination]="false" nzBordered="false">
-        <thead>
+      <!-- 🔹 СПИННЕР ЗАГРУЗКИ -->
+      <nz-spin [nzSpinning]="loadingDocuments" [nzSize]="'large'">
+
+        <!-- 🔹 ТАБЛИЦА -->
+        <nz-table
+          [nzData]="documents"
+          [nzShowPagination]="true"
+          [nzFrontPagination]="false"
+          [nzTotal]="totalElements"
+          [nzPageIndex]="currentPage + 1"
+          [nzPageSize]="pageSize"
+          [nzPageSizeOptions]="[10, 20, 50, 100]"
+          (nzPageIndexChange)="onPageChange($event)"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+          [nzNoResult]="emptyTpl">
+
+          <ng-template #emptyTpl>
+            <div class="empty-state">
+              <span nz-icon nzType="file" nzTheme="outline" style="font-size: 48px; color: #ccc;"></span>
+              <p>{{ 'documents.noDocuments' | translate }}</p>
+            </div>
+          </ng-template>
+
+          <thead>
           <tr>
-            <th nzWidth="50px">{{ 'documents.table.number' | translate }}</th>
-            <th>{{ 'documents.table.component' | translate }}</th>
-            <th>{{ 'documents.table.subsystem' | translate }}</th>
-            <th>{{ 'documents.table.name' | translate }}</th>
-            <th>{{ 'documents.table.updated_at' | translate }}</th>
-            <th nzWidth="120px"></th>
+            <th>№</th>
+
+            <th *ngFor="let col of columns">
+              {{ col.title }}
+            </th>
+
+            <th></th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ data.component }}</td>
-            <td>{{ data.subsystem }}</td>
-            <td>{{ data.name | nameTranslate }}</td>
-            <td>{{ data.date }}</td>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let doc of documents; let i = index">
+            <td>{{ currentPage * pageSize + i + 1 }}</td>
+
+            <td *ngFor="let col of columns">
+              {{ getDynamicValue(doc, col.key) }}
+            </td>
+
             <td>
-              <button class="download-btn" (click)="download(data)">
-                {{ 'documents.table.download' | translate }}
-                <span class="file-info">{{data.fileType}} {{data.fileSize}}</span>
+              <button nz-button nzType="link" (click)="download(doc)">
+                <span nz-icon nzType="download"></span>
+                {{ 'common.download' | translate }}
               </button>
             </td>
           </tr>
-        </tbody>
-      </nz-table>
+          </tbody>
+
+        </nz-table>
+
+      </nz-spin>
     </div>
   </div>
+
 </div>

@@ -33,7 +33,7 @@ export class CurrentUserService {
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private http: HttpClient,
     private authService: AuthService
   ) {
@@ -49,16 +49,16 @@ export class CurrentUserService {
   private checkInitialAuthenticationState(): void {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
-    
+
     if (!isAuthenticated && !hasSecretCode) {
       this.redirectToSSO();
-        return; 
+        return;
     }
   }
 
   private checkAuthenticationStatus(): boolean {
     const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-    
+   
     if (!userInfo) {
       return false;
     }
@@ -66,10 +66,10 @@ export class CurrentUserService {
     try {
       const decodedToken: any = jwtDecode(userInfo.accessToken);
       const isValid = decodedToken.exp * 1000 > Date.now();
-      
+     
       if (isValid) {
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
-      } 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+      }
       return isValid;
     } catch (error) {
       return false;
@@ -81,12 +81,12 @@ export class CurrentUserService {
 
       const iin = localStorage.getItem(this.iinKey);
       if (!iin) return;
-  
+
       try {
         const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
         const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
         const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
-  
+
         await firstValueFrom(
           this.http.post(
             '/sso-internal-back-new/sso/internal/deactivateSecretCode',
@@ -101,7 +101,7 @@ export class CurrentUserService {
         throw error;
       }
     }
- 
+
   private async onMessage(event: MessageEvent) {
     const data = event.data;
   if (data?.type === 'AUTH_SECRET_CODE') {
@@ -117,7 +117,7 @@ export class CurrentUserService {
 
     this.secretCode = receivedCode;
     localStorage.setItem(this.secretCodeKey, receivedCode);
-    
+
       try {
         const response = await firstValueFrom(
           this.http.get<SsoTokenResponse>(
@@ -141,11 +141,11 @@ export class CurrentUserService {
   public getAuthResponseKey(): string {
     return this.authResponseKey;
   }
-  
+
   public getSecretCodeKey(): string {
     return this.secretCodeKey;
   }
- 
+
   public getSecretCode(): string | undefined {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
@@ -158,7 +158,7 @@ export class CurrentUserService {
         return null;
       }
       else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true); 
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
       }
     };
     return this.currentUser;
@@ -170,7 +170,7 @@ export class CurrentUserService {
 
 
  isAuthenticated(): boolean {
-  return this.isAuthenticatedSubject.value; 
+  return this.isAuthenticatedSubject.value;
 }
 
   getIsAuthChecked(): boolean {
@@ -180,28 +180,28 @@ export class CurrentUserService {
   private getInitialAuthenticationStatus(): { isAuthenticated: boolean, isAuthChecked: boolean } {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
-    
+
     if (isAuthenticated) {
         return { isAuthenticated: true, isAuthChecked: true };
     }
-    
+
     if (!hasSecretCode) {
-        return { isAuthenticated: false, isAuthChecked: true }; 
+        return { isAuthenticated: false, isAuthChecked: true };
     }
-    
+
     return { isAuthenticated: false, isAuthChecked: false };
 }
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
-    
+
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
-    
+
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
-    
+
     window.open(this.buildSsoRedirectUrl(), '_blank');
     this.hasLoggedOut = true;
   }
@@ -257,7 +257,7 @@ export class CurrentUserService {
         email: decoded.email || '',
         preferred_username: decoded.preferred_username || ''
       } as UserTokenInfo;
-      
+
       const secretCode = localStorage.getItem(this.secretCodeKey);
       if (secretCode) {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
@@ -293,4 +293,11 @@ export class CurrentUserService {
       return 0;
     }
   }
+  getToken(): string | null {
+    const user = this.getCurrentUser();
+    if (user && user.accessToken) {
+      return user.accessToken;
+    }
+    return null;
+  }
 }
