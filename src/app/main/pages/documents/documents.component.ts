@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -7,7 +7,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { DocumentsService, DocumentDto, PageResponse } from '../../../shared/services/documents.service';
@@ -59,15 +59,19 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   constructor(
     private documentsService: DocumentsService,
     private translate: TranslateService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadCategories();
 
     // Подписываемся на смену языка
-    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
-      this.refreshData();
+    this.langChangeSubscription = this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      console.log('Language changed to:', event.lang);
+      console.log('Translations:', event.translations);
+      // Полностью перезагружаем все данные
+      this.refreshAllData();
     });
   }
 
@@ -75,16 +79,41 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.langChangeSubscription?.unsubscribe();
   }
 
-  // Обновление данных при смене языка
-  refreshData(): void {
-    // Перезагружаем категории с новым языком
-    this.loadCategories();
+  // Полное обновление всех данных
+  refreshAllData(): void {
+    // Сохраняем текущий режим и выбранную категорию
+    const currentViewMode = this.viewMode;
+    const currentCategoryId = this.selectedCategory?.id;
 
-    // Если мы в режиме документов, обновляем колонки и документы
-    if (this.viewMode === 'documents' && this.selectedCategory) {
-      // Обновляем выбранную категорию из нового списка
-      this.updateSelectedCategory();
-      // Перезагружаем документы
+    // Перезагружаем категории
+    this.loadCategories(() => {
+      // После загрузки категорий восстанавливаем состояние
+      if (currentViewMode === 'documents' && currentCategoryId) {
+        const restoredCategory = this.categories.find(c => c.id === currentCategoryId);
+        if (restoredCategory) {
+          this.selectedCategory = restoredCategory;
+          this.updateColumns(restoredCategory);
+          this.loadDocuments();
+        } else {
+          // Если категория не найдена, возвращаемся в меню
+          this.viewMode = 'menu';
+          this.selectedCategory = undefined;
+          this.documents = [];
+          this.columns = [];
+        }
+      } else if (currentViewMode === 'menu') {
+        // Просто обновляем отображение категорий
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Обновление данных без полной перезагрузки (для текущего вида)
+  refreshData(): void {
+    if (this.viewMode === 'menu') {
+      this.loadCategories();
+    } else if (this.viewMode === 'documents' && this.selectedCategory) {
+      this.updateColumns(this.selectedCategory);
       this.loadDocuments();
     }
   }
@@ -97,6 +126,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         this.selectedCategory = updatedCategory;
         // Обновляем колонки с новым языком
         this.updateColumns(updatedCategory);
+        this.cdr.detectChanges();
       }
     }
   }
@@ -112,7 +142,13 @@ export class DocumentsComponent implements OnInit, OnDestroy {
           : category.uiSchema;
 
         if (schema && Array.isArray(schema.columns)) {
-          this.columns = schema.columns.filter((c: any) => c && c.key && c.title);
+          // Переводим заголовки колонок, если они есть в переводе
+          this.columns = schema.columns
+            .filter((c: any) => c && c.key && c.title)
+            .map((col: any) => ({
+              ...col,
+              title: this.getTranslatedColumnTitle(col.key, col.title)
+            }));
         } else {
           this.columns = [];
         }
@@ -124,28 +160,58 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     }
 
     console.log('Обновленные columns:', this.columns);
+    this.cdr.detectChanges();
+  }
+
+  // Получение переведенного заголовка колонки
+  getTranslatedColumnTitle(key: string, defaultTitle: string): string {
+    // Пытаемся получить перевод по ключу
+    const translationKey = `documents.table.${key}`;
+    let translated = this.translate.instant(translationKey);
+
+    // Если перевод не найден, возвращаем оригинальный заголовок
+    if (translated === translationKey) {
+      return defaultTitle;
+    }
+    return translated;
   }
 
   // 🔹 загрузка категорий
-  loadCategories(): void {
+  loadCategories(callback?: () => void): void {
     this.loadingCategories = true;
     const lang = this.translate.currentLang === 'kz' ? 'kk' : 'ru';
+
+    console.log('Loading categories with lang:', lang);
 
     this.documentsService.getCategories(lang).subscribe({
       next: (data: CategoryModel[]) => {
         this.categories = data;
         this.loadingCategories = false;
-        console.log('categories:', data);
+        console.log('categories loaded:', data);
 
-        // После загрузки категорий обновляем выбранную
-        this.updateSelectedCategory();
+        // Обновляем переводы имен категорий
+        this.updateCategoryNames();
+
+        this.cdr.detectChanges();
+
+        if (callback) {
+          callback();
+        }
       },
       error: (err) => {
         console.error(err);
-        this.message.error('Ошибка загрузки категорий');
+        this.message.error(this.translate.instant('message.error.loadCategories') || 'Ошибка загрузки категорий');
         this.loadingCategories = false;
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  // Обновление имен категорий с переводом
+  updateCategoryNames(): void {
+    // Если категории уже имеют переведенные имена, ничего не делаем
+    // Или можно дополнительно обработать
+    this.cdr.detectChanges();
   }
 
   // 🔹 открытие категории
@@ -160,6 +226,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
     // Загружаем документы
     this.loadDocuments();
+
+    this.cdr.detectChanges();
   }
 
   // 🔹 загрузка документов по категории
@@ -168,6 +236,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
     this.loadingDocuments = true;
     const lang = this.translate.currentLang === 'kz' ? 'kk' : 'ru';
+
+    console.log('Loading documents with lang:', lang, 'category:', this.selectedCategory.id);
 
     this.documentsService.getDocumentsByCategory(
       this.selectedCategory.id,
@@ -181,13 +251,15 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
         this.loadingDocuments = false;
-        console.log('documents:', this.documents);
+        console.log('documents loaded:', this.documents);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
-        this.message.error('Ошибка загрузки документов');
+        this.message.error(this.translate.instant('message.error.loadDocuments') || 'Ошибка загрузки документов');
         this.loadingDocuments = false;
         this.documents = [];
+        this.cdr.detectChanges();
       }
     });
   }
@@ -218,11 +290,13 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
         this.loadingDocuments = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
-        this.message.error('Ошибка поиска');
+        this.message.error(this.translate.instant('message.error.search') || 'Ошибка поиска');
         this.loadingDocuments = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -248,7 +322,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   download(document: DocumentDto): void {
     if (!document.downloadUrl) {
-      this.message.error('Путь к файлу не найден');
+      this.message.error(this.translate.instant('message.error.fileNotFound') || 'Путь к файлу не найден');
       return;
     }
 
@@ -257,17 +331,20 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.viewMode = 'menu';
+    this.selectedCategory = undefined;
     this.documents = [];
     this.columns = [];
     this.searchValue = '';
     this.currentPage = 0;
+    this.cdr.detectChanges();
   }
 
-  // Форматирование даты
+  // Форматирование даты с учетом языка
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('ru-RU', {
+    const lang = this.translate.currentLang === 'kz' ? 'kk-KZ' : 'ru-RU';
+    return date.toLocaleDateString(lang, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
