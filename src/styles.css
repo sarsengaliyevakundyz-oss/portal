@@ -1,35 +1,125 @@
-@import url('fonts.css?family=Nunito+Sans:wght@400;600;700&display=swap'); /* You can add global styles to this file, and also import other style files */
+@import url('fonts.css?family=Nunito+Sans:wght@400;600;700&display=swap');
 @import "ng-zorro-antd/ng-zorro-antd.min.css";
 
+/* БАЗА */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  /*background: #eef3f7 url('/background_image.png') no-repeat fixed center center;*/
   background-size: cover;
   font-family: 'Nunito Sans', sans-serif !important;
   color: #333;
+  /* Стабилизируем скролл - только здесь, не дублируем */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.ant-pagination-item, 
+/* ng-zorro */
+.ant-pagination-item,
 .ant-pagination {
   font-family: inherit !important;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  flex-direction: column
-}
-
+/* фон главной */
 body.home-background {
   background: #eef3f7 url('/internalportalfront/background_image.png') no-repeat fixed center center;
   background-size: cover;
+  transition: background-image 0.3s ease-in-out;
 }
 
-/* Класс для других страниц (можете задать другие параметры, чтобы фоновая картинка была частичной) */
+/* фон других страниц */
 body.partial-background {
   background: #eef3f7 url('/internalportalfront/background_image.png') no-repeat fixed left center;
-  background-size: 130% auto; /* Увеличиваем картинку примерно в 2 раза, можно регулировать значение */
+  background-size: 130% auto;
+  transition: background-image 0.3s ease-in-out;
+}
+
+/* ========================= */
+/* 🔥 ПЛАВНОСТЬ UI (ВАЖНО) */
+/* ========================= */
+
+/* глобальная плавность (без перегруза) */
+* {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+/* клики (убираем "жёсткость") */
+button,
+a,
+.item,
+.doc-card {
+  transition: all 0.2s ease;
+}
+
+button:active,
+a:active,
+.item:active,
+.doc-card:active {
+  transform: scale(0.97);
+}
+
+/* hover мягче */
+.item:hover,
+.doc-card:hover {
+  transform: translateY(-3px);
+}
+
+/* убираем резкий outline */
+*:focus {
+  outline: none;
+}
+
+/* Плавное появление страниц */
+router-outlet + * {
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Отключаем анимацию для календаря */
+router-outlet + app-calendar {
+  animation: none !important;
+}
+
+.calendar-container {
+  animation: none !important;
+}
+
+/* Глобальные оптимизации для плавности */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Оптимизация для анимаций */
+.animate-all {
+  will-change: transform, opacity;
+}
+
+/* Отключаем анимацию для календаря при первой загрузке */
+app-calendar .calendar-grid .days .day-item {
+  animation: none;
+}
+
+app-calendar .calendar-grid.calendar-fade-in .days .day-item {
+  animation: dayItemFadeIn 0.25s ease backwards;
+}
+
+/* Плавное появление страниц без дергания */
+app-main-layout {
+  display: block;
+  min-height: 100vh;
 }
