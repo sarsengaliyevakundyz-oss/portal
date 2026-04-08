@@ -1,15 +1,21 @@
 <h1>{{ 'main.system' | translate }}</h1>
+
 <div class="items-container">
-  <a class="item" *ngFor="let item of items" [routerLink]="['/systems', item.id]">
+  <a class="item animate-item"
+     *ngFor="let item of items; let i = index"
+     [routerLink]="['/systems', item.id]"
+     [style.animation-delay]="(i * 0.08) + 's'">
+
     <div class="item-title">
       {{ item.name }}
     </div>
+
     <div class="item-icon">
       <img
         [src]="item.fullPathImg"
-        alt="{{ item.name }}"
         (error)="onImgError($event)"
       />
     </div>
+
   </a>
 </div>
