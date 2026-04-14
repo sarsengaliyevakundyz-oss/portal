@@ -128,11 +128,13 @@ export class CurrentUserService {
     this.currentUser = null as any;
     this.secretCode = undefined;
 
-    // 🔥 ВАЖНО: разрешаем снова открыть SSO
+    // сбрасываем флаг
     this.hasLoggedOut = false;
 
-    // 🔥 сразу открываем SSO
-    this.redirectToSSO();
+    // 🔥 даём Angular отрисоваться
+    setTimeout(() => {
+      this.redirectToSSO();
+    }, 0);
   }
 
   private async onMessage(event: MessageEvent) {
