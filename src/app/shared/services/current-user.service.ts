@@ -152,7 +152,7 @@ export class CurrentUserService {
       try {
         const response = await firstValueFrom(
           this.http.get<SsoTokenResponse>(
-            '/getSsoToken',
+            '/internalportal/getSsoToken',
             {
               headers: new HttpHeaders({
                 'Accept': 'application/json',
@@ -184,17 +184,18 @@ export class CurrentUserService {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
+
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser) {
+    if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if (!userInfo) {
+      if(!userInfo){
 //         this.redirectToSSO();
         return null;
-      } else {
+      }
+      else{
         this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
       }
-    }
-    ;
+    };
     return this.currentUser;
   }
 
