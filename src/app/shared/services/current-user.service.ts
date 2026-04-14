@@ -52,10 +52,15 @@ export class CurrentUserService {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
-    if (!isAuthenticated && !hasSecretCode) {
-      this.isAuthenticatedSubject.next(false);
-      this.isAuthCheckedSubject.next(true);
+    if (!isAuthenticated && !hasSecretCode && !this.hasLoggedOut) {
+      this.redirectToSSO(); // 🔥 вернуть
       return;
+    }
+
+    // если есть токен
+    if (isAuthenticated) {
+      this.isAuthenticatedSubject.next(true);
+      this.isAuthCheckedSubject.next(true);
     }
   }
 
@@ -111,17 +116,23 @@ export class CurrentUserService {
     }
   }
   private logoutAndRedirect(): void {
+    // чистим всё
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
+    // обновляем состояние
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
     this.currentUser = null as any;
     this.secretCode = undefined;
 
-    this.redirectToSSO(); // 🔥 ключевая замена
+    // 🔥 ВАЖНО: разрешаем снова открыть SSO
+    this.hasLoggedOut = false;
+
+    // 🔥 сразу открываем SSO
+    this.redirectToSSO();
   }
 
   private async onMessage(event: MessageEvent) {
@@ -155,6 +166,9 @@ export class CurrentUserService {
 
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
+
+          this.hasLoggedOut = false; // 🔥 обязательно
+
           this.router.navigate(['/']);
         });
       } catch (err) {
