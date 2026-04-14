@@ -58,10 +58,16 @@ export class BaseApi {
   private handleAuthError(err: HttpErrorResponse): Observable<never> {
     const errorMessage = typeof err.error === 'string' ? err.error : err.error?.message;
 
+    // 🔧 ДОБАВЬ ПРОВЕРКУ НА 500 - НЕ ЛОГАУТИМ
+    if (err.status === 500) {
+      console.error('Server error (500):', errorMessage);
+      return throwError(() => err); // Просто пробрасываем ошибку дальше
+    }
+
     if (err.status == 401 ||
-        errorMessage?.includes('Сессия пользователя истекла') ||
-        errorMessage?.includes('Требуется повторная авторизация через SSO') ||
-        errorMessage?.includes('status 401 reading')) {
+      errorMessage?.includes('Сессия пользователя истекла') ||
+      errorMessage?.includes('Требуется повторная авторизация через SSO') ||
+      errorMessage?.includes('status 401 reading')) {
 
       localStorage.removeItem('authResponse');
       localStorage.removeItem('secretCode');

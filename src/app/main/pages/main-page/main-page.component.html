@@ -18,14 +18,14 @@
 </div>
 
 <main class="main-content" [class.hidden]="!isAuthenticated || !isAuthChecked">
-  <section class="news">
+  <section class="news" [class.animated]="isAuthenticated">
     <app-news></app-news>
     <div class="news-list-more">
       <a routerLink="/news">{{'action.more' | translate}}...</a>
     </div>
   </section>
 
-  <section class="calendar">
+  <section class="calendar" [class.animated]="isAuthenticated">
     <app-calendar></app-calendar>
   </section>
 </main>
