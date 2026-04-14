@@ -29,17 +29,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscription = combineLatest([
-        this.currentUser.isAuthenticated$, 
-        this.currentUser.isAuthChecked$
+      this.currentUser.isAuthenticated$,
+      this.currentUser.isAuthChecked$
     ]).subscribe(([isAuthenticated, isAuthChecked]) => {
-        this.isAuthenticated = isAuthenticated;
-        this.isAuthChecked = isAuthChecked;
+      this.isAuthenticated = isAuthenticated;
+      this.isAuthChecked = isAuthChecked;
     });
-  }
+  }
 
   ngOnDestroy() {
-      if (this.authSubscription) {
-          this.authSubscription.unsubscribe();
-      }
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

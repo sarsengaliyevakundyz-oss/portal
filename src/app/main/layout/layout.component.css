@@ -1,22 +1,22 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* гарантируем высоту экрана */
-  width: 100%; /* при необходимости */
+  min-height: 100vh;
+  width: 100%;
 }
 
 .top-header {
-  /*position: fixed; !* Зафиксировать вверху *!*/
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999; /* Чтобы быть выше контента */
+  z-index: 999;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 0px;
   width: 1200px;
   margin: 0 auto;
+  transition: all 0.3s ease;
 }
 
 .nav-logo {
@@ -41,10 +41,14 @@
   text-decoration: none;
   color: #333;
   font-size: 14px;
-  /*font-weight: 500;*/
   padding-bottom: 5px;
   position: relative;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
 
+.nav-menu a:hover {
+  color: #007bff;
 }
 
 .nav-menu a.active {
@@ -59,6 +63,24 @@
   bottom: 0;
   height: 2px;
   background-color: #007bff;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    left: 50%;
+    right: 50%;
+  }
+  to {
+    left: 15%;
+    right: 15%;
+  }
+}
+
+/* Эффект клика на меню */
+.click-effect {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
 }
 
 .user-actions {
@@ -79,20 +101,64 @@
   padding: 4px 15px;
   border-radius: 20px;
   font-size: 14px;
-  /*font-weight: 500;*/
   cursor: pointer;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .profile-btn:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
 }
 
-.content{
+.profile-btn:active {
+  transform: translateY(0);
+}
+
+.content {
   width: 1200px;
   margin: 0 auto;
   padding-top: 30px;
-  flex: 1; /* Заставим контент занимать оставшееся пространство */
+  flex: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Анимация для контента при навигации */
+.content.navigating {
+  opacity: 0.5;
+}
+
+.content.fade-in {
+  animation: contentFadeIn 0.3s ease-out;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Глобальные анимации для body */
+body.navigation-start {
+  overflow-x: hidden;
+}
+
+body.fade-out {
+  animation: bodyFadeOut 0.15s ease-out;
+}
+
+@keyframes bodyFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.95;
+  }
 }
 
 /*footer*/
@@ -102,7 +168,6 @@
   left: 0;
   right: 0;
 }
-
 
 .profile-container {
   position: relative;
@@ -118,6 +183,18 @@
   z-index: 1;
   border-radius: 4px;
   margin-top: 5px;
+  animation: menuFadeIn 0.2s ease-out;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .menu-item {
@@ -128,8 +205,38 @@
   background: none;
   cursor: pointer;
   color: #333;
+  transition: background 0.2s ease;
 }
 
 .menu-item:hover {
   background-color: #f5f5f5;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .top-header {
+    width: 95%;
+    padding: 15px 20px;
+  }
+
+  .content {
+    width: 95%;
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    gap: 15px;
+    padding-left: 5%;
+  }
+
+  .nav-menu a {
+    font-size: 12px;
+  }
+
+  .profile-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
 }

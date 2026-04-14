@@ -77,6 +77,9 @@ export class CurrentUserService {
       return false;
     }
   }
+
+// Добавьте этот метод в CurrentUserService
+
   async deactivateToken(): Promise<void> {
     console.log("deactivateToken run");
 
@@ -90,13 +93,13 @@ export class CurrentUserService {
     try {
       const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
       const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
-      const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
+      const encryptedIIN = CryptoJS.AES.encrypt(iin, key, {iv: iv}).toString();
 
       await firstValueFrom(
         this.http.post(
           '/sso-internal-back-new/sso/internal/deactivateSecretCode',
-          { iin: encryptedIIN },
-          { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+          {iin: encryptedIIN},
+          {headers: new HttpHeaders({'Content-Type': 'application/json'})}
         )
       );
 
@@ -109,6 +112,7 @@ export class CurrentUserService {
     }
   }
 
+// Добавьте этот новый метод
   private logoutAndRedirect(): void {
     // Очищаем все локальные данные
     localStorage.removeItem(this.authResponseKey);
@@ -128,7 +132,8 @@ export class CurrentUserService {
   }
 
   private async onMessage(event: MessageEvent) {
-    // if (event.origin !== 'http://172.16.18.182:9999') return;
+
+    if (event.origin !== 'http://172.16.18.182:9999') return;
     const data = event.data;
     if (data?.type === 'AUTH_SECRET_CODE') {
       const receivedCode = data.secretCode;
@@ -147,7 +152,7 @@ export class CurrentUserService {
       try {
         const response = await firstValueFrom(
           this.http.get<SsoTokenResponse>(
-            '/internalportal/getSsoToken',
+            '/getSsoToken',
             {
               headers: new HttpHeaders({
                 'Accept': 'application/json',
@@ -156,6 +161,7 @@ export class CurrentUserService {
             }
           )
         );
+
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
           this.router.navigate(['/']);
@@ -261,6 +267,7 @@ export class CurrentUserService {
     return fallback.toString();
   }
 
+
   async logout() {
     if (this.hasLoggedOut) return;
 
@@ -340,4 +347,5 @@ export class CurrentUserService {
     }
     return null;
   }
+
 }
