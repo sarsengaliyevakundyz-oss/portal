@@ -110,22 +110,19 @@ export class CurrentUserService {
     }
   }
   private logoutAndRedirect(): void {
-    // Очищаем все локальные данные
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
-    // Обновляем состояние аутентификации
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
-    // Очищаем текущего пользователя
     this.currentUser = null as any;
     this.secretCode = undefined;
 
-    // Перенаправляем на страницу логина (не открываем новое окно)
-    this.router.navigate(['/login']);
+    this.redirectToSSO(); // 🔥 ключевая замена
   }
+
   private async onMessage(event: MessageEvent) {
     const data = event.data;
   if (data?.type === 'AUTH_SECRET_CODE') {
@@ -222,15 +219,16 @@ export class CurrentUserService {
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
 
+    this.hasLoggedOut = true; // ✅ только здесь
+
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
     this.isAuthenticatedSubject.next(false);
-    this.isAuthCheckedSubject.next(true);
+    this.isAuthCheckedSubject.next(true);
 
     window.open(this.buildSsoRedirectUrl(), '_blank');
-    this.hasLoggedOut = true;
   }
 
   private buildSsoRedirectUrl(): string {
