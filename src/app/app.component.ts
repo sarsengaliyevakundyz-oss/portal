@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Route, Router, RouterOutlet} from '@angular/router';
 import {CurrentUserService} from './shared/services/current-user.service';
 import {UmamiService} from './core/services/Umami.service';
- 
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
@@ -15,10 +15,12 @@ export class AppComponent implements OnInit{
   constructor(private route: ActivatedRoute, private currentUser: CurrentUserService, private router: Router,
               private umamiService: UmamiService) {
   }
- 
+
   ngOnInit(): void {
     this.setBackground();
-    this.currentUser.getCurrentUser();
+    setTimeout(() => {
+      this.currentUser.getCurrentUser();
+    }, 0);
     this.route.queryParams.subscribe(params => {
       const token = params['access_token'];
       const refresh = params['refresh_token'];
@@ -29,7 +31,7 @@ export class AppComponent implements OnInit{
     });
     this.umamiService.initializeManualPageTracking();
   }
- 
+
   private setBackground() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

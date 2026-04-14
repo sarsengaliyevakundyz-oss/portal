@@ -57,12 +57,12 @@ export class BaseApi {
 
   private handleAuthError(err: HttpErrorResponse): Observable<never> {
     const errorMessage = typeof err.error === 'string' ? err.error : err.error?.message;
-    
-    if (err.status == 401 || 
+
+    if (err.status == 401 ||
         errorMessage?.includes('Сессия пользователя истекла') ||
         errorMessage?.includes('Требуется повторная авторизация через SSO') ||
         errorMessage?.includes('status 401 reading')) {
-      
+
       localStorage.removeItem('authResponse');
       localStorage.removeItem('secretCode');
       localStorage.removeItem('iinKey');

@@ -53,15 +53,17 @@
       </div>
       <div class="days">
         <div *ngFor="let day of calendarDays"
-            class="day-item"
-            [ngClass]="{
+             class="day-item"
+             [ngClass]="{
               'past-day': day.isPast,
               'current-day': day.isCurrent,
               'holiday-region': day.isHoliday && day.eventType === 'region',
               'holiday-respondent': day.isHoliday && day.eventType === 'respondent',
               'next-month-day': day.isNextMonth
             }">
-          {{ day.date }}
+          <div class="day-content">
+            {{ day.date }}
+          </div>
           <div *ngIf="day.events?.length" class="day-events">
             <div *ngFor="let event of day.events" class="event-tooltip">
               {{ event.formName }} ({{ event.periodKindlistName }})

@@ -39,24 +39,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
   currentYear = new Date().getFullYear();
   CalendarTypeEnum = CalendarTypeEnum;
 
-  query: CalendarQuery = { 
-    type: CalendarTypeEnum.Region, 
-    year: new Date().getFullYear(), 
+  query: CalendarQuery = {
+    type: CalendarTypeEnum.Region,
+    year: new Date().getFullYear(),
     month: new Date().getMonth() + 1
   } as CalendarQuery;
 
   allEvents: any[] = [];
   nextEvents: any[] = [];
-  calendarDays: { 
-    date: number, 
-    isPast: boolean, 
-    isCurrent: boolean, 
-    isHoliday: boolean, 
+  calendarDays: {
+    date: number,
+    isPast: boolean,
+    isCurrent: boolean,
+    isHoliday: boolean,
     isNextMonth: boolean,
     events?: any[],
     eventType?: 'region' | 'respondent'
   }[] = [];
-  
+
   isLoading: boolean = false;
   isShowAllEvents: boolean = false;
   private authSubscription: Subscription | undefined;
@@ -72,19 +72,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authSubscription = this.currentUser.isAuthChecked$.subscribe(isReady => {
-        if (isReady) {
-            if (this.currentUser.isAuthenticated()) {
-              this.generateCalendar();
-            } else {
-              this.isLoading = false;
-            }
+      if (isReady) {
+        if (this.currentUser.isAuthenticated()) {
+          this.generateCalendar();
+        } else {
+          this.isLoading = false;
         }
+      }
     });
   }
 
   ngOnDestroy(): void {
     if (this.authSubscription) {
-        this.authSubscription.unsubscribe();
+      this.authSubscription.unsubscribe();
     }
   }
 
@@ -123,10 +123,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   generateCalendar(): void {
-    this.allEvents = []; 
+    this.allEvents = [];
     this.nextEvents = [];
     this.isLoading = true;
-    
+
     if (!this.currentUser.isAuthenticated()) {
       this.isLoading = false;
       return;
@@ -138,7 +138,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return;
         }
-        
+
         this.processCalendarData(res.data);
         this.isLoading = false;
       },
@@ -155,7 +155,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.printCalendar([]);
       return;
     }
-  
+
     this.allEvents = data.map(item => {
       const [day, month, year] = item.dateEnd.split('.').map(Number);
       const date = new Date(year, month - 1, day);
@@ -173,14 +173,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     });
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     this.nextEvents = this.allEvents
       .filter(event => {
         const isUpcoming = event.date >= today;
         return isUpcoming;
       })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
-  
+
     this.printCalendar(currentMonthEvents);
   }
 
@@ -193,15 +193,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
     today.setHours(0, 0, 0, 0);
 
     const eventsByDay: { [key: number]: any[] } = {};
-    
+
     events.forEach(event => {
-      const eventDay = event.date.getDate(); 
+      const eventDay = event.date.getDate();
       if (!eventsByDay[eventDay]) {
         eventsByDay[eventDay] = [];
       }
       eventsByDay[eventDay].push(event);
     });
-    
+
     let startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     for (let i = startDay; i > 0; i--) {
       this.calendarDays.push({
@@ -212,31 +212,31 @@ export class CalendarComponent implements OnInit, OnDestroy {
         isNextMonth: false
       });
     }
-  
+
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(this.query.year, this.query.month - 1, day);
       const isPast = date < today;
       const dayEvents = eventsByDay[day] || [];
-      
+
       let eventType: 'region' | 'respondent' | undefined;
       if (dayEvents.length > 0) {
         const eventTypes = new Set(dayEvents.map(e => e.type.toString()));
-        
+
         if (eventTypes.has(CalendarTypeEnum.Region.toString())) {
           eventType = 'region';
         } else if (eventTypes.has(CalendarTypeEnum.Respondent.toString())) {
           eventType = 'respondent';
         }
       }
-  
+
       this.calendarDays.push({
         date: day,
         isPast: isPast,
         isCurrent: date.toDateString() === today.toDateString(),
-        isHoliday: dayEvents.length > 0, 
+        isHoliday: dayEvents.length > 0,
         isNextMonth: false,
         events: dayEvents,
-        eventType: eventType 
+        eventType: eventType
       });
     }
 

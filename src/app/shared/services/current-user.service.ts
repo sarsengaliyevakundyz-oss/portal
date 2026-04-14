@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 import { RoleEnum, UserTokenInfo } from '../models/user.model'
 import { AuthService } from "./auth.service"
+import { NgZone } from '@angular/core';
 
 interface SsoTokenResponse {
   access_token: string;
@@ -35,7 +36,8 @@ export class CurrentUserService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private zone: NgZone
   ) {
     window.addEventListener('message', this.onMessage.bind(this), false);
     const savedCode = localStorage.getItem(this.secretCodeKey);
@@ -50,9 +52,9 @@ export class CurrentUserService {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
-    if (!isAuthenticated && !hasSecretCode) {
+    if (!isAuthenticated && !hasSecretCode && !this.hasLoggedOut) {
       this.redirectToSSO();
-        return;
+      return;
     }
   }
 
@@ -76,32 +78,54 @@ export class CurrentUserService {
     }
   }
 
-    async deactivateToken(): Promise<void> {
-      console.log("deactivateToken run")
+  async deactivateToken(): Promise<void> {
+    console.log("deactivateToken run");
 
-      const iin = localStorage.getItem(this.iinKey);
-      if (!iin) return;
-
-      try {
-        const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
-        const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
-        const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
-
-        await firstValueFrom(
-          this.http.post(
-            '/sso-internal-back-new/sso/internal/deactivateSecretCode',
-            { iin: encryptedIIN },
-            { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-          )
-        );
-
-        this.logout();
-      } catch (error) {
-        console.error('Error deactivating token:', error);
-        throw error;
-      }
+    const iin = localStorage.getItem(this.iinKey);
+    if (!iin) {
+      // Если IIN нет, просто выходим
+      this.logoutAndRedirect();
+      return;
     }
 
+    try {
+      const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
+      const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
+      const encryptedIIN = CryptoJS.AES.encrypt(iin, key, { iv: iv }).toString();
+
+      await firstValueFrom(
+        this.http.post(
+          '/sso-internal-back-new/sso/internal/deactivateSecretCode',
+          { iin: encryptedIIN },
+          { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+        )
+      );
+
+      // Успешно деактивировали на сервере
+      this.logoutAndRedirect();
+    } catch (error) {
+      console.error('Error deactivating token:', error);
+      // Даже если ошибка, все равно выходим локально
+      this.logoutAndRedirect();
+    }
+  }
+  private logoutAndRedirect(): void {
+    // Очищаем все локальные данные
+    localStorage.removeItem(this.authResponseKey);
+    localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
+
+    // Обновляем состояние аутентификации
+    this.isAuthenticatedSubject.next(false);
+    this.isAuthCheckedSubject.next(true);
+
+    // Очищаем текущего пользователя
+    this.currentUser = null as any;
+    this.secretCode = undefined;
+
+    // Перенаправляем на страницу логина (не открываем новое окно)
+    this.router.navigate(['/login']);
+  }
   private async onMessage(event: MessageEvent) {
     const data = event.data;
   if (data?.type === 'AUTH_SECRET_CODE') {
@@ -131,7 +155,10 @@ export class CurrentUserService {
           )
         );
 
-        this.setUser(response.access_token, response.refresh_token);
+        this.zone.run(() => {
+          this.setUser(response.access_token, response.refresh_token);
+          this.router.navigate(['/']);
+        });
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
       }

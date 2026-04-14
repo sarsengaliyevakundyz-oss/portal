@@ -29,8 +29,8 @@ export class LayoutComponent {
   ) {}
 
   isAuthenticated(): boolean {
-    return this.currentUser.isAuthenticated() && 
-           !!localStorage.getItem(this.currentUser.getAuthResponseKey()) && 
+    return this.currentUser.isAuthenticated() &&
+           !!localStorage.getItem(this.currentUser.getAuthResponseKey()) &&
            !!localStorage.getItem(this.currentUser.getSecretCodeKey());
   }
 
@@ -38,8 +38,23 @@ export class LayoutComponent {
     this.showProfileMenu = !this.showProfileMenu;
   }
   async deactivateToken(): Promise<void> {
-    console.log('deactivateToken called');
-    await this.currentUser.deactivateToken();
+    try {
+      await this.currentUser.deactivateToken();
+    } catch (error) {
+      console.error('Error deactivating token:', error);
+    } finally {
+      // Очищаем все данные
+      localStorage.removeItem(this.currentUser.getAuthResponseKey());
+      localStorage.removeItem(this.currentUser.getSecretCodeKey());
+      localStorage.removeItem('iinKey');
+      localStorage.removeItem('vip_lang');
+
+      this.showProfileMenu = false;
+
+      // Перезагружаем страницу, а не навигируем на /login
+      // При перезагрузке checkInitialAuthenticationState() увидит что нет сессии и откроет SSO
+      window.location.href = '/';
+    }
   }
 
   @HostListener('document:click', ['$event'])
