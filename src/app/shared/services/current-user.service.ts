@@ -1,12 +1,12 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http"
-import { Injectable } from "@angular/core"
-import { Router } from "@angular/router"
+import {HttpClient, HttpHeaders} from "@angular/common/http"
+import {Injectable} from "@angular/core"
+import {Router} from "@angular/router"
 import * as CryptoJS from 'crypto-js'
-import { jwtDecode } from 'jwt-decode'
-import { BehaviorSubject, firstValueFrom } from 'rxjs'
-import { RoleEnum, UserTokenInfo } from '../models/user.model'
-import { AuthService } from "./auth.service"
-import { NgZone } from '@angular/core';
+import {jwtDecode} from 'jwt-decode'
+import {BehaviorSubject, firstValueFrom} from 'rxjs'
+import {RoleEnum, UserTokenInfo} from '../models/user.model'
+import {AuthService} from "./auth.service"
+import {NgZone} from '@angular/core';
 
 interface SsoTokenResponse {
   access_token: string;
@@ -21,10 +21,10 @@ interface SsoTokenResponse {
 })
 export class CurrentUserService {
   private secretCode?: string;
-  private currentUser!:UserTokenInfo;
+  private currentUser!: UserTokenInfo;
   private permissions: RoleEnum[] = [];
   private authResponseKey = 'authResponse';
-  private secretCodeKey   = 'secretCode';
+  private secretCodeKey = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
   // private initialStatus = this.getInitialAuthenticationStatus();
@@ -53,37 +53,30 @@ export class CurrentUserService {
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
     if (!isAuthenticated && !hasSecretCode && !this.hasLoggedOut) {
-      this.redirectToSSO(); // 🔥 вернуть
+      this.redirectToSSO();
       return;
-    }
-
-    // если есть токен
-    if (isAuthenticated) {
-      this.isAuthenticatedSubject.next(true);
-      this.isAuthCheckedSubject.next(true);
     }
   }
 
-  private checkAuthenticationStatus(): boolean {
-    const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-   
-    if (!userInfo) {
-      return false;
-    }
+  private checkAuthenticationStatus(): boolean {
+    const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
 
-    try {
-      const decodedToken: any = jwtDecode(userInfo.accessToken);
-      const isValid = decodedToken.exp * 1000 > Date.now();
-     
-      if (isValid) {
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
-      }
-      return isValid;
-    } catch (error) {
-      return false;
-    }
-  }
+    if (!userInfo) {
+      return false;
+    }
 
+    try {
+      const decodedToken: any = jwtDecode(userInfo.accessToken);
+      const isValid = decodedToken.exp * 1000 > Date.now();
+
+      if (isValid) {
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+      }
+      return isValid;
+    } catch (error) {
+      return false;
+    }
+  }
   async deactivateToken(): Promise<void> {
     console.log("deactivateToken run");
 
@@ -115,43 +108,41 @@ export class CurrentUserService {
       this.logoutAndRedirect();
     }
   }
+
   private logoutAndRedirect(): void {
-    // чистим всё
+    // Очищаем все локальные данные
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
-    // обновляем состояние
+    // Обновляем состояние аутентификации
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
+    // Очищаем текущего пользователя
     this.currentUser = null as any;
     this.secretCode = undefined;
 
-    // сбрасываем флаг
-    this.hasLoggedOut = false;
-
-    // 🔥 даём Angular отрисоваться
-    setTimeout(() => {
-      this.redirectToSSO();
-    }, 0);
+    // Перенаправляем на страницу логина (не открываем новое окно)
+    this.router.navigate(['/login']);
   }
 
   private async onMessage(event: MessageEvent) {
+    if (event.origin !== 'http://172.16.18.182:9999') return;
     const data = event.data;
-  if (data?.type === 'AUTH_SECRET_CODE') {
-    const receivedCode = data.secretCode;
-    if (typeof receivedCode !== 'string') {
-      console.error('Unexpected secretCode:', receivedCode);
-      return;
-    }
+    if (data?.type === 'AUTH_SECRET_CODE') {
+      const receivedCode = data.secretCode;
+      if (typeof receivedCode !== 'string') {
+        console.error('Unexpected secretCode:', receivedCode);
+        return;
+      }
 
-    if (data.iin && !localStorage.getItem(this.iinKey)) {
-      localStorage.setItem(this.iinKey, data.iin);
-    }
+      if (data.iin && !localStorage.getItem(this.iinKey)) {
+        localStorage.setItem(this.iinKey, data.iin);
+      }
 
-    this.secretCode = receivedCode;
-    localStorage.setItem(this.secretCodeKey, receivedCode);
+      this.secretCode = receivedCode;
+      localStorage.setItem(this.secretCodeKey, receivedCode);
 
       try {
         const response = await firstValueFrom(
@@ -165,12 +156,8 @@ export class CurrentUserService {
             }
           )
         );
-
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
-
-          this.hasLoggedOut = false; // 🔥 обязательно
-
           this.router.navigate(['/']);
         });
       } catch (err) {
@@ -191,52 +178,50 @@ export class CurrentUserService {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
-  getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if(!userInfo){
+  getCurrentUser(): UserTokenInfo | null {
+    if (!this.currentUser) {
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+      if (!userInfo) {
 //         this.redirectToSSO();
-        return null;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
-      }
-    };
-    return this.currentUser;
-  }
+        return null;
+      } else {
+        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+      }
+    }
+    ;
+    return this.currentUser;
+  }
 
-  getPermissions(): RoleEnum[]{
+  getPermissions(): RoleEnum[] {
     return this.permissions;
   }
 
 
- isAuthenticated(): boolean {
-  return this.isAuthenticatedSubject.value;
-}
+  isAuthenticated(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
 
   getIsAuthChecked(): boolean {
-    return this.isAuthCheckedSubject.value;
-  }
+    return this.isAuthCheckedSubject.value;
+  }
 
   private getInitialAuthenticationStatus(): { isAuthenticated: boolean, isAuthChecked: boolean } {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
     if (isAuthenticated) {
-        return { isAuthenticated: true, isAuthChecked: true };
+      return {isAuthenticated: true, isAuthChecked: true};
     }
 
     if (!hasSecretCode) {
-        return { isAuthenticated: false, isAuthChecked: true };
+      return {isAuthenticated: false, isAuthChecked: true};
     }
 
-    return { isAuthenticated: false, isAuthChecked: false };
-}
+    return {isAuthenticated: false, isAuthChecked: false};
+  }
 
   private redirectToSSO(): void {
     if (this.hasLoggedOut) return;
-
-    this.hasLoggedOut = true; // ✅ только здесь
 
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
@@ -246,10 +231,11 @@ export class CurrentUserService {
     this.isAuthCheckedSubject.next(true);
 
     window.open(this.buildSsoRedirectUrl(), '_blank');
+    this.hasLoggedOut = true;
   }
 
   private buildSsoRedirectUrl(): string {
-    const { protocol, hostname, port, origin } = window.location;
+    const {protocol, hostname, port, origin} = window.location;
     const effectivePort = port || '9999';
 
     if (hostname === 'new.e.stat.gov.kz') {
@@ -277,7 +263,18 @@ export class CurrentUserService {
 
   async logout() {
     if (this.hasLoggedOut) return;
-    this.redirectToSSO();
+
+    // Очищаем данные без открытия нового окна SSO
+    localStorage.removeItem(this.authResponseKey);
+    localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
+
+    this.isAuthenticatedSubject.next(false);
+    this.isAuthCheckedSubject.next(true);
+    this.currentUser = null as any;
+    this.secretCode = undefined;
+
+    await this.router.navigate(['/login']);
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
@@ -288,7 +285,7 @@ export class CurrentUserService {
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
       const isJwt = token && token.split('.').length === 3;
-      const decoded: any = isJwt ? jwtDecode(token) : {}
+      const decoded: any = isJwt ? jwtDecode(token) : {}
 
       this.currentUser = {
         accessToken: token,
@@ -305,9 +302,9 @@ export class CurrentUserService {
         localStorage.setItem(this.authResponseKey, JSON.stringify(this.currentUser));
       }
       if (updateAuthStatus) {
-        this.isAuthenticatedSubject.next(true);
-        this.isAuthCheckedSubject.next(true);
-      }
+        this.isAuthenticatedSubject.next(true);
+        this.isAuthCheckedSubject.next(true);
+      }
     } catch (error) {
       console.error("Error setting user:", error);
       this.redirectToSSO();
@@ -321,20 +318,21 @@ export class CurrentUserService {
     return payload.exp! < currentTime;
   }
 
-   minutesToExpire(): number {
-    if (!this.currentUser || !this.currentUser.accessToken) {
-      return 0;
-    }
-    try {
-      const payload = jwtDecode(this.currentUser.accessToken);
-      const currentTime = Math.floor(Date.now() / 1000);
-      const timeUntilExpire = payload.exp! - currentTime;
-      return Math.floor(timeUntilExpire / 60);
-    } catch (e) {
-      console.error("Error decoding token for minutesToExpire", e);
-      return 0;
-    }
-  }
+  minutesToExpire(): number {
+    if (!this.currentUser || !this.currentUser.accessToken) {
+      return 0;
+    }
+    try {
+      const payload = jwtDecode(this.currentUser.accessToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      const timeUntilExpire = payload.exp! - currentTime;
+      return Math.floor(timeUntilExpire / 60);
+    } catch (e) {
+      console.error("Error decoding token for minutesToExpire", e);
+      return 0;
+    }
+  }
+
   getToken(): string | null {
     const user = this.getCurrentUser();
     if (user && user.accessToken) {
