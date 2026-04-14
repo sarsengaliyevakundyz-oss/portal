@@ -133,19 +133,38 @@ export class CurrentUserService {
 
   private async onMessage(event: MessageEvent) {
 
-    if (event.origin !== 'http://172.16.18.182:9999') return;
+    // ✅ логируем для дебага
+    console.log('SSO MESSAGE:', event.origin, event.data);
+
+    // ✅ разрешаем несколько origin
+    const allowedOrigins = [
+      'http://172.16.18.182:9999',
+      'http://172.16.0.182:9999',
+      window.location.origin
+    ];
+
+    if (!allowedOrigins.includes(event.origin)) {
+      console.warn('Blocked origin:', event.origin);
+      return;
+    }
+
     const data = event.data;
+
     if (data?.type === 'AUTH_SECRET_CODE') {
+
       const receivedCode = data.secretCode;
+
       if (typeof receivedCode !== 'string') {
         console.error('Unexpected secretCode:', receivedCode);
         return;
       }
 
+      // сохраняем iin
       if (data.iin && !localStorage.getItem(this.iinKey)) {
         localStorage.setItem(this.iinKey, data.iin);
       }
 
+      // сохраняем secretCode
       this.secretCode = receivedCode;
       localStorage.setItem(this.secretCodeKey, receivedCode);
 
@@ -162,16 +181,21 @@ export class CurrentUserService {
           )
         );
 
+        // 🔥 ВАЖНО — через zone
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
+
+          // сброс флага (важно для повторного logout)
+          this.hasLoggedOut = false;
+
           this.router.navigate(['/']);
         });
+
       } catch (err) {
         console.error('Не удалось получить SSO-токен:', err);
       }
     }
   }
-
   public getAuthResponseKey(): string {
     return this.authResponseKey;
   }

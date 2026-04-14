@@ -140,17 +140,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error deactivating token:', error);
     } finally {
-      // Очищаем все данные
-      localStorage.removeItem(this.currentUser.getAuthResponseKey());
-      localStorage.removeItem(this.currentUser.getSecretCodeKey());
-      localStorage.removeItem('iinKey');
-      localStorage.removeItem('vip_lang');
-
       this.showProfileMenu = false;
-
-      // Перезагружаем страницу, а не навигируем на /login
-      // При перезагрузке checkInitialAuthenticationState() увидит что нет сессии и откроет SSO
-      window.location.href = '/';
     }
   }
 
