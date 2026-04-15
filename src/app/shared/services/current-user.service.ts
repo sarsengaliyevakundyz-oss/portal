@@ -26,8 +26,10 @@ export class CurrentUserService {
   private authResponseKey = 'authResponse';
   private secretCodeKey = 'secretCode';
   private iinKey = 'iin';
-  private hasLoggedOut = false;
-  // private initialStatus = this.getInitialAuthenticationStatus();
+
+  // ✅ 1. Заменили hasLoggedOut на isLogoutInProgress
+  private isLogoutInProgress = false;
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -44,7 +46,6 @@ export class CurrentUserService {
     if (savedCode) {
       this.secretCode = savedCode;
     }
-
     this.checkInitialAuthenticationState();
   }
 
@@ -52,23 +53,18 @@ export class CurrentUserService {
     const isAuthenticated = this.checkAuthenticationStatus();
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
-    if (!isAuthenticated && !hasSecretCode && !this.hasLoggedOut) {
+    if (!isAuthenticated && !hasSecretCode) {
       this.redirectToSSO();
-      return;
     }
   }
 
   private checkAuthenticationStatus(): boolean {
     const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-
-    if (!userInfo) {
-      return false;
-    }
+    if (!userInfo) return false;
 
     try {
       const decodedToken: any = jwtDecode(userInfo.accessToken);
       const isValid = decodedToken.exp * 1000 > Date.now();
-
       if (isValid) {
         this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
       }
@@ -78,73 +74,56 @@ export class CurrentUserService {
     }
   }
 
-// Добавьте этот метод в CurrentUserService
-
+  // ✅ 2. deactivateToken через finally — выход всегда, IIN не удаляется
   async deactivateToken(): Promise<void> {
-    console.log("deactivateToken run");
-    let iin = localStorage.getItem(this.iinKey);
+    if (this.isLogoutInProgress) return;
+    this.isLogoutInProgress = true;
 
-    if (!iin) {
-      // Ждём 300мс и пробуем снова
-      await new Promise(resolve => setTimeout(resolve, 300));
-      iin = localStorage.getItem(this.iinKey);
-    }
-
-    if (!iin) {
-      console.warn('IIN not found, proceeding with local logout only');
-      this.logoutAndRedirect();
-      return;
-    }
-    if (!iin) {
-      console.log('IIN:', iin);
-      this.logoutAndRedirect();
-      return;
-    }
-    console.log('IIN:', iin);
+    const iin = localStorage.getItem(this.iinKey);
 
     try {
-      const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
-      const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
-      const encryptedIIN = CryptoJS.AES.encrypt(iin, key, {iv: iv}).toString();
-      console.log('IIN:', iin);
-      await firstValueFrom(
-        this.http.post(
-          '/sso-internal-back-new/sso/internal/deactivateSecretCode',
-          {iin: encryptedIIN},
-          {headers: new HttpHeaders({'Content-Type': 'application/json'})}
-        )
-      );
+      if (iin) {
+        const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
+        const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
+        const encryptedIIN = CryptoJS.AES.encrypt(iin, key, {iv: iv}).toString();
 
-      // Успешно деактивировали на сервере
-      this.logoutAndRedirect();
+        await firstValueFrom(
+          this.http.post(
+            '/sso-internal-back-new/sso/internal/deactivateSecretCode',
+            {iin: encryptedIIN},
+            {headers: new HttpHeaders({'Content-Type': 'application/json'})}
+          )
+        );
+      } else {
+        console.warn('IIN not found, skipping deactivation request');
+      }
     } catch (error) {
       console.error('Error deactivating token:', error);
-      // Даже если ошибка, все равно выходим локально
+    } finally {
+      // ✅ Выход всегда — и при успехе, и при ошибке, и без iin
       this.logoutAndRedirect();
     }
   }
 
-// Добавьте этот новый метод
   private logoutAndRedirect(): void {
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
-    localStorage.removeItem(this.iinKey);
+    // ✅ 3. IIN НЕ удаляем — он нужен при следующем deactivateToken
+    // localStorage.removeItem(this.iinKey);
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
     this.currentUser = null as any;
     this.secretCode = undefined;
-    this.hasLoggedOut = false; // ← добавь это! иначе флаг блокирует повторный вход
+    this.isLogoutInProgress = false; // ✅ сбрасываем флаг
 
-    this.router.navigate(['/login']);
+    // ✅ 4. Редиректим на SSO, не на /login
+    this.redirectToSSO();
   }
 
   private async onMessage(event: MessageEvent) {
+    console.log('SSO MESSAGE FULL DATA:', JSON.stringify(event.data));
 
-    // ✅ логируем для дебага
-    console.log('SSO MESSAGE:', event.origin, event.data);
-
-    // ✅ разрешаем несколько origin
     const allowedOrigins = [
       'http://172.16.18.182:9999',
       'http://172.16.0.182:9999',
@@ -159,7 +138,6 @@ export class CurrentUserService {
     const data = event.data;
 
     if (data?.type === 'AUTH_SECRET_CODE') {
-
       const receivedCode = data.secretCode;
 
       if (typeof receivedCode !== 'string') {
@@ -167,12 +145,11 @@ export class CurrentUserService {
         return;
       }
 
-      // сохраняем iin
+      // ✅ 5. Сохраняем IIN если SSO передал (при первом входе)
       if (data.iin) {
         localStorage.setItem(this.iinKey, data.iin);
       }
 
-      // сохраняем secretCode
       this.secretCode = receivedCode;
       localStorage.setItem(this.secretCodeKey, receivedCode);
 
@@ -189,13 +166,9 @@ export class CurrentUserService {
           )
         );
 
-        // 🔥 ВАЖНО — через zone
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
-
-          // сброс флага (важно для повторного logout)
-          this.hasLoggedOut = false;
-
+          this.isLogoutInProgress = false;
           this.router.navigate(['/']);
         });
 
@@ -204,73 +177,35 @@ export class CurrentUserService {
       }
     }
   }
-  public getAuthResponseKey(): string {
-    return this.authResponseKey;
-  }
 
-  public getSecretCodeKey(): string {
-    return this.secretCodeKey;
-  }
-
+  public getAuthResponseKey(): string { return this.authResponseKey; }
+  public getSecretCodeKey(): string { return this.secretCodeKey; }
   public getSecretCode(): string | undefined {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
-
   getCurrentUser(): UserTokenInfo | null {
-    if (!this.currentUser){
+    if (!this.currentUser) {
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      if(!userInfo){
-//         this.redirectToSSO();
-        return null;
-      }
-      else{
-        this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
-      }
-    };
+      if (!userInfo) return null;
+      this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+    }
     return this.currentUser;
   }
 
-  getPermissions(): RoleEnum[] {
-    return this.permissions;
-  }
-
-
-  isAuthenticated(): boolean {
-    return this.isAuthenticatedSubject.value;
-  }
-
-  getIsAuthChecked(): boolean {
-    return this.isAuthCheckedSubject.value;
-  }
-
-  private getInitialAuthenticationStatus(): { isAuthenticated: boolean, isAuthChecked: boolean } {
-    const isAuthenticated = this.checkAuthenticationStatus();
-    const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
-
-    if (isAuthenticated) {
-      return {isAuthenticated: true, isAuthChecked: true};
-    }
-
-    if (!hasSecretCode) {
-      return {isAuthenticated: false, isAuthChecked: true};
-    }
-
-    return {isAuthenticated: false, isAuthChecked: false};
-  }
+  getPermissions(): RoleEnum[] { return this.permissions; }
+  isAuthenticated(): boolean { return this.isAuthenticatedSubject.value; }
+  getIsAuthChecked(): boolean { return this.isAuthCheckedSubject.value; }
 
   private redirectToSSO(): void {
-    if (this.hasLoggedOut) return;
-
+    // ✅ 6. Не удаляем iin здесь тоже
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
-    localStorage.removeItem(this.iinKey);
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
     window.open(this.buildSsoRedirectUrl(), '_blank');
-    this.hasLoggedOut = true;
   }
 
   private buildSsoRedirectUrl(): string {
@@ -282,13 +217,11 @@ export class CurrentUserService {
       url.searchParams.set('client-id', '2');
       return url.toString();
     }
-
     if (hostname === '172.16.0.182') {
       const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
       return url.toString();
     }
-
     if (hostname === '172.16.18.182') {
       const url = new URL(`${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
@@ -300,32 +233,19 @@ export class CurrentUserService {
     return fallback.toString();
   }
 
-
+  // ✅ 7. logout теперь просто вызывает deactivateToken
   async logout() {
-    if (this.hasLoggedOut) return;
-
-    // Очищаем данные без открытия нового окна SSO
-    localStorage.removeItem(this.authResponseKey);
-    localStorage.removeItem(this.secretCodeKey);
-    localStorage.removeItem(this.iinKey);
-
-    this.isAuthenticatedSubject.next(false);
-    this.isAuthCheckedSubject.next(true);
-    this.currentUser = null as any;
-    this.secretCode = undefined;
-
-    await this.router.navigate(['/login']);
+    await this.deactivateToken();
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
     return permissions.some(permission => this.permissions.includes(permission));
   }
 
-
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
       const isJwt = token && token.split('.').length === 3;
-      const decoded: any = isJwt ? jwtDecode(token) : {}
+      const decoded: any = isJwt ? jwtDecode(token) : {};
 
       this.currentUser = {
         accessToken: token,
@@ -351,34 +271,22 @@ export class CurrentUserService {
     }
   }
 
-
   isExpired(token: string): boolean {
     const payload = jwtDecode(token);
-    const currentTime = Math.floor(Date.now() / 1000);
-    return payload.exp! < currentTime;
+    return payload.exp! < Math.floor(Date.now() / 1000);
   }
 
   minutesToExpire(): number {
-    if (!this.currentUser || !this.currentUser.accessToken) {
-      return 0;
-    }
+    if (!this.currentUser?.accessToken) return 0;
     try {
       const payload = jwtDecode(this.currentUser.accessToken);
-      const currentTime = Math.floor(Date.now() / 1000);
-      const timeUntilExpire = payload.exp! - currentTime;
-      return Math.floor(timeUntilExpire / 60);
+      return Math.floor((payload.exp! - Math.floor(Date.now() / 1000)) / 60);
     } catch (e) {
-      console.error("Error decoding token for minutesToExpire", e);
       return 0;
     }
   }
 
   getToken(): string | null {
-    const user = this.getCurrentUser();
-    if (user && user.accessToken) {
-      return user.accessToken;
-    }
-    return null;
+    return this.getCurrentUser()?.accessToken ?? null;
   }
-
 }
