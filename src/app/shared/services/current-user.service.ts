@@ -82,8 +82,19 @@ export class CurrentUserService {
 
   async deactivateToken(): Promise<void> {
     console.log("deactivateToken run");
+    let iin = localStorage.getItem(this.iinKey);
 
-    const iin = localStorage.getItem(this.iinKey);
+    if (!iin) {
+      // Ждём 300мс и пробуем снова
+      await new Promise(resolve => setTimeout(resolve, 300));
+      iin = localStorage.getItem(this.iinKey);
+    }
+
+    if (!iin) {
+      console.warn('IIN not found, proceeding with local logout only');
+      this.logoutAndRedirect();
+      return;
+    }
     if (!iin) {
       console.log('IIN:', iin);
       this.logoutAndRedirect();
@@ -115,20 +126,16 @@ export class CurrentUserService {
 
 // Добавьте этот новый метод
   private logoutAndRedirect(): void {
-    // Очищаем все локальные данные
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
-    // Обновляем состояние аутентификации
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
-
-    // Очищаем текущего пользователя
     this.currentUser = null as any;
     this.secretCode = undefined;
+    this.hasLoggedOut = false; // ← добавь это! иначе флаг блокирует повторный вход
 
-    // Перенаправляем на страницу логина (не открываем новое окно)
     this.router.navigate(['/login']);
   }
 

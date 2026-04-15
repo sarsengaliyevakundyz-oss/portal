@@ -13,7 +13,9 @@ export class JwtInterceptor implements HttpInterceptor {
 
   private readonly AUTH_EXCLUSION_URLS = [
     '/internalportal/getToken',
-    '/internalportal/getSsoToken'
+    '/internalportal/getSsoToken',
+    '/sso-internal-back-new/sso/internal/deactivateSecretCode' // ← добавь
+
   ];
   constructor(private currentUserService: CurrentUserService, private authService: AuthService) {}
 
