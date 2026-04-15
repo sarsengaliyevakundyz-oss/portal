@@ -85,16 +85,17 @@ export class CurrentUserService {
 
     const iin = localStorage.getItem(this.iinKey);
     if (!iin) {
-      // Если IIN нет, просто выходим
+      console.log('IIN:', iin);
       this.logoutAndRedirect();
       return;
     }
+    console.log('IIN:', iin);
 
     try {
       const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
       const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
       const encryptedIIN = CryptoJS.AES.encrypt(iin, key, {iv: iv}).toString();
-
+      console.log('IIN:', iin);
       await firstValueFrom(
         this.http.post(
           '/sso-internal-back-new/sso/internal/deactivateSecretCode',
@@ -160,7 +161,7 @@ export class CurrentUserService {
       }
 
       // сохраняем iin
-      if (data.iin && !localStorage.getItem(this.iinKey)) {
+      if (data.iin) {
         localStorage.setItem(this.iinKey, data.iin);
       }
 
