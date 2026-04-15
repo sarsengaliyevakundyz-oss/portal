@@ -27,13 +27,11 @@ export class CurrentUserService {
   private secretCodeKey = 'secretCode';
   private iinKey = 'iin';
   private hasLoggedOut = false;
-  private isDeactivating = false; // Флаг для предотвращения повторных вызовов
+  // private initialStatus = this.getInitialAuthenticationStatus();
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private isAuthCheckedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   isAuthChecked$ = this.isAuthCheckedSubject.asObservable();
-
-  private ssoWindow: Window | null = null;
 
   constructor(
     private router: Router,
@@ -80,44 +78,24 @@ export class CurrentUserService {
     }
   }
 
-  async deactivateToken(): Promise<void> {
-    // Предотвращаем повторные вызовы
-    if (this.isDeactivating) {
-      console.log("Deactivation already in progress, skipping");
-      return;
-    }
+// Добавьте этот метод в CurrentUserService
 
-    console.log("deactivateToken started");
-    this.isDeactivating = true;
+  async deactivateToken(): Promise<void> {
+    console.log("deactivateToken run");
 
     const iin = localStorage.getItem(this.iinKey);
-
-    // Сначала закрываем SSO окно если оно есть
-    if (this.ssoWindow && !this.ssoWindow.closed) {
-      try {
-        this.ssoWindow.close();
-      } catch(e) {}
-      this.ssoWindow = null;
-    }
-
-    // Очищаем флаг hasLoggedOut чтобы разрешить выход
-    this.hasLoggedOut = false;
-
     if (!iin) {
-      console.log('No IIN found, logging out');
-      await this.performLogout();
-      this.isDeactivating = false;
+      console.log('IIN:', iin);
+      this.logoutAndRedirect();
       return;
     }
-
-    console.log('IIN found, sending deactivation request');
+    console.log('IIN:', iin);
 
     try {
       const key = CryptoJS.enc.Hex.parse('10c3417e0b38987f3b44528d999a090efd708bcef15d6357c252bcd42b4cf03d');
       const iv = CryptoJS.enc.Hex.parse('315f48391c3d3cc857128287f8457d47');
       const encryptedIIN = CryptoJS.AES.encrypt(iin, key, {iv: iv}).toString();
-
-      // Отправляем запрос с таймаутом
+      console.log('IIN:', iin);
       await firstValueFrom(
         this.http.post(
           '/sso-internal-back-new/sso/internal/deactivateSecretCode',
@@ -125,78 +103,41 @@ export class CurrentUserService {
           {headers: new HttpHeaders({'Content-Type': 'application/json'})}
         )
       );
-      console.log('Deactivation request successful');
-    } catch (error: any) {
-      console.error('Error deactivating token:', error?.message || error);
-      // Продолжаем выход даже при ошибке
-    }
 
-    // Всегда выполняем выход
-    await this.performLogout();
-    this.isDeactivating = false;
+      // Успешно деактивировали на сервере
+      this.logoutAndRedirect();
+    } catch (error) {
+      console.error('Error deactivating token:', error);
+      // Даже если ошибка, все равно выходим локально
+      this.logoutAndRedirect();
+    }
   }
 
-  private async performLogout(): Promise<void> {
-    console.log("Performing logout");
-
+// Добавьте этот новый метод
+  private logoutAndRedirect(): void {
     // Очищаем все локальные данные
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
     localStorage.removeItem(this.iinKey);
 
-    // Очищаем sessionStorage
-    sessionStorage.clear();
-
-    // Очищаем cookies
-    this.clearCookies();
-
-    // Сбрасываем состояние
-    this.currentUser = null as any;
-    this.secretCode = undefined;
-    this.hasLoggedOut = true;
-
-    // Обновляем BehaviorSubject
+    // Обновляем состояние аутентификации
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
-    // Закрываем SSO окно если оно еще открыто
-    if (this.ssoWindow && !this.ssoWindow.closed) {
-      try {
-        this.ssoWindow.close();
-      } catch(e) {}
-      this.ssoWindow = null;
-    }
+    // Очищаем текущего пользователя
+    this.currentUser = null as any;
+    this.secretCode = undefined;
 
-    // Перенаправляем на страницу логина с очисткой истории
-    await this.router.navigate(['/login'], { replaceUrl: true });
-
-    // Принудительная перезагрузка для полной очистки кэша
-    setTimeout(() => {
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
-    }, 50);
-  }
-
-  private clearCookies(): void {
-    try {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf('=');
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' + window.location.hostname;
-      }
-      console.log('Cookies cleared');
-    } catch(e) {
-      console.warn('Could not clear all cookies:', e);
-    }
+    // Перенаправляем на страницу логина (не открываем новое окно)
+    this.router.navigate(['/login']);
   }
 
   private async onMessage(event: MessageEvent) {
+
+    // ✅ логируем для дебага
     console.log('SSO MESSAGE:', event.origin, event.data);
 
+    // ✅ разрешаем несколько origin
     const allowedOrigins = [
       'http://172.16.18.182:9999',
       'http://172.16.0.182:9999',
@@ -211,6 +152,7 @@ export class CurrentUserService {
     const data = event.data;
 
     if (data?.type === 'AUTH_SECRET_CODE') {
+
       const receivedCode = data.secretCode;
 
       if (typeof receivedCode !== 'string') {
@@ -230,7 +172,7 @@ export class CurrentUserService {
       try {
         const response = await firstValueFrom(
           this.http.get<SsoTokenResponse>(
-            '/internalportal/getSsoToken',  // Этот URL должен быть полным или проксирован
+            '/internalportal/getSsoToken',
             {
               headers: new HttpHeaders({
                 'Accept': 'application/json',
@@ -240,12 +182,14 @@ export class CurrentUserService {
           )
         );
 
+        // 🔥 ВАЖНО — через zone
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
+
+          // сброс флага (важно для повторного logout)
           this.hasLoggedOut = false;
-          this.isDeactivating = false;
-          // Навигация с правильным base path
-          this.router.navigate(['/'], { replaceUrl: true });
+
+          this.router.navigate(['/']);
         });
 
       } catch (err) {
@@ -265,10 +209,12 @@ export class CurrentUserService {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
 
+
   getCurrentUser(): UserTokenInfo | null {
     if (!this.currentUser){
       const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
       if(!userInfo){
+//         this.redirectToSSO();
         return null;
       }
       else{
@@ -282,12 +228,28 @@ export class CurrentUserService {
     return this.permissions;
   }
 
+
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
   }
 
   getIsAuthChecked(): boolean {
     return this.isAuthCheckedSubject.value;
+  }
+
+  private getInitialAuthenticationStatus(): { isAuthenticated: boolean, isAuthChecked: boolean } {
+    const isAuthenticated = this.checkAuthenticationStatus();
+    const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
+
+    if (isAuthenticated) {
+      return {isAuthenticated: true, isAuthChecked: true};
+    }
+
+    if (!hasSecretCode) {
+      return {isAuthenticated: false, isAuthChecked: true};
+    }
+
+    return {isAuthenticated: false, isAuthChecked: false};
   }
 
   private redirectToSSO(): void {
@@ -300,13 +262,12 @@ export class CurrentUserService {
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
-    // Сохраняем ссылку на окно
-    this.ssoWindow = window.open(this.buildSsoRedirectUrl(), '_blank');
+    window.open(this.buildSsoRedirectUrl(), '_blank');
     this.hasLoggedOut = true;
   }
 
   private buildSsoRedirectUrl(): string {
-    const { protocol, hostname, port, origin } = window.location;
+    const {protocol, hostname, port, origin} = window.location;
     const effectivePort = port || '9999';
 
     if (hostname === 'new.e.stat.gov.kz') {
@@ -335,12 +296,24 @@ export class CurrentUserService {
 
   async logout() {
     if (this.hasLoggedOut) return;
-    await this.performLogout();
+
+    // Очищаем данные без открытия нового окна SSO
+    localStorage.removeItem(this.authResponseKey);
+    localStorage.removeItem(this.secretCodeKey);
+    localStorage.removeItem(this.iinKey);
+
+    this.isAuthenticatedSubject.next(false);
+    this.isAuthCheckedSubject.next(true);
+    this.currentUser = null as any;
+    this.secretCode = undefined;
+
+    await this.router.navigate(['/login']);
   }
 
   checkPermissions(...permissions: RoleEnum[]): boolean {
     return permissions.some(permission => this.permissions.includes(permission));
   }
+
 
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
@@ -371,6 +344,7 @@ export class CurrentUserService {
     }
   }
 
+
   isExpired(token: string): boolean {
     const payload = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000);
@@ -399,4 +373,5 @@ export class CurrentUserService {
     }
     return null;
   }
+
 }
