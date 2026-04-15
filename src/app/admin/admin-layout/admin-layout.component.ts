@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-layout',
@@ -7,7 +8,8 @@ import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/route
   imports: [
     RouterLink,
     RouterOutlet,
-    RouterLinkActive
+    RouterLinkActive,
+    TranslatePipe
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
