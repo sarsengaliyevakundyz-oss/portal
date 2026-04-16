@@ -12,7 +12,20 @@ import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@ang
 import ru from '@angular/common/locales/ru';
 import { firstValueFrom } from 'rxjs';
 
+// 👇 НОВЫЕ ИМПОРТЫ ДЛЯ ИКОНОК
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NZ_ICONS } from 'ng-zorro-antd/icon';
+import { IconDefinition } from '@ant-design/icons-angular';
+import {
+  UserOutline,
+  DownOutline,
+  RightOutline,
+  FolderOpenOutline,
+  // Добавьте другие иконки, если используете
+} from '@ant-design/icons-angular/icons';
+
 registerLocaleData(ru);
+
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './i18n/', '.json');
 }
@@ -26,26 +39,45 @@ export function initLanguageFactory(translate: TranslateService): () => Promise<
   };
 }
 
+// 👇 Регистрируем иконки
+const antDesignIcons: IconDefinition[] = [
+  UserOutline,
+  DownOutline,
+  RightOutline,
+  FolderOpenOutline
+];
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
       withViewTransitions({
-        // Опционально: настройка продолжительности анимации
         onViewTransitionCreated(transitionInfo) {
           // Плавный переход
         }
       }),
       withInMemoryScrolling({
-        scrollPositionRestoration: 'top', // Всегда в начало
+        scrollPositionRestoration: 'top',
         anchorScrolling: 'enabled',
       }),
-      withComponentInputBinding() // Улучшает связывание компонентов
+      withComponentInputBinding()
     ),
     importProvidersFrom(CoreModule),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
+
+    // 👇 ДОБАВЬТЕ ЭТО: регистрация модуля иконок
+    importProvidersFrom(
+      NzIconModule.forRoot(antDesignIcons)  // Регистрируем иконки
+    ),
+
+    // 👇 ИЛИ используйте провайдер (можно оба способа, но лучше один)
+    {
+      provide: NZ_ICONS,
+      useValue: antDesignIcons
+    },
+
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {

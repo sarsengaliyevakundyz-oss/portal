@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {DatePipe, NgForOf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {NewsService} from '../../../shared/services/news.service';
 import {News, NewsCategory, NewsQuery} from '../../../shared/models/news.model';
 import {ActivatedRoute, RouterLink} from '@angular/router';
@@ -16,7 +16,7 @@ import {Subscription} from 'rxjs';
   imports: [
     FormsModule,
     NgForOf,
-    DatePipe,
+    // DatePipe - удаляем, так как не используем
     NzPaginationComponent,
     SharedModule,
     RouterLink
@@ -30,10 +30,10 @@ export class NewsPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private translate: TranslateService
   ) { }
+
   ngOnInit(): void {
     this.loadFilters();
     this.preLoad();
-    // this.loadData();
 
     this.subscriptions.add(
       this.translate.onLangChange.subscribe(() => {
@@ -44,52 +44,83 @@ export class NewsPageComponent implements OnInit, OnDestroy {
       })
     );
   }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  categories: NewsCategory[] = [];
-  years :number[] = [];
-  query: NewsQuery = {year: new Date().getFullYear(), page: 0, limit: 10} as NewsQuery;
 
+  categories: NewsCategory[] = [];
+  years: number[] = [];
+  query: NewsQuery = {year: new Date().getFullYear(), page: 0, limit: 10} as NewsQuery;
 
   news: News[] = [];
   total: number = 0;
   private subscriptions = new Subscription();
 
-
   loadData() {
     this.newsService.getList(this.query).subscribe(response => {
       this.news = response.response;
       this.total = response.pageable.total;
-    })
+    });
   }
 
   private loadFilters() {
     this.newsService.getYears().subscribe(response => {
       this.years = response;
-    })
+    });
     this.newsService.getCategories({isActive: true}).subscribe(response => {
       this.categories = response;
-    })
+    });
   }
 
-
   private preLoad() {
-    this.subscriptions.add(this.route.queryParamMap.subscribe(params => { // Используем queryParamMap
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
       const year = params.get('year');
       const categoryId = params.get('category');
 
       if (year) {
-        this.query.year = Number(year); // Преобразуем в число
+        this.query.year = Number(year);
       }
 
       if (categoryId) {
-        this.query.categoryId = Number(categoryId); // Преобразуем в число
-        this.loadData(); // Вызываем loadData(), если есть categoryId
+        this.query.categoryId = Number(categoryId);
+        this.loadData();
       }
     }));
   }
 
+  formatDate(dateStr: Date | string): string {
+    if (!dateStr) return '';
+
+    // 👇 Сначала преобразуем Date в строку, если нужно
+    let dateString: string;
+    if (dateStr instanceof Date) {
+      // Если это объект Date, преобразуем в ISO строку
+      dateString = dateStr.toISOString();
+    } else {
+      dateString = dateStr;
+    }
+
+    // Проверяем формат "DD.MM.YYYY"
+    if (dateString.includes('.')) {
+      const parts = dateString.split('.');
+      if (parts.length === 3) {
+        return `${parts[0]}-${parts[1]}-${parts[2]}`;
+      }
+    }
+
+    // Если пришло в ISO формате или другой строковой дате
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
+    return dateString;
+  }
+
   protected readonly window = window;
-    protected readonly environment = environment;
+  protected readonly environment = environment;
 }

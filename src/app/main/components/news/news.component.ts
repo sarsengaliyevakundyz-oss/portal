@@ -43,7 +43,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     public currentUser: CurrentUserService,
     private translate: TranslateService
   ) {}
- 
+
   isAuthenticated(): boolean {
     return this.currentUser.isAuthenticated();
   }
@@ -52,9 +52,8 @@ export class NewsComponent implements OnInit, OnDestroy {
     this.authSubscription = this.currentUser.isAuthChecked$.pipe(
       take(2)
     ).subscribe(isReady => {
-      console.log('isReady in news:', isReady);
       if (isReady) {
-        console.log('isAuthenticated in news:', this.currentUser.isAuthenticated())
+        // console.log('isAuthenticated in news:', this.currentUser.isAuthenticated())
         if (this.currentUser.isAuthenticated()) {
           this.loadCategories();
           }
@@ -98,7 +97,7 @@ export class NewsComponent implements OnInit, OnDestroy {
       }
     });
   }
- 
+
   months = [
     'Month.January', 'Month.February', 'Month.March', 'Month.April',
     'Month.May', 'Month.June', 'Month.July', 'Month.August',
@@ -106,22 +105,22 @@ export class NewsComponent implements OnInit, OnDestroy {
   ];
   selectedMonthIndex = new Date().getMonth();
   selectedYear = new Date().getFullYear();
- 
+
   currentMonthIndex = new Date().getMonth();
   currentYear = new Date().getFullYear();
- 
+
   get selectedMonthName(): string {
     return this.months[this.selectedMonthIndex];
   }
- 
+
   selectCategory(categoryId: number): void {
     this.query.categoryId = categoryId;
     this.loadData();
   }
- 
+
   scrollCategories(direction: number): void {
     const newIndex = this.currentCategoryIndex + direction;
-  
+
     if (newIndex >= 0 && newIndex < this.categories.length) {
       this.currentCategoryIndex = newIndex;
       const category = this.categories[this.currentCategoryIndex];
@@ -129,7 +128,7 @@ export class NewsComponent implements OnInit, OnDestroy {
       this.loadData();
     }
   }
- 
+
   prevMonth(): void {
     this.selectedMonthIndex--;
     if (this.selectedMonthIndex < 0) {
@@ -138,7 +137,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     }
     this.getNews();
   }
-   
+
   nextMonth(): void {
     this.selectedMonthIndex++;
     if (this.selectedMonthIndex > 11) {
@@ -147,11 +146,11 @@ export class NewsComponent implements OnInit, OnDestroy {
     }
     this.getNews();
   }
- 
+
   private getNews() {
- 
+
   }
- 
+
   private parseDate(dateString: string | Date): Date {
     if (dateString instanceof Date) {
       return dateString;
@@ -167,7 +166,7 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   protected readonly window = window;
   protected readonly CalendarTypeEnum = CalendarTypeEnum;
- 
+
   loadData() {
     this.newsService.getList(this.query).subscribe(response => {
       this.news = response.response.map(item => ({
@@ -176,6 +175,6 @@ export class NewsComponent implements OnInit, OnDestroy {
       }));
     })
   }
- 
+
   protected readonly environment = environment;
 }

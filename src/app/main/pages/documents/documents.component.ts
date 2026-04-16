@@ -181,13 +181,12 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.loadingCategories = true;
     const lang = this.translate.currentLang === 'kz' ? 'kk' : 'ru';
 
-    console.log('Loading categories with lang:', lang);
+    // console.log('Loading categories with lang:', lang);
 
     this.documentsService.getCategories(lang).subscribe({
       next: (data: CategoryModel[]) => {
         this.categories = data;
         this.loadingCategories = false;
-        console.log('categories loaded:', data);
 
         // Обновляем переводы имен категорий
         this.updateCategoryNames();

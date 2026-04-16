@@ -25,11 +25,15 @@
       <div class="news-content">
         <h5>{{ news_item.title }}</h5>
         <p>{{ news_item.description }}</p>
-        <small>{{ news_item.publishDate | date : 'dd-MM-yyyy' }} | <span class="tag">{{ news_item.vipCategory }}</span></small>
+        <small>
+          <!-- Используем ручное форматирование -->
+          {{ formatDate(news_item.publishDate) }} | <span class="tag">{{ news_item.vipCategory }}</span>
+        </small>
       </div>
     </a>
     <nz-pagination [nzPageSize]="query.limit"
                    [nzTotal]="total"
-                   [nzPageIndex]="query.page + 1"></nz-pagination>
+                   [nzPageIndex]="query.page + 1"
+                   (nzPageIndexChange)="query.page = $event - 1; loadData()"></nz-pagination>
   </div>
 </div>
