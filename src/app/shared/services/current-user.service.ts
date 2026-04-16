@@ -55,9 +55,29 @@ export class CurrentUserService {
 
     if (!isAuthenticated && !hasSecretCode) {
       this.redirectToSSO();
+      return;
+    }
+
+    // ✅ Токен протух но есть secretCode — можно попробовать рефрешнуть
+    if (!isAuthenticated && hasSecretCode) {
+      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
+      const refreshToken = userInfo?.refreshToken;
+      const secretCode = localStorage.getItem(this.secretCodeKey);
+
+      if (refreshToken && secretCode) {
+        firstValueFrom(this.authService.refreshToken(refreshToken, secretCode))
+          .then(res => {
+            this.setUser(res.access_token, res.refresh_token);
+          })
+          .catch(() => {
+            // Рефреш не удался — идём на SSO
+            this.redirectToSSO();
+          });
+      } else {
+        this.redirectToSSO();
+      }
     }
   }
-
   private checkAuthenticationStatus(): boolean {
     const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
     if (!userInfo) return false;
@@ -125,7 +145,7 @@ export class CurrentUserService {
 
 
   private async onMessage(event: MessageEvent) {
-    console.log('SSO MESSAGE FULL DATA:', JSON.stringify(event.data));
+    // console.log('SSO MESSAGE FULL DATA:', JSON.stringify(event.data));
 
     const allowedOrigins = [
       'http://172.16.18.182:9999',
@@ -196,35 +216,32 @@ export class CurrentUserService {
     return this.currentUser;
   }
 
-  getPermissions(): RoleEnum[] { return this.permissions; }
   isAuthenticated(): boolean { return this.isAuthenticatedSubject.value; }
-  getIsAuthChecked(): boolean { return this.isAuthCheckedSubject.value; }
 
   private redirectToSSO(): void {
-    // ✅ 6. Не удаляем iin здесь тоже
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
+    // iin не удаляем!
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
     window.open(this.buildSsoRedirectUrl(), '_blank');
+
+    // ✅ Уводим Angular с текущей страницы
+    this.router.navigate(['/login']);
   }
 
   private buildSsoRedirectUrl(): string {
-    const {protocol, hostname, port, origin} = window.location;
+    const { protocol, hostname, port, origin } = window.location;
     const effectivePort = port || '9999';
 
     if (hostname === 'new.e.stat.gov.kz') {
-      const url = new URL(`${protocol}//new.e.stat.gov.kz:${effectivePort}/ssointernalfrontnew`);
-      url.searchParams.set('client-id', '2');
-      return url.toString();
-    }
-    if (hostname === '172.16.0.182') {
       const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
       return url.toString();
     }
+
     if (hostname === '172.16.18.182') {
       const url = new URL(`${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew`);
       url.searchParams.set('client-id', '2');
@@ -235,7 +252,6 @@ export class CurrentUserService {
     fallback.searchParams.set('client-id', '2');
     return fallback.toString();
   }
-
   // ✅ 7. logout теперь просто вызывает deactivateToken
   async logout() {
     await this.deactivateToken();
