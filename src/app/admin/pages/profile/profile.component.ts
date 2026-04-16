@@ -53,14 +53,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.system.getUserInfo(lang).subscribe(userRoles => {
       this.user = userRoles;
-      if (this.user?.systems) {
+
+      // Добавьте проверку на существование systems
+      if (this.user?.systems && Array.isArray(this.user.systems)) {
         // Сохраняем состояние раскрытия
         const oldExpandedSystems = [...this.expandedSystems];
         const oldExpandedChildren = [...this.expandedChildren];
 
         this.expandedSystems = new Array(this.user.systems.length).fill(false);
         this.expandedChildren = this.user.systems.map(sys =>
-          new Array(sys.subsystems.length).fill(false)
+          sys.subsystems ? new Array(sys.subsystems.length).fill(false) : []
         );
 
         // Восстанавливаем состояние раскрытия
@@ -79,10 +81,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
             }
           }
         }
+      } else {
+        // Если систем нет, инициализируем пустыми массивами
+        this.expandedSystems = [];
+        this.expandedChildren = [];
       }
     });
   }
-
   toggleSystem(index: number): void {
     this.expandedSystems[index] = !this.expandedSystems[index];
 

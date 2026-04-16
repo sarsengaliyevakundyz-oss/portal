@@ -13,7 +13,8 @@
     <div class="user-info">
       <h3 class="user-fullname">{{ user.fullName }}</h3>
       <p class="user-login">
-        <span nz-icon nzType="user" nzTheme="outline"></span>
+        <!-- Исправлено: убираем nzTheme, используем nzType="user" -->
+        <span nz-icon nzType="user"></span>
         {{ 'administrations.login' | translate }}: {{ user.login }}
       </p>
     </div>
@@ -36,6 +37,7 @@
           </div>
           <div class="system-actions">
             <span class="system-arrow" [class.rotated]="expandedSystems[i]">
+              <!-- Исправлено: используем nzType="down" -->
               <span nz-icon nzType="down"></span>
             </span>
           </div>
@@ -53,6 +55,7 @@
                   <span class="subsystem-name">{{ subsystem.name }}</span>
                 </div>
                 <span class="subsystem-arrow" [class.rotated]="expandedChildren[i]?.[j]">
+                  <!-- Исправлено: используем nzType="right" -->
                   <span nz-icon nzType="right"></span>
                 </span>
               </div>
@@ -83,7 +86,8 @@
 
   <!-- Пустое состояние -->
   <div class="empty-state animate-fade" *ngIf="!user?.systems?.length">
-    <span nz-icon nzType="folder-open" nzTheme="outline"></span>
+    <!-- Исправлено: используем nzType="folder-open" -->
+    <span nz-icon nzType="folder-open"></span>
     <p>{{ 'profile.noSystems' | translate }}</p>
   </div>
 </div>
