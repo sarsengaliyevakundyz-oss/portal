@@ -108,18 +108,21 @@ export class CurrentUserService {
   private logoutAndRedirect(): void {
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
-    // ✅ 3. IIN НЕ удаляем — он нужен при следующем deactivateToken
-    // localStorage.removeItem(this.iinKey);
+    // iin не удаляем!
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
     this.currentUser = null as any;
     this.secretCode = undefined;
-    this.isLogoutInProgress = false; // ✅ сбрасываем флаг
+    this.isLogoutInProgress = false;
 
-    // ✅ 4. Редиректим на SSO, не на /login
-    this.redirectToSSO();
+    // ✅ Открываем SSO в новом окне
+    window.open(this.buildSsoRedirectUrl(), '_blank');
+
+    // ✅ Текущую вкладку Angular уводим на /login
+    this.router.navigate(['/login']);
   }
+
 
   private async onMessage(event: MessageEvent) {
     console.log('SSO MESSAGE FULL DATA:', JSON.stringify(event.data));
