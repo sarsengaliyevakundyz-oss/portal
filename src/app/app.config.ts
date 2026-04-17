@@ -1,5 +1,12 @@
 import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling, withComponentInputBinding } from '@angular/router';
+import {
+  provideRouter,
+  withInMemoryScrolling,
+  withComponentInputBinding,
+  DefaultUrlSerializer,
+  UrlSerializer,  // ✅ добавили
+  UrlTree
+} from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
@@ -8,11 +15,10 @@ import { CoreModule } from './core/core.module';
 
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import ru from '@angular/common/locales/ru';
 import { firstValueFrom } from 'rxjs';
 
-// 👇 НОВЫЕ ИМПОРТЫ ДЛЯ ИКОНОК
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NZ_ICONS } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
@@ -21,7 +27,6 @@ import {
   DownOutline,
   RightOutline,
   FolderOpenOutline,
-  // Добавьте другие иконки, если используете
 } from '@ant-design/icons-angular/icons';
 
 registerLocaleData(ru);
@@ -39,7 +44,13 @@ export function initLanguageFactory(translate: TranslateService): () => Promise<
   };
 }
 
-// 👇 Регистрируем иконки
+export class TrailingSlashUrlSerializer extends DefaultUrlSerializer {
+  override parse(url: string): UrlTree {
+    const urlWithoutSlash = url.replace(/\/(\?|#|$)/, '$1');
+    return super.parse(urlWithoutSlash);
+  }
+}
+
 const antDesignIcons: IconDefinition[] = [
   UserOutline,
   DownOutline,
@@ -53,26 +64,23 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({
-        scrollPositionRestoration: 'disabled', // ✅ было 'top' — вызывал рывок
+        scrollPositionRestoration: 'disabled',
         anchorScrolling: 'enabled',
       }),
       withComponentInputBinding()
     ),
+    // ✅ Убираем trailing slash глобально
+    { provide: UrlSerializer, useClass: TrailingSlashUrlSerializer },
     importProvidersFrom(CoreModule),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
-
-    // 👇 ДОБАВЬТЕ ЭТО: регистрация модуля иконок
     importProvidersFrom(
-      NzIconModule.forRoot(antDesignIcons)  // Регистрируем иконки
+      NzIconModule.forRoot(antDesignIcons)
     ),
-
-    // 👇 ИЛИ используйте провайдер (можно оба способа, но лучше один)
     {
       provide: NZ_ICONS,
       useValue: antDesignIcons
     },
-
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
@@ -88,6 +96,5 @@ export const appConfig: ApplicationConfig = {
       deps: [TranslateService],
       useFactory: initLanguageFactory
     },
-    // { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };
