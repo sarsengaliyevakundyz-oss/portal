@@ -54,28 +54,12 @@ export class CurrentUserService {
     const hasSecretCode = !!localStorage.getItem(this.secretCodeKey);
 
     if (!isAuthenticated && !hasSecretCode) {
-      this.redirectToSSO();
-      return;
-    }
-
-    // ✅ Токен протух но есть secretCode — можно попробовать рефрешнуть
-    if (!isAuthenticated && hasSecretCode) {
-      const userInfo = JSON.parse(localStorage.getItem(this.authResponseKey) || 'null') as UserTokenInfo;
-      const refreshToken = userInfo?.refreshToken;
-      const secretCode = localStorage.getItem(this.secretCodeKey);
-
-      if (refreshToken && secretCode) {
-        firstValueFrom(this.authService.refreshToken(refreshToken, secretCode))
-          .then(res => {
-            this.setUser(res.access_token, res.refresh_token);
-          })
-          .catch(() => {
-            // Рефреш не удался — идём на SSO
-            this.redirectToSSO();
-          });
-      } else {
-        this.redirectToSSO();
-      }
+      // ✅ Тоже с задержкой — роутер ещё не инициализирован в момент конструктора
+      setTimeout(() => {
+        this.zone.run(() => {
+          this.redirectToSSO();
+        });
+      }, 0);
     }
   }
   private checkAuthenticationStatus(): boolean {
@@ -128,7 +112,6 @@ export class CurrentUserService {
   private logoutAndRedirect(): void {
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
-    // iin не удаляем!
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
@@ -136,11 +119,13 @@ export class CurrentUserService {
     this.secretCode = undefined;
     this.isLogoutInProgress = false;
 
-    // ✅ Открываем SSO в новом окне
     window.open(this.buildSsoRedirectUrl(), '_blank');
 
-    // ✅ Текущую вкладку Angular уводим на /login
-    this.router.navigate(['/login']);
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.router.navigate(['/']); // ✅ было /login
+      });
+    }, 100);
   }
 
 
@@ -218,20 +203,25 @@ export class CurrentUserService {
 
   isAuthenticated(): boolean { return this.isAuthenticatedSubject.value; }
 
+
   private redirectToSSO(): void {
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
-    // iin не удаляем!
 
     this.isAuthenticatedSubject.next(false);
     this.isAuthCheckedSubject.next(true);
 
     window.open(this.buildSsoRedirectUrl(), '_blank');
 
-    // ✅ Уводим Angular с текущей страницы
-    this.router.navigate(['/login']);
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.router.navigate(['/']); // ✅ было /login
+      });
+    }, 100);
   }
-
+  // private buildSsoRedirectUrl(): string {
+  //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
+  // }
   private buildSsoRedirectUrl(): string {
     const { protocol, hostname, port, origin } = window.location;
     const effectivePort = port || '9999';
