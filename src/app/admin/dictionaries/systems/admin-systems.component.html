@@ -1,48 +1,70 @@
 <div>
-  <h2>Системы</h2>
-  <button nz-button nzType="primary" (click)="openCreateModal()">+</button>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+    <h2 style="margin: 0;">Системы</h2>
+    <button class="add-btn" (click)="openCreateModal()">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>
+      Добавить систему
+    </button>
+  </div>
 
-  <!-- Include Create Item Modal -->
-  <app-add-system *ngIf="isShowCreateForm" (formSubmitted)="handleFormSubmit($event)" (cancel)="isShowCreateForm=false"></app-add-system>
-  <table class="styled-table">
+  <app-add-system
+    *ngIf="isShowCreateForm"
+    (formSubmitted)="handleFormSubmit($event)"
+    (cancel)="isShowCreateForm=false">
+  </app-add-system>
+
+  <table class="systems-table">
     <thead>
     <tr>
       <th>№</th>
-      <!-- <th>Id</th> -->
+      <th></th>  <!-- иконка -->
       <th>{{ 'system.codeName' | translate }}</th>
       <th>{{ 'system.name' | translate }}</th>
       <th>{{ 'system.description' | translate }}</th>
       <th>{{ 'system.kurator' | translate }}</th>
-      <th>{{ 'system.fullImgPath' | translate }}</th>
-      <th>{{ 'system.isActiv' | translate  }}</th>
+      <th></th>
+      <th></th>
       <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let system of paginatedData; let i = index">
-      <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-      <!-- <td>{{ system.systemInfo.id }}</td> -->
-      <td>{{ system.systemInfo.codeName }}</td>
-      <td>{{ system.systemInfo.name | nameTranslate }}</td>
-      <td [innerHTML]="system.systemInfo.description | nameTranslate"></td>
-      <td>
-          <span *ngFor="let k of system.systemInfo.kurator; let last = last">
-            {{ k.name | nameTranslate }}<span *ngIf="!last">, </span>
-          </span>
+      <td style="width: 40px; color: #999; font-size: 13px;">
+        {{ (currentPage - 1) * pageSize + i + 1 }}
       </td>
       <td>
-        <img *ngIf="system.systemInfo.fullPathImg" [src]="system.systemInfo.fullPathImg" alt="System Image" width="50">
+        <img
+          *ngIf="system.systemInfo.fullPathImg"
+          [src]="system.systemInfo.fullPathImg"
+          alt="System"
+          class="system-img">
+      </td>
+      <td>
+        <span class="code-badge">{{ system.systemInfo.codeName }}</span>
+      </td>
+      <td style="font-weight: 600; color: #1a1a2e;">
+        {{ system.systemInfo.name | nameTranslate }}
+      </td>
+      <td>
+        <div class="description-cell" [innerHTML]="system.systemInfo.description | nameTranslate"></div>
+      </td>
+      <td style="font-size: 13px; color: #555;">
+    <span *ngFor="let k of system.systemInfo.kurator; let last = last">
+      {{ k.name | nameTranslate }}<span *ngIf="!last">, </span>
+    </span>
       </td>
       <td style="text-align: center;">
-        <span *ngIf="system.systemInfo.active; else inactiveEye">
-          <i nz-icon nzType="eye" nzTheme="outline" style="font-size: 18px;"></i>
-        </span>
+    <span *ngIf="system.systemInfo.active; else inactiveEye" class="status-active">
+      <i nz-icon nzType="eye" nzTheme="outline" style="font-size: 18px;"></i>
+    </span>
         <ng-template #inactiveEye>
-          <i nz-icon nzType="eye-invisible" nzTheme="outline" style="font-size: 18px; text-decoration: line-through;"></i>
+      <span class="status-inactive">
+        <i nz-icon nzType="eye-invisible" nzTheme="outline" style="font-size: 18px;"></i>
+      </span>
         </ng-template>
       </td>
       <td style="text-align: center;">
-        <button nz-button nzType="default" nzShape="circle" (click)="openEditModal(system.systemInfo.id)">
+        <button class="edit-btn" (click)="openEditModal(system.systemInfo.id)">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
         </button>
       </td>
@@ -50,7 +72,6 @@
     </tbody>
   </table>
 
-  <!-- Пагинация -->
   <nz-pagination
     [nzPageSize]="pageSize"
     [nzTotal]="tableData.length"
@@ -59,14 +80,13 @@
   </nz-pagination>
 </div>
 
-
-<nz-modal 
-  [(nzVisible)]="isEditModalVisible" 
-  [nzTitle]="'Редактирование системы' | translate" 
-  [nzOkText]="'action.save' | translate" 
-  [nzCancelText]="'action.cancel' | translate"
-  (nzOnCancel)="handleEditCancel()" 
-  (nzOnOk)="handleEditSubmit()" 
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  [nzTitle]="'Редактирование системы'"
+  [nzOkText]="'Сохранить'"
+  [nzCancelText]="'Отмена'"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="handleEditSubmit()"
   [nzWidth]="800"
   [nzContent]="editContentTemplate">
 
@@ -76,75 +96,78 @@
     </div>
 
     <form *ngIf="!isLoading" [formGroup]="editForm" (ngSubmit)="handleEditSubmit()">
+
       <div nz-row [nzGutter]="16">
         <div nz-col nzSpan="12">
-          <label>{{ 'system.codeName' | translate }}:</label>
+          <span class="form-label">{{ 'system.codeName' | translate }}</span>
           <input nz-input formControlName="codeName" />
         </div>
-        <div nz-col nzSpan="12">
-          <label>{{ 'system.isActiv' | translate }}:</label>
+        <div nz-col nzSpan="12" style="display: flex; align-items: center; gap: 10px; padding-top: 20px;">
+          <span class="form-label" style="margin: 0;">{{ 'system.isActiv' | translate }}</span>
           <nz-switch formControlName="active"></nz-switch>
         </div>
       </div>
 
-      <h3>{{ 'system.name' | translate }}</h3>
+      <p class="form-section-title">{{ 'system.name' | translate }}</p>
       <div nz-row [nzGutter]="16">
         <div nz-col nzSpan="12">
-          <label>{{ 'modal.kazakh' | translate }}:</label>
+          <span class="form-label">{{ 'modal.kazakh' | translate }}</span>
           <input nz-input formControlName="nameKz" />
         </div>
         <div nz-col nzSpan="12">
-          <label>{{ 'modal.russian' | translate }}:</label>
+          <span class="form-label">{{ 'modal.russian' | translate }}</span>
           <input nz-input formControlName="nameRu" />
         </div>
       </div>
 
-      <h3>{{ 'system.description' | translate }}</h3>
+      <p class="form-section-title">{{ 'system.description' | translate }}</p>
       <div nz-row [nzGutter]="16">
         <div nz-col nzSpan="12">
-          <label>{{ 'modal.kazakh' | translate }}:</label>
+          <span class="form-label">{{ 'modal.kazakh' | translate }}</span>
           <textarea nz-input formControlName="descriptionKz" rows="3"></textarea>
         </div>
         <div nz-col nzSpan="12">
-          <label>{{ 'modal.russian' | translate }}:</label>
+          <span class="form-label">{{ 'modal.russian' | translate }}</span>
           <textarea nz-input formControlName="descriptionRu" rows="3"></textarea>
         </div>
       </div>
 
-      <h3>{{ 'system.fullImgPath' | translate }}</h3>
-      <div nz-row [nzGutter]="16">
-        <div nz-col nzSpan="24">
-          <input nz-input formControlName="fullImgPath" placeholder="URL изображения" />
-        </div>
-      </div>
+      <p class="form-section-title">{{ 'system.fullImgPath' | translate }}</p>
+      <input nz-input formControlName="fullImgPath" placeholder="URL изображения" />
 
-      <h3>{{ 'system.kurator' | translate }}</h3>
+      <p class="form-section-title">{{ 'system.kurator' | translate }}</p>
       <div formArrayName="kurator">
-        <div *ngFor="let kurator of kuratorControls.controls; let i = index" [formGroupName]="i">
+        <div
+          *ngFor="let kurator of kuratorControls.controls; let i = index"
+          [formGroupName]="i"
+          class="kurator-block">
           <div nz-row [nzGutter]="16">
             <div nz-col nzSpan="12">
-              <label>{{ 'modal.department' | translate }} (KZ):</label>
+              <span class="form-label">{{ 'modal.department' | translate }} (KZ)</span>
               <input nz-input formControlName="departmentKz" />
             </div>
             <div nz-col nzSpan="12">
-              <label>{{ 'modal.department' | translate }} (RU):</label>
+              <span class="form-label">{{ 'modal.department' | translate }} (RU)</span>
               <input nz-input formControlName="departmentRu" />
             </div>
           </div>
-          <div nz-row [nzGutter]="16">
+          <div nz-row [nzGutter]="16" style="margin-top: 8px;">
             <div nz-col nzSpan="12">
-              <label>{{ 'modal.kurator' | translate }} (KZ):</label>
+              <span class="form-label">{{ 'modal.kurator' | translate }} (KZ)</span>
               <input nz-input formControlName="nameKz" />
             </div>
             <div nz-col nzSpan="12">
-              <label>{{ 'modal.kurator' | translate }} (RU):</label>
+              <span class="form-label">{{ 'modal.kurator' | translate }} (RU)</span>
               <input nz-input formControlName="nameRu" />
             </div>
           </div>
-          <button nz-button nzDanger (click)="removeKurator(i)">Удалить</button>
-          <hr style="margin: 16px 0;">
+          <button nz-button nzDanger nzSize="small" style="margin-top: 8px;" (click)="removeKurator(i)">
+            <i nz-icon nzType="delete" nzTheme="outline"></i> Удалить
+          </button>
         </div>
-        <button nz-button nzType="dashed" (click)="addKurator()">+ Добавить куратора</button>
+        <button nz-button nzType="dashed" (click)="addKurator()" style="width: 100%; margin-top: 4px;">
+          <i nz-icon nzType="plus" nzTheme="outline"></i> Добавить куратора
+        </button>
       </div>
     </form>
   </ng-template>

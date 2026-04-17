@@ -142,3 +142,13 @@ app-main-layout {
   display: block;
   min-height: 100vh;
 }
+router-outlet + * {
+  display: block;
+  animation: pageFadeIn 0.25s ease both;
+}
+
+/* Отключаем для admin компонентов */
+app-dictionaries router-outlet + * {
+  animation: none !important;
+  opacity: 1 !important;
+}

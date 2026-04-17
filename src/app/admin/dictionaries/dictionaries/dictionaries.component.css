@@ -1,35 +1,41 @@
-.custom-select {
-  position: relative;
-  width: 250px;
-  margin-bottom: 10px;
-}
-
-.custom-select select {
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #eee;
   width: 100%;
-  padding: 0px 15px;
-  border-radius: 10px;
-  border: 2px solid transparent;
-  background-color: #fff;
-  font-size: 18px;
-  color: #5a5a5a;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  appearance: none;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
 }
 
-.custom-select select:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-.custom-select::after {
-  content: "▼";
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
+.nav-tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
   font-size: 14px;
-  color: #5a5a5a;
-  pointer-events: none;
+  font-weight: 500;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
 }
+
+.nav-tab:hover {
+  color: #0575DA;
+}
+
+.nav-tab.active {
+  color: #0575DA;
+  font-weight: 600;
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #0575DA;
+  border-radius: 2px 2px 0 0;
+}
+

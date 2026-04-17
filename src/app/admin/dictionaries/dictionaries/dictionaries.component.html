@@ -1,18 +1,18 @@
-<div class="custom-select" *ngIf="!isLoading && allowedSections.length > 0">
-  <select (change)="navigateToPage($event)">
-    <option
-      *ngFor="let section of allowedSections"
-      [value]="section.route">
-      {{ section.labelKey | translate }}
-    </option>
-  </select>
+<div class="nav-tabs" *ngIf="!isLoading && allowedSections.length > 0">
+  <button
+    *ngFor="let section of allowedSections"
+    class="nav-tab"
+    [class.active]="router.url.includes(section.route)"
+    (click)="router.navigate([section.route])">
+    {{ section.labelKey | translate }}
+  </button>
 </div>
 
-<div *ngIf="isLoading">
+<div class="loading-text" *ngIf="isLoading">
   {{ 'common.loading' | translate }}…
 </div>
 
-<div *ngIf="!isLoading && allowedSections.length === 0">
+<div class="no-access" *ngIf="!isLoading && allowedSections.length === 0">
   {{ 'admin.noAccess' | translate }}
 </div>
 

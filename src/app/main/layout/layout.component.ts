@@ -62,27 +62,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   private handleNavigation(event: RouterEvent): void {
-    if (event instanceof NavigationStart) {
-      this.isNavigating = true;
-      // ✅ убрали addClass fade-out и navigating — они меняли размеры
-
-    } else if (event instanceof NavigationEnd) {
+    if (event instanceof NavigationEnd) {
       this.activeLink = this.router.url;
-      setTimeout(() => {
-        this.isNavigating = false;
-        if (this.contentElement) {
-          // ✅ только fade-in — только opacity, без transform
-          this.renderer.addClass(this.contentElement, 'fade-in');
-          setTimeout(() => {
-            if (this.contentElement) {
-              this.renderer.removeClass(this.contentElement, 'fade-in');
-            }
-          }, 250);
-        }
-      }, 50); // ✅ уменьшили задержку с 150 до 50
-
-    } else if (event instanceof NavigationCancel || event instanceof NavigationError) {
-      this.isNavigating = false;
+      this.smoothScrollToTop();
     }
   }
   private smoothScrollToTop(): void {

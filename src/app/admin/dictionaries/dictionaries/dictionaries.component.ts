@@ -40,7 +40,7 @@ export class DictionariesComponent implements OnInit {
   isLoading = true;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private systemsService: SystemsService
   ) {}
 
@@ -50,7 +50,7 @@ export class DictionariesComponent implements OnInit {
         const access = map.access;
         this.allowedSections = ADMIN_SECTIONS.filter(sec => access[sec.key]);
         this.isLoading = false;
-        
+
         const systemsSection = this.allowedSections.find(sec => sec.key === 'systems');
         if (systemsSection) {
           this.router.navigate([systemsSection.route]);
