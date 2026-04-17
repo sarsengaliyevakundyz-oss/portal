@@ -171,3 +171,36 @@
   .nav-menu a { font-size: 12px; }
   .profile-btn { padding: 4px 10px; font-size: 12px; }
 }
+.profile-menu {
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
+  z-index: 1;
+  border-radius: 12px;
+  margin-top: 8px;
+  animation: menuFadeIn 0.2s ease both;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #131313;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-item:hover {
+  background-color: #f38888;
+}

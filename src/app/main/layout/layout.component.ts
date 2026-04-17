@@ -7,6 +7,7 @@ import { CurrentUserService } from '../../shared/services/current-user.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-main-layout',
@@ -18,7 +19,8 @@ import { Subscription } from 'rxjs';
     CommonModule,
     LangSwitcherComponent,
     FooterComponent,
-    TranslatePipe
+    TranslatePipe,
+    NzIconModule  // ✅ добавь
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'

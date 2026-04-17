@@ -9,6 +9,7 @@ import {
 } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { PoweroffOutline } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
 import { CoreModule } from './core/core.module';
@@ -55,7 +56,8 @@ const antDesignIcons: IconDefinition[] = [
   UserOutline,
   DownOutline,
   RightOutline,
-  FolderOpenOutline
+  FolderOpenOutline,
+  PoweroffOutline
 ];
 
 export const appConfig: ApplicationConfig = {
