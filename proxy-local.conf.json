@@ -1,23 +1,61 @@
 {
-  "/internalportalfiles": {
-    "target": "http://172.16.18.90:9000",
+  "/internalportal/getSsoToken": {
+    "target": "http://172.16.9.52:8888",
     "secure": false,
     "changeOrigin": true
   },
-  "/internalportal": {
-    "target": "http://172.16.18.182:9999",
+  "/internalportal/getToken": {
+    "target": "http://172.16.9.52:8888",
     "secure": false,
     "changeOrigin": true
   },
-
-  "/realms": {
+  "/internalportal/news": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/calendar": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/infoSystems": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/api/categories": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/api/documents": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/documents": "/api/documents"
+    }
+  },
+  "/internalportal/systems": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/admin": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/instructions": {
+    "target": "http://172.16.9.52:8888",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/internalportal/realms": {
     "target": "http://172.16.18.47:8282",
     "secure": false,
     "changeOrigin": true
   }
-//  "/api/collect": {
-//    "target": "http://172.16.18.233:3000",
-//    "secure": false,
-//    "changeOrigin": true
-//  }
+
 }
