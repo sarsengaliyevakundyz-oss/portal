@@ -38,36 +38,32 @@
 
   <!-- Календарь -->
   <div class="calendar-grid">
-    <div *ngIf="isLoading" class="loading-overlay">
-      Loading...
+    <!-- ✅ Оверлей поверх — календарь не исчезает -->
+    <div *ngIf="isLoading" class="loading-overlay"></div>
+
+    <div class="week-header">
+      <div class="day">{{ 'week.mon' | translate }}</div>
+      <div class="day">{{ 'week.tue' | translate }}</div>
+      <div class="day">{{ 'week.wed' | translate }}</div>
+      <div class="day">{{ 'week.thu' | translate }}</div>
+      <div class="day">{{ 'week.fri' | translate }}</div>
+      <div class="day">{{ 'week.sat' | translate }}</div>
+      <div class="day">{{ 'week.sun' | translate }}</div>
     </div>
-    <div *ngIf="!isLoading">
-      <div class="week-header">
-        <div class="day">{{ 'week.mon' | translate }}</div>
-        <div class="day">{{ 'week.tue' | translate }}</div>
-        <div class="day">{{ 'week.wed' | translate }}</div>
-        <div class="day">{{ 'week.thu' | translate }}</div>
-        <div class="day">{{ 'week.fri' | translate }}</div>
-        <div class="day">{{ 'week.sat' | translate }}</div>
-        <div class="day">{{ 'week.sun' | translate }}</div>
-      </div>
-      <div class="days">
-        <div *ngFor="let day of calendarDays"
-             class="day-item"
-             [ngClass]="{
-              'past-day': day.isPast,
-              'current-day': day.isCurrent,
-              'holiday-region': day.isHoliday && day.eventType === 'region',
-              'holiday-respondent': day.isHoliday && day.eventType === 'respondent',
-              'next-month-day': day.isNextMonth
-            }">
-          <div class="day-content">
-            {{ day.date }}
-          </div>
-          <div *ngIf="day.events?.length" class="day-events">
-            <div *ngFor="let event of day.events" class="event-tooltip">
-              {{ event.formName }} ({{ event.periodKindlistName }})
-            </div>
+    <div class="days">
+      <div *ngFor="let day of calendarDays"
+           class="day-item"
+           [ngClass]="{
+          'past-day': day.isPast,
+          'current-day': day.isCurrent,
+          'holiday-region': day.isHoliday && day.eventType === 'region',
+          'holiday-respondent': day.isHoliday && day.eventType === 'respondent',
+          'next-month-day': day.isNextMonth
+        }">
+        <div class="day-content">{{ day.date }}</div>
+        <div *ngIf="day.events?.length" class="day-events">
+          <div *ngFor="let event of day.events" class="event-tooltip">
+            {{ event.formName }} ({{ event.periodKindlistName }})
           </div>
         </div>
       </div>

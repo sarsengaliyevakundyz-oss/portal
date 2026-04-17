@@ -127,6 +127,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.nextEvents = [];
     this.isLoading = true;
 
+    // ✅ Генерируем пустой календарь сразу — чтобы не было белого экрана
+    if (this.calendarDays.length === 0) {
+      this.printCalendar([]);
+    }
     if (!this.currentUser.isAuthenticated()) {
       this.isLoading = false;
       return;

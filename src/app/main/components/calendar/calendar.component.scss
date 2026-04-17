@@ -3,7 +3,7 @@
   margin: auto;
 }
 
-// Navigation styles
+// Navigation
 .navigation {
   display: flex;
   align-items: center;
@@ -27,9 +27,7 @@
       filter: brightness(0.7) saturate(2) hue-rotate(-30deg);
     }
 
-    &:active {
-      transform: scale(0.95);
-    }
+    &:active { transform: scale(0.95); }
   }
 }
 
@@ -96,14 +94,8 @@
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 // Calendar grid
@@ -114,42 +106,41 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 14px;
   position: relative;
-  min-height: 380px;
+  min-height: 220px; // ✅ уменьшили — не белый огромный блок
   transition: all 0.3s ease;
 }
 
-.calendar-content {
-  //animation: fadeIn 0.3s ease-out;
-}
-
+// ✅ ОДИН блок loading-overlay — полупрозрачный поверх календаря
 .loading-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.95);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1px);
   z-index: 10;
-  gap: 10px;
+  border-radius: 10px;
+}
 
-  .spinner {
-    width: 35px;
-    height: 35px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #1890ff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+// ✅ При загрузке ячейки мигают
+.calendar-grid:has(.loading-overlay) .day-item {
+  animation: skeleton-pulse 1.4s ease infinite;
+}
 
-  span {
-    color: #666;
-    font-size: 13px;
-  }
+.calendar-grid:has(.loading-overlay) .day-item.holiday-region,
+.calendar-grid:has(.loading-overlay) .day-item.holiday-respondent,
+.calendar-grid:has(.loading-overlay) .day-item.current-day {
+  background: #e0e8f5;
+  box-shadow: none;
+  animation: skeleton-pulse 1.4s ease infinite;
+}
+
+.calendar-grid:has(.loading-overlay) .day-content,
+.calendar-grid:has(.loading-overlay) .day-number {
+  color: #ccc;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 @keyframes spin {
@@ -178,7 +169,7 @@
   gap: 8px;
 }
 
-// Day item styles - СРЕДНИЙ РАЗМЕР
+// Day items
 .day-item {
   position: relative;
   aspect-ratio: 1.5;
@@ -201,67 +192,49 @@
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
     z-index: 100;
 
-    .day-number {
-      transform: scale(1.03);
-    }
+    .day-number { transform: scale(1.03); }
   }
 
   &.past-day {
     background-color: #f5f5f5;
     color: #c0c0c0;
-
-    .day-number {
-      opacity: 0.65;
-    }
+    .day-number { opacity: 0.65; }
   }
 
   &.current-day {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
-
-    .day-number {
-      font-weight: 300;
-    }
+    .day-number { font-weight: 300; }
   }
 
   &.holiday-region {
     background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
     color: white;
-
-    .day-number {
-      font-weight: 300;
-    }
+    .day-number { font-weight: 300; }
   }
 
   &.holiday-respondent {
     background: linear-gradient(135deg, #fa8c16 0%, #d46b00 100%);
     color: white;
-
-    .day-number {
-      font-weight: 300;
-    }
+    .day-number { font-weight: 300; }
   }
 
   &.next-month-day,
   &.prev-month-day {
     background-color: #fafafa;
     color: #d0d0d0;
-
-    .day-number {
-      opacity: 0.45;
-    }
+    .day-number { opacity: 0.45; }
   }
 }
 
-// Tooltip styles
+// Tooltip
 .day-events {
   position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   min-width: 200px;
-  width: auto;
   max-width: 280px;
   z-index: 1003;
   background: #2c2c2c;
@@ -285,14 +258,8 @@
 }
 
 @keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; transform: translateX(-50%) translateY(5px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 .day-item:hover .day-events {
@@ -310,21 +277,12 @@
   color: #f5f5f5;
   border-bottom: 1px solid #444;
 
-  .event-name {
-    font-weight: 600;
-  }
-
-  .event-period {
-    opacity: 0.8;
-    font-size: 11px;
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
+  .event-name { font-weight: 600; }
+  .event-period { opacity: 0.8; font-size: 11px; }
+  &:last-child { border-bottom: none; }
 }
 
-// Event list styles - НИКАКИХ ИЗМЕНЕНИЙ ПРИ НАВЕДЕНИИ
+// Event list
 .event-list {
   margin-top: 22px;
 
@@ -335,7 +293,6 @@
     background: #f8f9fa;
     border-radius: 8px;
     margin-bottom: 10px;
-    // Убрано всё: и transition, и hover
   }
 
   .event-date {
@@ -382,7 +339,6 @@
       cursor: pointer;
       font-size: 13px;
       padding: 6px 10px;
-      // Убрано всё: и transition, и hover
     }
   }
 }
@@ -398,23 +354,16 @@
     align-items: stretch;
     gap: 12px;
 
-    .region-selector {
-      margin-left: 0;
-    }
+    .region-selector { margin-left: 0; }
   }
 
-  .week-header .day {
-    font-size: 8px;
-  }
+  .week-header .day { font-size: 8px; }
 
-  .days {
-    gap: 6px;
-  }
+  .days { gap: 6px; }
 
   .day-number {
     font-size: 8px;
     font-weight: 500;
-    transition: transform 0.2s ease;
   }
 
   .day-events {
@@ -429,11 +378,6 @@
     }
   }
 
-  .event-date .event-day {
-    font-size: 20px;
-  }
-
-  .event-details p {
-    font-size: 12px;
-  }
+  .event-date .event-day { font-size: 20px; }
+  .event-details p { font-size: 12px; }
 }
