@@ -1,32 +1,38 @@
-<h1>{{info.systemInfo.name | nameTranslate}}</h1>
-<div class="cards-container">
-  <a class="card" *ngFor="let system of info.children" (click)="openModule(system)">
-    <h3 class="card-title">{{ system.name | nameTranslate }}</h3>
-    <p class="card-subtitle">{{ system.description | nameTranslate }}</p>
-  </a>
+<div *ngIf="!info" style="padding: 40px; text-align: center;">
+  <nz-spin nzSimple></nz-spin>
 </div>
 
+<ng-container *ngIf="info && info.systemInfo">
 
-<div class="system-info-container">
-  <div class="info-block">
-    <h2>ИНФО</h2>
-    <!-- Выводим описание. Предполагается, что оно может быть в формате HTML (список), поэтому innerHTML -->
-    <div class="info-description" [innerHTML]="info.systemInfo.description | nameTranslate"></div>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+    <button class="back-btn" (click)="goBack()">
+      ← {{ 'documents.back' | translate }}
+    </button>
+    <h1 style="margin: 0;">{{info.systemInfo.name | nameTranslate}}</h1>
   </div>
 
-  <div class="kurators-block">
-    <h2>КУРАТОРЫ</h2>
-    <!-- Карточка куратора -->
-    <div class="kurator-card" *ngFor="let kurator of info.systemInfo.kurator">
-<!--      <div class="kurator-avatar">-->
-<!--        <img [src]="'/systems' + info.systemInfo.pathImg || '/default.png'" [alt]="info.systemInfo.kurator" (error)="onImgError($event)">-->
-<!--      </div>-->
-      <div class="kurator-info">
-        <div class="kurator-name">{{ kurator.name | nameTranslate }}</div>
-        <div class="kurator-department">{{ kurator.department | nameTranslate }}</div>
-      </div>
+  <div class="cards-container">
+    <a class="card" *ngFor="let system of info.children" (click)="openModule(system)">
+      <h3 class="card-title">{{ system.name | nameTranslate }}</h3>
+      <p class="card-subtitle">{{ system.description | nameTranslate }}</p>
+    </a>
+  </div>
+
+  <div class="system-info-container">
+    <div class="info-block">
+      <h2>ИНФО</h2>
+      <div class="info-description" [innerHTML]="info.systemInfo.description | nameTranslate"></div>
     </div>
 
-    <!-- Позже вы добавите сюда блок технической поддержки -->
+    <div class="kurators-block">
+      <h2>КУРАТОРЫ</h2>
+      <div class="kurator-card" *ngFor="let kurator of info.systemInfo.kurator">
+        <div class="kurator-info">
+          <div class="kurator-name">{{ kurator.name | nameTranslate }}</div>
+          <div class="kurator-department">{{ kurator.department | nameTranslate }}</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+</ng-container>
