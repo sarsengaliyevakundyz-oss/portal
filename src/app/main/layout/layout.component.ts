@@ -64,40 +64,27 @@ export class LayoutComponent implements OnInit, OnDestroy {
   private handleNavigation(event: RouterEvent): void {
     if (event instanceof NavigationStart) {
       this.isNavigating = true;
-      this.renderer.addClass(document.body, 'navigation-start');
-      this.renderer.addClass(document.body, 'fade-out');
-      if (this.contentElement) {
-        this.renderer.addClass(this.contentElement, 'navigating');
-      }
+      // ✅ убрали addClass fade-out и navigating — они меняли размеры
 
     } else if (event instanceof NavigationEnd) {
       this.activeLink = this.router.url;
       setTimeout(() => {
         this.isNavigating = false;
-        this.renderer.removeClass(document.body, 'navigation-start');
-        this.renderer.removeClass(document.body, 'fade-out');
         if (this.contentElement) {
-          this.renderer.removeClass(this.contentElement, 'navigating');
+          // ✅ только fade-in — только opacity, без transform
           this.renderer.addClass(this.contentElement, 'fade-in');
           setTimeout(() => {
             if (this.contentElement) {
               this.renderer.removeClass(this.contentElement, 'fade-in');
             }
-          }, 300);
+          }, 250);
         }
-        this.smoothScrollToTop();
-      }, 150);
+      }, 50); // ✅ уменьшили задержку с 150 до 50
 
     } else if (event instanceof NavigationCancel || event instanceof NavigationError) {
       this.isNavigating = false;
-      this.renderer.removeClass(document.body, 'navigation-start');
-      this.renderer.removeClass(document.body, 'fade-out');
-      if (this.contentElement) {
-        this.renderer.removeClass(this.contentElement, 'navigating');
-      }
     }
   }
-
   private smoothScrollToTop(): void {
     setTimeout(() => {
       if (window.scrollY > 0) {

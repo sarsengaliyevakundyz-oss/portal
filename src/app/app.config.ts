@@ -52,13 +52,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
-      // withViewTransitions({
-      //   onViewTransitionCreated(transitionInfo) {
-      //     // Плавный переход
-      //   }
-      // }),
       withInMemoryScrolling({
-        scrollPositionRestoration: 'top',
+        scrollPositionRestoration: 'disabled', // ✅ было 'top' — вызывал рывок
         anchorScrolling: 'enabled',
       }),
       withComponentInputBinding()

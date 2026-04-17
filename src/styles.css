@@ -1,7 +1,9 @@
 @import url('fonts.css?family=Nunito+Sans:wght@400;600;700&display=swap');
 @import "ng-zorro-antd/ng-zorro-antd.min.css";
 
+/* ========================= */
 /* БАЗА */
+/* ========================= */
 html, body {
   margin: 0;
   padding: 0;
@@ -9,9 +11,10 @@ html, body {
   background-size: cover;
   font-family: 'Nunito Sans', sans-serif !important;
   color: #333;
-  /* Стабилизируем скролл - только здесь, не дублируем */
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ng-zorro */
@@ -20,76 +23,83 @@ html, body {
   font-family: inherit !important;
 }
 
-/* фон главной */
+/* ========================= */
+/* ФОНЫ */
+/* ========================= */
 body.home-background {
   background: #eef3f7 url('/internalportalfront/background_image.png') no-repeat fixed center center;
   background-size: cover;
-  transition: background-image 0.3s ease-in-out;
 }
 
-/* фон других страниц */
 body.partial-background {
   background: #eef3f7 url('/internalportalfront/background_image.png') no-repeat fixed left center;
   background-size: 130% auto;
-  transition: background-image 0.3s ease-in-out;
 }
 
 /* ========================= */
-/* 🔥 ПЛАВНОСТЬ UI (ВАЖНО) */
+/* ГЛОБАЛЬНАЯ ПЛАВНОСТЬ */
 /* ========================= */
-
-/* глобальная плавность (без перегруза) */
-* {
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease,
-    color 0.2s ease;
-}
-
-/* клики (убираем "жёсткость") */
 button,
 a,
-.item,
-.doc-card {
-  transition: all 0.2s ease;
+input,
+select,
+textarea {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
-button:active,
-a:active,
+.item,
+.doc-card,
+.news-item,
+.card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.item:hover,
+.doc-card:hover,
+.news-item:hover,
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
 .item:active,
-.doc-card:active {
+.doc-card:active,
+.news-item:active,
+.card:active {
+  transform: scale(0.98);
+}
+
+button:active {
   transform: scale(0.97);
 }
 
-/* hover мягче */
-.item:hover,
-.doc-card:hover {
-  transform: translateY(-3px);
-}
-
-/* убираем резкий outline */
 *:focus {
   outline: none;
 }
 
-/* Плавное появление страниц */
+/* ========================= */
+/* ПЕРЕХОДЫ МЕЖДУ СТРАНИЦАМИ */
+/* ========================= */
+
+/* ✅ Только opacity — без translateY, иначе дёргается */
 router-outlet + * {
-  animation: fadeIn 0.25s ease;
+  display: block;
+  animation: pageFadeIn 0.25s ease both;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Отключаем анимацию для календаря */
+/* Исключения */
 router-outlet + app-calendar {
   animation: none !important;
 }
@@ -98,18 +108,6 @@ router-outlet + app-calendar {
   animation: none !important;
 }
 
-/* Глобальные оптимизации для плавности */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Оптимизация для анимаций */
-.animate-all {
-  will-change: transform, opacity;
-}
-
-/* Отключаем анимацию для календаря при первой загрузке */
 app-calendar .calendar-grid .days .day-item {
   animation: none;
 }
@@ -118,7 +116,28 @@ app-calendar .calendar-grid.calendar-fade-in .days .day-item {
   animation: dayItemFadeIn 0.25s ease backwards;
 }
 
-/* Плавное появление страниц без дергания */
+/* ========================= */
+/* СКЕЛЕТОН */
+/* ========================= */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ========================= */
+/* УТИЛИТЫ */
+/* ========================= */
+.animate-all {
+  will-change: transform, opacity;
+}
+
 app-main-layout {
   display: block;
   min-height: 100vh;
