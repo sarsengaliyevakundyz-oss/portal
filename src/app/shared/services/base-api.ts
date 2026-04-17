@@ -71,7 +71,7 @@ export class BaseApi {
 
       localStorage.removeItem('authResponse');
       localStorage.removeItem('secretCode');
-      localStorage.removeItem('iinKey');
+      localStorage.removeItem('iin');
       localStorage.removeItem('vip_lang');
 
       this.redirectToSSO();
@@ -86,6 +86,10 @@ export class BaseApi {
 
   window.open(this.buildSsoRedirectUrl(), '_blank');
 }
+
+  // private buildSsoRedirectUrl(): string {
+  //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
+  // }
 
   private buildSsoRedirectUrl(): string {
     const { protocol, hostname, port, origin } = window.location;
@@ -110,7 +114,6 @@ export class BaseApi {
     fallback.searchParams.set('client-id', '2');
     return fallback.toString();
   }
-
   protected GetFile(uri: string, params: any = null): void {
     const pars = this.getUrlParams(params);
     this.http.get(uri, {params: pars, responseType: 'blob', observe: 'response'})
