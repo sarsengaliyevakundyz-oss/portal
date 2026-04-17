@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# ✅ Меняй дату чтобы сбросить кэш при необходимости
+ARG CACHE_BUST=2026-04-17
+
 RUN npm config rm proxy && \
     npm config rm https-proxy && \
     npm config rm http-proxy && \
