@@ -26,7 +26,11 @@ import { Subscription } from 'rxjs';
 export class LayoutComponent implements OnInit, OnDestroy {
   showProfileMenu = false;
   isNavigating = false;
+  // ✅ Добавили поле для состояния аутентификации
+  isAuthenticatedState = false;
+
   private navigationSubscription: Subscription | null = null;
+  private authSubscription: Subscription | null = null; // ✅ новое
   private contentElement: HTMLElement | null = null;
   private activeLink: string = '';
 
@@ -38,10 +42,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Находим элемент контента
     this.contentElement = this.el.nativeElement.querySelector('.content');
 
-    // Отслеживаем все события навигации
+    // ✅ Подписываемся на статус аутентификации один раз
+    this.authSubscription = this.currentUser.isAuthenticated$.subscribe(val => {
+      this.isAuthenticatedState = val;
+    });
+
     this.navigationSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationStart ||
         event instanceof NavigationEnd ||
@@ -51,35 +58,26 @@ export class LayoutComponent implements OnInit, OnDestroy {
       this.handleNavigation(event);
     });
 
-    // Сохраняем активную ссылку
     this.activeLink = this.router.url;
   }
 
   private handleNavigation(event: RouterEvent): void {
     if (event instanceof NavigationStart) {
       this.isNavigating = true;
-
-      // Добавляем класс для плавного перехода
       this.renderer.addClass(document.body, 'navigation-start');
       this.renderer.addClass(document.body, 'fade-out');
-
-      // Добавляем класс на контент для плавного перехода
       if (this.contentElement) {
         this.renderer.addClass(this.contentElement, 'navigating');
       }
 
     } else if (event instanceof NavigationEnd) {
       this.activeLink = this.router.url;
-
-      // Плавное появление контента
       setTimeout(() => {
         this.isNavigating = false;
         this.renderer.removeClass(document.body, 'navigation-start');
         this.renderer.removeClass(document.body, 'fade-out');
-
         if (this.contentElement) {
           this.renderer.removeClass(this.contentElement, 'navigating');
-          // Добавляем класс для плавного появления
           this.renderer.addClass(this.contentElement, 'fade-in');
           setTimeout(() => {
             if (this.contentElement) {
@@ -87,8 +85,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
             }
           }, 300);
         }
-
-        // Плавная прокрутка наверх
         this.smoothScrollToTop();
       }, 150);
 
@@ -103,31 +99,21 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   private smoothScrollToTop(): void {
-    // Плавная прокрутка
-    const scrollToTop = () => {
-      const currentScroll = window.scrollY;
-      if (currentScroll > 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+    setTimeout(() => {
+      if (window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    };
-
-    // Небольшая задержка для плавности
-    setTimeout(scrollToTop, 50);
+    }, 50);
   }
 
   ngOnDestroy() {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.navigationSubscription?.unsubscribe();
+    this.authSubscription?.unsubscribe(); // ✅
   }
 
+  // ✅ Теперь не читает localStorage на каждый цикл
   isAuthenticated(): boolean {
-    return this.currentUser.isAuthenticated() &&
-      !!localStorage.getItem(this.currentUser.getAuthResponseKey()) &&
-      !!localStorage.getItem(this.currentUser.getSecretCodeKey());
+    return this.isAuthenticatedState;
   }
 
   toggleProfileMenu(): void {
@@ -155,21 +141,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
     return this.router.url === path;
   }
 
-  // Плавный переход по меню
   navigateTo(path: string, event?: MouseEvent): void {
     if (event) {
       event.preventDefault();
     }
-
-    const currentUrl = this.router.url;
-
-    // Если уже на этой странице, плавно скроллим наверх
-    if (currentUrl === path) {
+    if (this.router.url === path) {
       this.smoothScrollToTop();
       return;
     }
-
-    // Добавляем эффект клика на кнопку
     const target = event?.target as HTMLElement;
     if (target) {
       this.renderer.addClass(target, 'click-effect');
@@ -177,8 +156,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
         this.renderer.removeClass(target, 'click-effect');
       }, 200);
     }
-
-    // Выполняем навигацию
     this.router.navigate([path]);
   }
 }
