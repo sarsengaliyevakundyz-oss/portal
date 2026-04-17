@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Route, Router, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, NavigationError, Route, Router, RouterOutlet} from '@angular/router';
 import {CurrentUserService} from './shared/services/current-user.service';
 import {UmamiService} from './core/services/Umami.service';
 
@@ -18,17 +18,33 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.setBackground();
+
+    // ✅ Перезагружаем страницу если чанки не загрузились (после деплоя)
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationError) {
+        const error = (event as any).error;
+        const isChunkError = error?.message?.includes('Failed to fetch dynamically imported module') ||
+          error?.message?.includes('Loading chunk') ||
+          error?.name === 'ChunkLoadError';
+        if (isChunkError) {
+          window.location.href = event.url; // ✅ Перезагружаем на нужный URL
+        }
+      }
+    });
+
     setTimeout(() => {
       this.currentUser.getCurrentUser();
     }, 0);
+
     this.route.queryParams.subscribe(params => {
       const token = params['access_token'];
       const refresh = params['refresh_token'];
-      if(token!=undefined){
+      if (token != undefined) {
         this.currentUser.setUser(token, refresh);
         this.router.navigate(['/']);
       }
     });
+
     this.umamiService.initializeManualPageTracking();
   }
 
