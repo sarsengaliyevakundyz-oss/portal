@@ -19,6 +19,9 @@ RUN npm config set https-proxy http://172.16.12.11:3128
 RUN npm config set registry https://registry.npmjs.org/
 #RUN npm config set cafile  /usr/local/share/ca-certificates/Unified_State_Internet_Access_Gateway.crt
 RUN npm cache clean --force
+RUN npm config set fetch-retries 5
+RUN npm config set fetch-retry-mintimeout 60000
+RUN npm config set fetch-retry-maxtimeout 300000
 RUN npm install
 COPY . .
 RUN node --max-old-space-size=10240 ./node_modules/@angular/cli/bin/ng build --configuration development --base-href /internalportalfront/ --deploy-url /internalportalfront/
