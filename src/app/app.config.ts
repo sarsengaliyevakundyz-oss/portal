@@ -28,8 +28,12 @@ import {
   DownOutline,
   RightOutline,
   FolderOpenOutline,
+  PlusOutline,
+  EditOutline,
+  EyeOutline,
+  EyeInvisibleOutline,
+  DeleteOutline
 } from '@ant-design/icons-angular/icons';
-
 registerLocaleData(ru);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -57,7 +61,12 @@ const antDesignIcons: IconDefinition[] = [
   DownOutline,
   RightOutline,
   FolderOpenOutline,
-  PoweroffOutline
+  PoweroffOutline,
+  PlusOutline,
+  EditOutline,
+  EyeOutline,
+  EyeInvisibleOutline,
+  DeleteOutline
 ];
 
 export const appConfig: ApplicationConfig = {

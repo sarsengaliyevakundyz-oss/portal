@@ -13,64 +13,81 @@
     (cancel)="isShowCreateForm=false">
   </app-add-system>
 
-  <table class="systems-table">
-    <thead>
-    <tr>
-      <th>№</th>
-      <th></th>  <!-- иконка -->
-      <th>{{ 'system.codeName' | translate }}</th>
-      <th>{{ 'system.name' | translate }}</th>
-      <th>{{ 'system.description' | translate }}</th>
-      <th>{{ 'system.kurator' | translate }}</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let system of paginatedData; let i = index">
-      <td style="width: 40px; color: #999; font-size: 13px;">
-        {{ (currentPage - 1) * pageSize + i + 1 }}
-      </td>
-      <td>
-        <img
-          *ngIf="system.systemInfo.fullPathImg"
-          [src]="system.systemInfo.fullPathImg"
-          alt="System"
-          class="system-img">
-      </td>
-      <td>
-        <span class="code-badge">{{ system.systemInfo.codeName }}</span>
-      </td>
-      <td style="font-weight: 600; color: #1a1a2e;">
-        {{ system.systemInfo.name | nameTranslate }}
-      </td>
-      <td>
-        <div class="description-cell" [innerHTML]="system.systemInfo.description | nameTranslate"></div>
-      </td>
-      <td style="font-size: 13px; color: #555;">
-    <span *ngFor="let k of system.systemInfo.kurator; let last = last">
-      {{ k.name | nameTranslate }}<span *ngIf="!last">, </span>
-    </span>
-      </td>
-      <td style="text-align: center;">
-    <span *ngIf="system.systemInfo.active; else inactiveEye" class="status-active">
-      <i nz-icon nzType="eye" nzTheme="outline" style="font-size: 18px;"></i>
-    </span>
-        <ng-template #inactiveEye>
-      <span class="status-inactive">
-        <i nz-icon nzType="eye-invisible" nzTheme="outline" style="font-size: 18px;"></i>
-      </span>
-        </ng-template>
-      </td>
-      <td style="text-align: center;">
-        <button class="edit-btn" (click)="openEditModal(system.systemInfo.id)">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <!-- Аккордеон -->
+  <div class="accordion">
+    <div class="accordion-item" *ngFor="let system of paginatedData; let i = index">
+      <div class="accordion-header" (click)="toggleAccordion(i)">
+        <div class="accordion-left">
+          <div class="accordion-number">{{ (currentPage - 1) * pageSize + i + 1 }}</div>
+          <!-- Иконка статуса -->
+          <div class="accordion-status">
+            <i *ngIf="system.systemInfo.active" nz-icon nzType="check-circle" nzTheme="fill" style="color: #00b894; font-size: 18px;"></i>
+            <i *ngIf="!system.systemInfo.active" nz-icon nzType="close-circle" nzTheme="fill" style="color: #ccc; font-size: 18px;"></i>
+          </div>
+          <!-- ИЗОБРАЖЕНИЕ в заголовке -->
+          <div class="accordion-image" *ngIf="system.systemInfo.fullPathImg">
+            <img [src]="system.systemInfo.fullPathImg" alt="System" class="system-img-small">
+          </div>
+          <div class="accordion-code">
+            <span class="code-badge">{{ system.systemInfo.codeName }}</span>
+          </div>
+          <div class="accordion-title">
+            {{ system.systemInfo.name | nameTranslate }}
+          </div>
+        </div>
+        <div class="accordion-right">
+          <div class="accordion-icon">
+            <i nz-icon [nzType]="openIndex === i ? 'up' : 'down'" nzTheme="outline"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-content" [class.open]="openIndex === i">
+        <div class="content-inner">
+          <!-- Описание -->
+          <div class="info-row">
+            <div class="info-label">Описание</div>
+            <div class="info-value" [innerHTML]="system.systemInfo.description | nameTranslate"></div>
+          </div>
+
+          <!-- Кураторы -->
+          <div class="info-row">
+            <div class="info-label">Кураторы</div>
+            <div class="info-value">
+              <div class="kurator-list">
+                <div class="kurator-card" *ngFor="let k of system.systemInfo.kurator">
+                  <div class="kurator-name">
+                    <i nz-icon nzType="user" nzTheme="outline"></i>
+                    {{ k.name | nameTranslate }}
+                  </div>
+                  <div class="kurator-department">
+                    <i nz-icon nzType="team" nzTheme="outline"></i>
+                    {{ k.department | nameTranslate }}
+                  </div>
+                </div>
+                <div class="kurator-empty" *ngIf="system.systemInfo.kurator.length === 0">
+                  Нет кураторов
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ID системы -->
+          <div class="info-row">
+            <div class="info-label">ID системы</div>
+            <div class="info-value code-value">{{ system.systemInfo.id }}</div>
+          </div>
+
+          <!-- Кнопка редактирования -->
+          <div class="accordion-actions">
+            <button class="edit-btn" (click)="openEditModal(system.systemInfo.id); $event.stopPropagation()">
+              <i nz-icon nzType="edit" nzTheme="outline"></i> Редактировать
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <nz-pagination
     [nzPageSize]="pageSize"
@@ -80,6 +97,7 @@
   </nz-pagination>
 </div>
 
+<!-- Модалка редактирования (оставляем как есть) -->
 <nz-modal
   [(nzVisible)]="isEditModalVisible"
   [nzTitle]="'Редактирование системы'"
@@ -88,6 +106,7 @@
   (nzOnCancel)="handleEditCancel()"
   (nzOnOk)="handleEditSubmit()"
   [nzWidth]="800"
+  [nzMaskClosable]="true"
   [nzContent]="editContentTemplate">
 
   <ng-template #editContentTemplate>
@@ -96,7 +115,6 @@
     </div>
 
     <form *ngIf="!isLoading" [formGroup]="editForm" (ngSubmit)="handleEditSubmit()">
-
       <div nz-row [nzGutter]="16">
         <div nz-col nzSpan="12">
           <span class="form-label">{{ 'system.codeName' | translate }}</span>

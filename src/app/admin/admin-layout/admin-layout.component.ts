@@ -17,4 +17,8 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class AdminLayoutComponent {
   constructor(private router: Router) {
   }
+  navigate(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.router.navigate([select.value]);
+  }
 }

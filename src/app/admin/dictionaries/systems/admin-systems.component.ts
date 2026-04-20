@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf, NgTemplateOutlet, JsonPipe} from '@angular/common'; 
+import {NgForOf, NgIf, NgTemplateOutlet, JsonPipe} from '@angular/common';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SystemsService} from '../../../shared/services/systems.service';
@@ -12,13 +12,13 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { 
-  FormBuilder, 
-  FormGroup, 
-  FormArray, 
-  Validators, 
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
   ReactiveFormsModule,
-  FormsModule 
+  FormsModule
 } from '@angular/forms';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -84,14 +84,19 @@ export class AdminSystemsComponent implements OnInit {
   isShowCreateForm = false;
   isLoading = false;
   isSaving = false;
-  
+
   editSystemData: SystemChildInfoModel | null = null;
   selectedSystem: SystemChildInfoModel | null = null;
 
   ngOnInit(): void {
     this.loadData();
   }
+  openIndex: number | null = null;  // индекс открытого аккордеона
 
+// Добавьте метод:
+  toggleAccordion(index: number): void {
+    this.openIndex = this.openIndex === index ? null : index;
+  }
   onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePagination();
@@ -115,7 +120,7 @@ export class AdminSystemsComponent implements OnInit {
 
   private mapSystemListToChildInfo(system: SystemListModel): SystemChildInfoModel {
     const imgPath = system.fullImgPath || '';
-    
+
     return {
       systemInfo: {
         id: system.id,
@@ -128,7 +133,7 @@ export class AdminSystemsComponent implements OnInit {
         })),
         pathImg: { ru: imgPath, kz: imgPath, en: '' },
         fullPathImg: imgPath,
-        active: system.active 
+        active: system.active
       },
       children: []
     };
@@ -137,7 +142,7 @@ export class AdminSystemsComponent implements OnInit {
   get kuratorControls(): FormArray {
     return this.editForm.get('kurator') as FormArray;
   }
-  
+
   addKurator(kurator?: any): void {
     const kuratorGroup = this.fb.group({
       nameKz: [kurator?.name?.kz || ''],
@@ -145,10 +150,10 @@ export class AdminSystemsComponent implements OnInit {
       departmentKz: [kurator?.department?.kz || ''],
       departmentRu: [kurator?.department?.ru || '']
     });
-    
+
     this.kuratorControls.push(kuratorGroup);
   }
-  
+
   removeKurator(index: number): void {
     this.kuratorControls.removeAt(index);
   }
@@ -156,7 +161,7 @@ export class AdminSystemsComponent implements OnInit {
   openEditModal(systemId: number): void {
     this.isEditModalVisible = true;
     this.isLoading = true;
-  
+
     this.service.getSystemById(systemId.toString()).subscribe({
       next: (res: any) => {
         this.populateEditForm(res);
@@ -190,16 +195,19 @@ export class AdminSystemsComponent implements OnInit {
   }
 
   handleEditCancel(): void {
-    this.isEditModalVisible = false;
-    this.editSystemData = null;
     this.isSaving = false;
+    // Небольшая задержка перед закрытием
+    setTimeout(() => {
+      this.isEditModalVisible = false;
+      this.editSystemData = null;
+    }, 150);
   }
 
   handleEditSubmit(): void {
     if (this.editForm.valid) {
       this.isSaving = true;
-      
-      const formData = this.editForm.value; 
+
+      const formData = this.editForm.value;
     }
   }
 

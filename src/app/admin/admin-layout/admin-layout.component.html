@@ -1,14 +1,31 @@
-<h1>{{ 'administrations.title' | translate }}</h1>
-<div class="dashboard">
-  <!-- Верхняя панель вкладок -->
-  <nav class="tabs">
-    <a routerLink="profile" routerLinkActive="active">{{ 'administrations.profile' | translate }}</a>
-    <a routerLink="dic" routerLinkActive="active">{{ 'administrations.admin' | translate }}</a>
-    <!--    <a routerLink="/instructions" routerLinkActive="active">Инструкции</a>-->
-  </nav>
 
-  <!-- Контент текущей страницы -->
-  <div class="content">
-    <router-outlet></router-outlet>
+<div class="admin-layout">
+  <!-- Заголовок страницы сверху -->
+  <div style="margin-top: 40px;"></div>
+
+  <header class="page-header">
+    <h1>{{ 'administrations.title' | translate }}</h1>
+  </header>
+
+  <div class="layout-body">
+    <aside class="sidebar">
+      <nav class="side-nav">
+        <a routerLink="profile" routerLinkActive="active" class="nav-item">
+          <span class="nav-text">{{ 'administrations.profile' | translate }}</span>
+          <span class="nav-badge"></span>
+        </a>
+
+        <a routerLink="dic" routerLinkActive="active" class="nav-item">
+          <span class="nav-text">{{ 'administrations.admin' | translate }}</span>
+        </a>
+      </nav>
+
+    </aside>
+
+    <main class="main-content">
+      <div class="content-body">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
   </div>
 </div>
