@@ -32,7 +32,7 @@ import {
   EditOutline,
   EyeOutline,
   EyeInvisibleOutline,
-  DeleteOutline
+  DeleteOutline,  TeamOutline
 } from '@ant-design/icons-angular/icons';
 registerLocaleData(ru);
 
@@ -66,7 +66,7 @@ const antDesignIcons: IconDefinition[] = [
   EditOutline,
   EyeOutline,
   EyeInvisibleOutline,
-  DeleteOutline
+  DeleteOutline,TeamOutline
 ];
 
 export const appConfig: ApplicationConfig = {
