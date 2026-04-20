@@ -316,7 +316,15 @@ nz-pagination {
   justify-content: center;
   padding: 40px;
 }
+.accordion {
+  width: 100%;
+}
 
+.accordion-item {
+  /* убери если есть margin по бокам */
+  margin-left: 0;
+  margin-right: 0;
+}
 :host {
   display: block;
   animation: tabFadeIn 0.2s ease both;

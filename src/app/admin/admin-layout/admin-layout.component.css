@@ -151,7 +151,7 @@
 }
 
 .content-body {
-  padding: 24px 32px;
+  padding: 24px 0 24px 32px; /* ✅ убрали правый padding */
 }
 
 /* Анимация при переходе */

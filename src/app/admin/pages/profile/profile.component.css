@@ -38,13 +38,15 @@
     transform: rotate(0deg);
   }
 }
-
-.profile-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-  animation: fadeIn 0.4s ease-out;
+.content-body {
+  padding: 24px 0 24px 24px;
 }
+/*.profile-container {*/
+/*  max-width: 1200px;*/
+/*  margin: 0 auto;*/
+/*  padding: 24px;*/
+/*  animation: fadeIn 0.4s ease-out;*/
+/*}*/
 
 /* Заголовок */
 .profile-header {
@@ -58,6 +60,9 @@
   margin: 0;
   position: relative;
   display: inline-block;
+}
+.accordion {
+  width: 100%;
 }
 
 .profile-title::after {
@@ -136,13 +141,13 @@
 }
 
 /* Системы */
-.systems-container {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8e8e8;
-}
+/*.systems-container {*/
+/*  background: white;*/
+/*  border-radius: 16px;*/
+/*  overflow: hidden;*/
+/*  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);*/
+/*  border: 1px solid #e8e8e8;*/
+/*}*/
 
 .systems-header {
   padding: 20px 24px;
@@ -211,7 +216,13 @@
   transform: rotate(180deg);
   color: #0958BF;
 }
+.ant-tag-blue {
+  color: #111112;
+  background: #a1bdda;
+  border-color: #e1eaf3;
+  border-radius: 40px;
 
+}
 /* Подсистемы - исправленная плавная анимация */
 .subsystems-wrapper {
   display: grid;
@@ -283,7 +294,7 @@
 
 .subsystem-arrow.rotated {
   transform: rotate(90deg);
-  color: #0958BF;
+  color: #265da1;
 }
 
 /* Роли - исправленная плавная анимация */
