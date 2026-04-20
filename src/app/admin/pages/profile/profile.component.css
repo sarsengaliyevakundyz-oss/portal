@@ -38,9 +38,6 @@
     transform: rotate(0deg);
   }
 }
-.content-body {
-  padding: 24px 0 24px 24px;
-}
 /*.profile-container {*/
 /*  max-width: 1200px;*/
 /*  margin: 0 auto;*/
@@ -296,7 +293,6 @@
   transform: rotate(90deg);
   color: #265da1;
 }
-
 /* Роли - исправленная плавная анимация */
 .roles-wrapper {
   display: grid;
