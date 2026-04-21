@@ -11,11 +11,11 @@
             alt="Previous"
             style="margin-right: 20px"
           />
-      
+
           <div style="margin-right: 20px" class="category-item">
             {{ categories[currentCategoryIndex]?.name | nameTranslate }}
           </div>
-      
+
           <img
             (click)="scrollCategories(1)"
             [class.disabled]="currentCategoryIndex === categories.length - 1"
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
- 
+
   <div class="news-item" *ngIf="news.length" [routerLink]="'/news/'+news[0].id">
     <div class="news-header">
       <div class="news-image">

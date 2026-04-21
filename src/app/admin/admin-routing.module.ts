@@ -20,6 +20,7 @@ const routes: Routes = [
           {path: '', redirectTo: 'profile', pathMatch: 'full'},
           {path: 'profile', component: ProfileComponent},
           {path: 'dic', component: DictionariesComponent, children: [
+            {path: '', redirectTo: 'systems', pathMatch: 'full'},
               {path: 'news', component: AdminNewsComponent},
               {path: 'categories', component: AdminCategoriesComponent},
               {path: 'trans', component: AdminLocalizatorComponent},
