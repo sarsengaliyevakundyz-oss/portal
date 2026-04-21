@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable, firstValueFrom, from, throwError} from 'rxjs'; // Добавляем 'from' и 'throwError'
+import {Observable, firstValueFrom, from, throwError} from 'rxjs';
 import {CurrentUserService} from '../../shared/services/current-user.service';
 import {AuthService} from '../../shared/services/auth.service';
-import { catchError, switchMap } from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -14,10 +14,13 @@ export class JwtInterceptor implements HttpInterceptor {
   private readonly AUTH_EXCLUSION_URLS = [
     '/internalportal/getToken',
     '/internalportal/getSsoToken',
-    '/sso-internal-back-new/sso/internal/deactivateSecretCode' // ← добавь
-
+    '/sso-internal-back-new/sso/internal/deactivateSecretCode'
   ];
-  constructor(private currentUserService: CurrentUserService, private authService: AuthService) {}
+
+  constructor(
+    private currentUserService: CurrentUserService,
+    private authService: AuthService
+  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.AUTH_EXCLUSION_URLS.some(url => req.url.includes(url))) {
@@ -38,9 +41,11 @@ export class JwtInterceptor implements HttpInterceptor {
       const secretCode = this.currentUserService.getSecretCode();
 
       if (!refreshToken || !secretCode) {
-        this.currentUserService.logout();
+        // ✅ Нет данных для рефреша — чистим и редиректим без HTTP запроса
+        this.clearAndRedirect();
         return throwError(() => new Error('Missing refresh token or secret code'));
       }
+
       this.refreshTokenPromise = firstValueFrom(
         this.authService.refreshToken(refreshToken, secretCode)
       )
@@ -48,7 +53,9 @@ export class JwtInterceptor implements HttpInterceptor {
           this.currentUserService.setUser(res.access_token, res.refresh_token);
         })
         .catch(err => {
-          this.currentUserService.logout();
+          // ✅ НЕ вызываем logout() — он делает HTTP запрос и создаёт цикл
+          // Чистим localStorage напрямую и редиректим в SSO
+          this.clearAndRedirect();
           throw err;
         })
         .finally(() => {
@@ -68,6 +75,10 @@ export class JwtInterceptor implements HttpInterceptor {
             headers: req.headers.set('Authorization', `${newAuthToken}`)
           });
           return next.handle(refreshedReq);
+        }),
+        catchError(err => {
+          // ✅ Если рефреш упал — не повторяем запрос, просто пробрасываем ошибку
+          return throwError(() => err);
         })
       );
     }
@@ -76,5 +87,35 @@ export class JwtInterceptor implements HttpInterceptor {
       headers: req.headers.set('Authorization', `${authToken}`)
     });
     return next.handle(authReq);
+  }
+
+  // ✅ Чистим всё напрямую без HTTP запросов — исключаем зацикливание
+  private clearAndRedirect(): void {
+    localStorage.removeItem('authResponse');
+    localStorage.removeItem('secretCode');
+    // ✅ iin НЕ удаляем — нужен для deactivateToken при следующем логауте
+
+    this.isRefreshing = false;
+    this.refreshTokenPromise = null;
+
+    const ssoUrl = this.buildSsoUrl();
+    const ssoWindow = window.open(ssoUrl, '_blank');
+
+    if (!ssoWindow || ssoWindow.closed) {
+      window.location.href = ssoUrl;
+    }
+  }
+
+  private buildSsoUrl(): string {
+    const {protocol, hostname, port, origin} = window.location;
+    const effectivePort = port || '9999';
+
+    if (hostname === 'new.e.stat.gov.kz') {
+      return `${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew?client-id=2`;
+    }
+    if (hostname === '172.16.18.182') {
+      return `${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew?client-id=2`;
+    }
+    return `${origin}/ssointernalfrontnew?client-id=2`;
   }
 }
