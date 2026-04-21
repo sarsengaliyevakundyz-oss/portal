@@ -402,3 +402,39 @@
   .event-date .event-day { font-size: 20px; }
   .event-details p { font-size: 12px; }
 }
+::ng-deep .ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+::ng-deep .ant-modal-header {
+  background: linear-gradient(135deg, #125d9a 0%, #84b4e4 100%);
+  border-bottom: none;
+  padding: 16px 24px;
+
+  .ant-modal-title {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+::ng-deep .ant-modal-close-x {
+  color: white;
+}
+
+::ng-deep .ant-table-thead > tr > th {
+  background: #f0f4ff;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+::ng-deep .ant-table-tbody > tr:hover > td {
+  background: #f5f7ff !important;
+}
+
+::ng-deep .ant-table-tbody > tr > td {
+  font-size: 13px;
+  color: #444;
+}

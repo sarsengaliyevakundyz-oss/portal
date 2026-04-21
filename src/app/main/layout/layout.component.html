@@ -1,8 +1,8 @@
 <div class="container">
+
   <div class="top-header">
     <div class="nav-logo">
       <img src="logo.png" alt="QazStat">
-      <!-- <label [innerHTML]="'main.title' | translate"></label> -->
     </div>
     <nav class="nav-menu" *ngIf="isAuthenticated()">
       <a routerLink="/" [class.active]="isExactMatch('/')">{{'main.name' | translate}}</a>
@@ -13,11 +13,7 @@
     <div class="user-actions" *ngIf="isAuthenticated()">
       <app-lang-switcher></app-lang-switcher>
       <div class="profile-container">
-        <a
-          routerLinkActive="active"
-          class="profile-btn"
-          (click)="toggleProfileMenu()"
-        >
+        <a class="profile-btn" (click)="toggleProfileMenu()">
           <img style="margin-right: 7px; margin-bottom: 3px" src="profile.png">
           {{currentUser.getCurrentUser()?.full_name}}
         </a>
@@ -32,10 +28,12 @@
   </div>
 
   <div class="content">
+    <app-breadcrumb></app-breadcrumb>
     <router-outlet></router-outlet>
   </div>
 
   <div class="footer">
     <app-footer></app-footer>
   </div>
+
 </div>

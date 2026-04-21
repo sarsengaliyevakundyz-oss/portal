@@ -63,12 +63,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: CalendarService,
-    public currentUser: CurrentUserService
-  ) {}
+    public currentUser: CurrentUserService,  private modal: NzModalService  // ← добавить
 
-  isAuthenticated(): boolean {
-    return this.currentUser.isAuthenticated();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.authSubscription = this.currentUser.isAuthChecked$.subscribe(isReady => {

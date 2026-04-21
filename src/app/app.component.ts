@@ -18,7 +18,6 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.setBackground();
-
     // ✅ Перезагружаем страницу если чанки не загрузились (после деплоя)
     this.router.events.subscribe(event => {
       if (event instanceof NavigationError) {

@@ -11,10 +11,10 @@ html, body {
   background-size: cover;
   font-family: 'Nunito Sans', sans-serif !important;
   color: #333;
-  overflow-y: auto;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Резервируем место под скроллбар — фикс прыжка при модалках */
+  scrollbar-gutter: stable;
 }
 
 /* ng-zorro */
@@ -34,6 +34,20 @@ body.home-background {
 body.partial-background {
   background: #eef3f7 url('/internalportalfront/background_image.png') no-repeat fixed left center;
   background-size: 130% auto;
+}
+
+/* ========================= */
+/* ФИКС МОДАЛОК — ng-zorro/cdk не должны двигать контент */
+/* ========================= */
+body.cdk-global-scrollblock {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+  position: static !important;
+}
+
+body.ant-scrolling-effect {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
 }
 
 /* ========================= */
@@ -86,22 +100,23 @@ button:active {
 
 /* ========================= */
 /* ПЕРЕХОДЫ МЕЖДУ СТРАНИЦАМИ */
+/* Только один блок — без дублей! */
 /* ========================= */
-
-/* ✅ Только opacity — без translateY, иначе дёргается */
 router-outlet + * {
   display: block;
-  animation: pageFadeIn 0.25s ease both;
+  animation: pageFadeIn 0.22s ease both;
 }
 
 @keyframes pageFadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
-/* Исключения */
-router-outlet + app-calendar {
+/* Исключения — компоненты без анимации */
+router-outlet + app-calendar,
+app-dictionaries router-outlet + * {
   animation: none !important;
+  opacity: 1 !important;
 }
 
 .calendar-container {
@@ -110,10 +125,6 @@ router-outlet + app-calendar {
 
 app-calendar .calendar-grid .days .day-item {
   animation: none;
-}
-
-app-calendar .calendar-grid.calendar-fade-in .days .day-item {
-  animation: dayItemFadeIn 0.25s ease backwards;
 }
 
 /* ========================= */
@@ -127,28 +138,14 @@ app-calendar .calendar-grid.calendar-fade-in .days .day-item {
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
+  0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
 /* ========================= */
 /* УТИЛИТЫ */
 /* ========================= */
-.animate-all {
-  will-change: transform, opacity;
-}
-
 app-main-layout {
   display: block;
   min-height: 100vh;
-}
-router-outlet + * {
-  display: block;
-  animation: pageFadeIn 0.25s ease both;
-}
-
-/* Отключаем для admin компонентов */
-app-dictionaries router-outlet + * {
-  animation: none !important;
-  opacity: 1 !important;
 }

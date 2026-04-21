@@ -8,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import {NzIconModule} from 'ng-zorro-antd/icon';
+import {BreadcrumbComponent} from '../../shared/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -20,7 +21,8 @@ import {NzIconModule} from 'ng-zorro-antd/icon';
     LangSwitcherComponent,
     FooterComponent,
     TranslatePipe,
-    NzIconModule  // ✅ добавь
+    NzIconModule,
+    BreadcrumbComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'

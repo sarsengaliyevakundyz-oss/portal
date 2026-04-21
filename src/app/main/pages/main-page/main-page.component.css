@@ -1,43 +1,89 @@
 .main-content {
-  display: flex;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* Wrapper */
+/* ========================= */
+/* СТИЛИ КАРТОЧЕК — МУТНЫЕ (СТЕКЛЯННЫЕ), БЕЗ АНИМАЦИИ */
+/* ========================= */
+.news {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  flex: 1;
+  position: relative;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.news:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.calendar {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  flex: 1;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.calendar:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Тёмный текст для читаемости */
+.news,
+.calendar,
+.news *,
+.calendar * {
+  color: #1a2a3a;
+}
+
+/* ========================= */
+/* СТАТИСТИКА */
+/* ========================= */
 .stats-block {
-  display: flex; /* Make it a flex container */
-  align-items: center; /* Vertically align content */
-  height: 100%; /* Take full height */
-  max-height: 200px; /* Set a reasonable height limit */
-  /*border: 1px solid #e0e0e0; !* Optional border for clarity *!*/
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-height: 200px;
   margin-top: 10px;
   margin-bottom: 50px;
 }
 
-/* Image Container */
 .image-container {
-  height: 100%; /* Full height */
+  height: 100%;
   display: flex;
-  align-items: center; /* Center image vertically */
+  align-items: center;
 }
 
 .image-container img {
-  height: 100px; /* Scale image to full height */
-  width: auto; /* Maintain aspect ratio */
+  height: 100px;
+  width: auto;
 }
 
-/* Text Container */
 .text-container {
   display: flex;
   flex-direction: column;
   justify-content: left;
-  padding: 0 20px; /* Add some horizontal padding */
+  padding: 0 20px;
 }
 
 .text-container .title {
   font-size: 36px;
   font-weight: 800;
-  color: #0575DA; /* Blue color for title */
+  color: #0575DA;
   margin: 0;
 }
 
@@ -47,19 +93,11 @@
   margin: 0;
 }
 
-
-.news {
-  /*background-color: #fff;*/
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  backdrop-filter: blur(10px);
-  position: relative;
-}
-
+/* ========================= */
+/* КНОПКА "ЕЩЁ" */
+/* ========================= */
 .news-list-more {
-  text-align: right; /* Center the button horizontally */
+  text-align: right;
   padding-right: 10px;
   position: absolute;
   right: 10px;
@@ -67,25 +105,18 @@
 }
 
 .news-list-more button {
-  background: none; /* Remove button background */
-  border: none; /* Remove button border */
-  color: #007bff; /* Customize text color (blue as an example) */
-  font-size: 14px; /* Adjust font size */
-  cursor: pointer; /* Add pointer cursor for better UX */
-  padding: 0; /* Remove default padding */
-  text-decoration: none; /* Remove underline */
+  background: none;
+  border: none;
+  color: #2c6e9e;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
 }
 
-
-.calendar {
-  /*background-color: rgba(238, 243, 247, 0.8);*/
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  backdrop-filter: blur(10px);
-}
-
+/* ========================= */
+/* ПРОЧЕЕ */
+/* ========================= */
 .hidden {
   visibility: hidden;
   position: absolute;
@@ -99,18 +130,21 @@
   margin: 2rem auto;
   max-width: 800px;
   padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .welcome-message h2 {
-  color: #333;
+  color: #1a2a3a;
   margin-bottom: 1rem;
 }
 
 .welcome-message p {
-  color: #555;
+  color: #2a3a4a;
   margin: 0.5rem 0;
   line-height: 1.5;
 }
