@@ -1,9 +1,9 @@
 <div>
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-    <h2 style="margin: 0;">Системы</h2>
+    <h2 style="margin: 0;">{{ 'admin.sections.systems' | translate }}</h2>
     <button class="add-btn" (click)="openCreateModal()">
       <i nz-icon nzType="plus" nzTheme="outline"></i>
-      Добавить систему
+      {{ 'action.add' | translate }}
     </button>
   </div>
 
@@ -13,18 +13,15 @@
     (cancel)="isShowCreateForm=false">
   </app-add-system>
 
-  <!-- Аккордеон -->
   <div class="accordion">
     <div class="accordion-item" *ngFor="let system of paginatedData; let i = index">
       <div class="accordion-header" (click)="toggleAccordion(i)">
         <div class="accordion-left">
           <div class="accordion-number">{{ (currentPage - 1) * pageSize + i + 1 }}</div>
-          <!-- Иконка статуса -->
           <div class="accordion-status">
             <i *ngIf="system.systemInfo.active" nz-icon nzType="check-circle" nzTheme="fill" style="color: #00b894; font-size: 18px;"></i>
             <i *ngIf="!system.systemInfo.active" nz-icon nzType="close-circle" nzTheme="fill" style="color: #ccc; font-size: 18px;"></i>
           </div>
-          <!-- ИЗОБРАЖЕНИЕ в заголовке -->
           <div class="accordion-image" *ngIf="system.systemInfo.fullPathImg">
             <img [src]="system.systemInfo.fullPathImg" alt="System" class="system-img-small">
           </div>
@@ -44,15 +41,12 @@
 
       <div class="accordion-content" [class.open]="openIndex === i">
         <div class="content-inner">
-          <!-- Описание -->
           <div class="info-row">
-            <div class="info-label">Описание</div>
+            <div class="info-label">{{ 'system.description' | translate }}</div>
             <div class="info-value" [innerHTML]="system.systemInfo.description | nameTranslate"></div>
           </div>
-
-          <!-- Кураторы -->
           <div class="info-row">
-            <div class="info-label">Кураторы</div>
+            <div class="info-label">{{ 'system.kurator' | translate }}</div>
             <div class="info-value">
               <div class="kurator-list">
                 <div class="kurator-card" *ngFor="let k of system.systemInfo.kurator">
@@ -66,22 +60,19 @@
                   </div>
                 </div>
                 <div class="kurator-empty" *ngIf="system.systemInfo.kurator.length === 0">
-                  Нет кураторов
+                  —
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- ID системы -->
           <div class="info-row">
-            <div class="info-label">ID системы</div>
+            <div class="info-label">{{ 'system.id' | translate }}</div>
             <div class="info-value code-value">{{ system.systemInfo.id }}</div>
           </div>
-
-          <!-- Кнопка редактирования -->
           <div class="accordion-actions">
             <button class="edit-btn" (click)="openEditModal(system.systemInfo.id); $event.stopPropagation()">
-              <i nz-icon nzType="edit" nzTheme="outline"></i> Редактировать
+              <i nz-icon nzType="edit" nzTheme="outline"></i>
+              {{ 'action.update' | translate }}
             </button>
           </div>
         </div>
@@ -97,12 +88,11 @@
   </nz-pagination>
 </div>
 
-<!-- Модалка редактирования (оставляем как есть) -->
 <nz-modal
   [(nzVisible)]="isEditModalVisible"
-  [nzTitle]="'Редактирование системы'"
-  [nzOkText]="'Сохранить'"
-  [nzCancelText]="'Отмена'"
+  [nzTitle]="'system.name' | translate"
+  [nzOkText]="'action.save' | translate"
+  [nzCancelText]="'action.cancel' | translate"
   (nzOnCancel)="handleEditCancel()"
   (nzOnOk)="handleEditSubmit()"
   [nzWidth]="800"
@@ -150,15 +140,13 @@
         </div>
       </div>
 
-      <p class="form-section-title">{{ 'system.fullImgPath' | translate }}</p>
-      <input nz-input formControlName="fullImgPath" placeholder="URL изображения" />
+      <p class="form-section-title">{{ 'system.pathImg' | translate }}</p>
+      <input nz-input formControlName="fullImgPath" [placeholder]="'modal.image' | translate" />
 
       <p class="form-section-title">{{ 'system.kurator' | translate }}</p>
       <div formArrayName="kurator">
-        <div
-          *ngFor="let kurator of kuratorControls.controls; let i = index"
-          [formGroupName]="i"
-          class="kurator-block">
+        <div *ngFor="let kurator of kuratorControls.controls; let i = index"
+             [formGroupName]="i" class="kurator-block">
           <div nz-row [nzGutter]="16">
             <div nz-col nzSpan="12">
               <span class="form-label">{{ 'modal.department' | translate }} (KZ)</span>
@@ -180,11 +168,11 @@
             </div>
           </div>
           <button nz-button nzDanger nzSize="small" style="margin-top: 8px;" (click)="removeKurator(i)">
-            <i nz-icon nzType="delete" nzTheme="outline"></i> Удалить
+            <i nz-icon nzType="delete" nzTheme="outline"></i> {{ 'action.delete' | translate }}
           </button>
         </div>
         <button nz-button nzType="dashed" (click)="addKurator()" style="width: 100%; margin-top: 4px;">
-          <i nz-icon nzType="plus" nzTheme="outline"></i> Добавить куратора
+          <i nz-icon nzType="plus" nzTheme="outline"></i> {{ 'modal.addKurator' | translate }}
         </button>
       </div>
     </form>

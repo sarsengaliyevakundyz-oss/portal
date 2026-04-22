@@ -69,11 +69,19 @@ export class CurrentUserService {
     try {
       const decodedToken: any = jwtDecode(userInfo.accessToken);
       const isValid = decodedToken.exp * 1000 > Date.now();
+
       if (isValid) {
         this.setUser(userInfo.accessToken, userInfo.refreshToken, true);
+      } else {
+        // ✅ Токен истёк — чистим localStorage
+        localStorage.removeItem(this.authResponseKey);
+        localStorage.removeItem(this.secretCodeKey);
       }
+
       return isValid;
     } catch (error) {
+      localStorage.removeItem(this.authResponseKey);
+      localStorage.removeItem(this.secretCodeKey);
       return false;
     }
   }

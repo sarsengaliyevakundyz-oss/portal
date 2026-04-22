@@ -93,17 +93,18 @@ export class JwtInterceptor implements HttpInterceptor {
   private clearAndRedirect(): void {
     localStorage.removeItem('authResponse');
     localStorage.removeItem('secretCode');
-    // ✅ iin НЕ удаляем — нужен для deactivateToken при следующем логауте
 
     this.isRefreshing = false;
     this.refreshTokenPromise = null;
 
+    // ✅ Открываем SSO в новой вкладке
     const ssoUrl = this.buildSsoUrl();
-    const ssoWindow = window.open(ssoUrl, '_blank');
+    window.open(ssoUrl, '_blank');
 
-    if (!ssoWindow || ssoWindow.closed) {
-      window.location.href = ssoUrl;
-    }
+    // ✅ Текущая страница перенаправляется на главную — там компонент сам покажет SSO
+    setTimeout(() => {
+      window.location.href = window.location.origin + '/internalportalfront/';
+    }, 100);
   }
 
   private buildSsoUrl(): string {

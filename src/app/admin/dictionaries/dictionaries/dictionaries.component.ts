@@ -14,9 +14,9 @@ interface AdminSection {
 
 const ADMIN_SECTIONS: AdminSection[] = [
   { key: 'systems',       labelKey: 'admin.sections.systems',      route: '/admin/dic/systems' },
-  { key: 'localization',  labelKey: 'admin.sections.localization',  route: '/admin/dic/trans' },
   { key: 'news',          labelKey: 'admin.sections.news',          route: '/admin/dic/news' },
   { key: 'newsCategories',labelKey: 'admin.sections.categories',    route: '/admin/dic/categories' },
+  { key: 'localization',  labelKey: 'admin.sections.localization',  route: '/admin/dic/trans' },
   { key: 'instructions',  labelKey: 'admin.sections.instructions',  route: '/admin/instructions' },
   { key: 'roles',         labelKey: 'admin.sections.roles',         route: '/admin/dic/roles' },
 ];

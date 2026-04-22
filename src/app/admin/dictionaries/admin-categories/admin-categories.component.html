@@ -1,153 +1,142 @@
 <div>
-  <h2>Категории</h2>
-  <div class="actions">
-    <button class="btn btn-add" title="Добавить" aria-label="Добавить" (click)="onAdd()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/>
-      </svg>
-    </button>
-    <button class="btn btn-edit" title="Редактировать" aria-label="Редактировать" (click)="onEdit()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/>
-      </svg>
-    </button>
-    <button class="btn btn-delete" title="Удалить" aria-label="Удалить" (click)="onDelete()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/>
-      </svg>
-    </button>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+    <h2 style="margin: 0;">{{ 'admin.sections.categories' | translate }}</h2>
+    <div class="actions">
+      <button class="btn btn-add" [title]="'action.add' | translate" (click)="onAdd()">
+        <svg viewBox="0 0 24 24"><path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/></svg>
+      </button>
+      <button class="btn btn-edit" [title]="'action.update' | translate" (click)="onEdit()">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/></svg>
+      </button>
+      <button class="btn btn-delete" [title]="'action.delete' | translate" (click)="onDelete()">
+        <svg viewBox="0 0 24 24"><path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/></svg>
+      </button>
+    </div>
   </div>
 
-  <table class="styled-table">
+  <table class="categories-table">
     <thead>
     <tr>
-      <th>№</th>
-      <th>Наименование на рус</th>
-      <th>Наименование на каз</th>
-      <th>Иконка</th>
-      <th>Статус</th>
-      <th>Дата изменения</th>
+      <th>{{ 'common.number' | translate }}</th>
+      <th>{{ 'system.pathImg' | translate }}</th>
+      <th>{{ 'modal.russian' | translate }}</th>
+      <th>{{ 'modal.kazakh' | translate }}</th>
+      <th>{{ 'label.status' | translate }}</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let item of tableData; let i = index" (click)="onRowSelect(i)" [class.row-selected]="i === selectedIndex">
-      <td>{{ i + 1 }}</td>
-      <td>{{ item.name?.ru }}</td>
-      <td>{{ item.name?.kz }}</td>
-      <td>
-        <img *ngIf="item.imagePath" [src]="item.imagePath" alt="Иконка" class="icon-preview" />
+    <tr *ngFor="let item of tableData; let i = index"
+        (click)="onRowSelect(i)"
+        [class.selected]="i === selectedIndex">
+      <td style="color: #999; width: 40px;">{{ i + 1 }}</td>
+      <td style="width: 60px;">
+        <img *ngIf="item.imagePath" [src]="item.imagePath" class="cat-icon" alt="icon">
+        <span *ngIf="!item.imagePath" style="color: #ccc;">—</span>
       </td>
+      <td style="font-weight: 600; color: #1a1a2e;">{{ item.name?.ru }}</td>
+      <td style="color: #666;">{{ item.name?.kz }}</td>
       <td>
-        <span *ngIf="item.active">Активна</span>
-        <span *ngIf="!item.active">Скрыта</span>
+          <span class="cat-badge" [class.active]="item.active">
+            {{ item.active ? ('label.active' | translate) : ('action.hide' | translate) }}
+          </span>
       </td>
-      <td></td>
     </tr>
     </tbody>
   </table>
 </div>
 
+<!-- Модалка добавления -->
 <div *ngIf="showAddModal" class="modal-overlay" (click)="onCancelAdd()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Добавить категорию</h3>
+      <h3>{{ 'action.add' | translate }} — {{ 'admin.sections.categories' | translate }}</h3>
     </div>
     <form [formGroup]="addForm" class="modal-body" (ngSubmit)="onSaveAdd()">
       <div class="form-field">
-        <label>Наименование (RU)</label>
-        <input type="text" formControlName="nameRu" />
+        <label>{{ 'modal.russian' | translate }}</label>
+        <input type="text" formControlName="nameRu" [placeholder]="'field.enter_name' | translate" />
       </div>
       <div class="form-field">
-        <label>Наименование (KZ)</label>
-        <input type="text" formControlName="nameKz" />
+        <label>{{ 'modal.kazakh' | translate }}</label>
+        <input type="text" formControlName="nameKz" [placeholder]="'field.enter_name' | translate" />
       </div>
       <div class="form-field">
-        <label>Иконка</label>
+        <label>{{ 'modal.image' | translate }}</label>
         <div class="file-row">
-          <label class="btn btn-secondary">
+          <label class="btn-secondary">
             <input type="file" (change)="onIconFileChange($event, 'add')" accept="image/*" hidden />
-            Загрузить файл
+            {{ 'common.download' | translate }}
           </label>
           <span class="file-name" *ngIf="uploadedIconFileName">{{ uploadedIconFileName }}</span>
-          <button type="button" class="icon-button" *ngIf="uploadedIconFileName" (click)="removeIconFile('add')" aria-label="Удалить файл">✕</button>
+          <button type="button" class="icon-button" *ngIf="uploadedIconFileName" (click)="removeIconFile('add')">✕</button>
         </div>
-        <div *ngIf="iconFilePreview" class="file-preview">
-          <img [src]="iconFilePreview" alt="Предпросмотр" class="icon-preview" />
-        </div>
+        <img *ngIf="iconFilePreview" [src]="iconFilePreview" style="width: 48px; height: 48px; margin-top: 8px; border-radius: 8px; object-fit: contain;">
       </div>
-      <!-- <div class="form-field">
-        <label>Статус</label>
-        <select formControlName="active">
-          <option [ngValue]="true">Активна</option>
-          <option [ngValue]="false">Скрыта</option>
-        </select>
-      </div> -->
       <div class="modal-footer">
-        <button type="button" class="btn-light" (click)="onCancelAdd()">Отмена</button>
-        <button type="submit" class="btn-primary">Сохранить</button>
+        <button type="button" class="btn-light" (click)="onCancelAdd()">{{ 'action.cancel' | translate }}</button>
+        <button type="submit" class="btn-primary">{{ 'action.save' | translate }}</button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Модалка редактирования -->
 <div *ngIf="showEditModal" class="modal-overlay" (click)="onCancelEdit()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Редактировать категорию</h3>
+      <h3>{{ 'action.update' | translate }} — {{ 'admin.sections.categories' | translate }}</h3>
     </div>
     <form [formGroup]="editForm" class="modal-body" (ngSubmit)="onSaveEdit()">
       <div class="form-field">
-        <label>Наименование (RU)</label>
+        <label>{{ 'modal.russian' | translate }}</label>
         <input type="text" formControlName="nameRu" />
       </div>
       <div class="form-field">
-        <label>Наименование (KZ)</label>
+        <label>{{ 'modal.kazakh' | translate }}</label>
         <input type="text" formControlName="nameKz" />
       </div>
       <div class="form-field">
-        <label>Иконка</label>
+        <label>{{ 'modal.image' | translate }}</label>
         <div class="file-row">
-          <label class="btn btn-secondary">
+          <label class="btn-secondary">
             <input type="file" (change)="onIconFileChange($event, 'edit')" accept="image/*" hidden />
-            Загрузить файл
+            {{ 'common.download' | translate }}
           </label>
           <span class="file-name" *ngIf="editIconFileName">{{ editIconFileName }}</span>
-          <button type="button" class="icon-button" *ngIf="editIconFileName" (click)="removeIconFile('edit')" aria-label="Удалить файл">✕</button>
+          <button type="button" class="icon-button" *ngIf="editIconFileName" (click)="removeIconFile('edit')">✕</button>
         </div>
-        <div *ngIf="editIconPreview" class="file-preview">
-          <img [src]="editIconPreview" alt="Предпросмотр" class="icon-preview" />
-        </div>
-        <div *ngIf="currentIconUrl && !editIconPreview" class="file-preview">
-          <img [src]="currentIconUrl" alt="Текущая иконка" class="icon-preview" />
-          <span class="current-file-text">Текущая иконка</span>
+        <img *ngIf="editIconPreview" [src]="editIconPreview" style="width: 48px; height: 48px; margin-top: 8px; border-radius: 8px; object-fit: contain;">
+        <div *ngIf="currentIconUrl && !editIconPreview" style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+          <img [src]="currentIconUrl" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain;">
         </div>
       </div>
       <div class="form-field">
-        <label>Статус</label>
+        <label>{{ 'label.status' | translate }}</label>
         <select formControlName="active">
-          <option [ngValue]="true">Активна</option>
-          <option [ngValue]="false">Скрыта</option>
+          <option [ngValue]="true">{{ 'label.active' | translate }}</option>
+          <option [ngValue]="false">{{ 'action.hide' | translate }}</option>
         </select>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn-light" (click)="onCancelEdit()">Отмена</button>
-        <button type="submit" class="btn-primary">Сохранить</button>
+        <button type="button" class="btn-light" (click)="onCancelEdit()">{{ 'action.cancel' | translate }}</button>
+        <button type="submit" class="btn-primary">{{ 'action.save' | translate }}</button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Модалка удаления -->
 <div *ngIf="showDeleteModal" class="modal-overlay" (click)="cancelDelete()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Удалить категорию</h3>
+      <h3>{{ 'action.delete' | translate }}</h3>
     </div>
     <div class="modal-body">
-      Вы уверены, что хотите удалить выбранную категорию?
+      <p style="margin: 0; color: #666;">{{ 'confirm.delete_document' | translate }}</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn-light" (click)="cancelDelete()">Отмена</button>
-      <button type="button" class="btn-primary" (click)="confirmDelete()">Удалить</button>
+      <button type="button" class="btn-light" (click)="cancelDelete()">{{ 'action.cancel' | translate }}</button>
+      <button type="button" class="btn-primary" (click)="confirmDelete()">{{ 'action.delete' | translate }}</button>
     </div>
   </div>
 </div>

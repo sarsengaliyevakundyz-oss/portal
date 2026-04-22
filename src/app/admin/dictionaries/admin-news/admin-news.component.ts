@@ -1,28 +1,24 @@
 import {Component, OnInit} from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NewsService} from '../../../shared/services/news.service';
 import {AdminCategoriesService} from '../../../shared/services/admin-categories.service';
 import {NewsCategory} from '../../../shared/models/news.model';
-
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs'; // ✅ добавь
 @Component({
   selector: 'app-admin-news',
   standalone: true,
   imports: [
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    TranslatePipe,
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,TranslatePipe
   ],
   templateUrl: './admin-news.component.html',
   styleUrl: './admin-news.component.css'
 })
 export class AdminNewsComponent implements OnInit {
+  private langSub?: Subscription;
 
   showAddModal: boolean = false;
   showEditModal: boolean = false;
@@ -34,10 +30,14 @@ export class AdminNewsComponent implements OnInit {
   selectedIndex: number | null = null;
 
   categories: NewsCategory[] = [];
+  openIndex: number | null = null;
 
+  toggleAccordion(index: number): void {
+    this.openIndex = this.openIndex === index ? null : index;
+  }
   constructor(private readonly formBuilder: FormBuilder,
               private readonly newsService: NewsService,
-              private readonly categoriesService: AdminCategoriesService) {
+              private readonly categoriesService: AdminCategoriesService, private readonly translate: TranslateService ) {
   }
 
   ngOnInit(): void {
@@ -61,6 +61,12 @@ export class AdminNewsComponent implements OnInit {
 
     this.loadList();
     this.loadCategories();
+
+    // ✅ Добавь это — подписка на смену языка
+    this.langSub = this.translate.onLangChange.subscribe(() => {
+      this.loadList();
+      this.loadCategories();
+    });
   }
 
   onAdd(): void {
@@ -101,7 +107,7 @@ export class AdminNewsComponent implements OnInit {
 
   private formatDateForApi(dateString: string): string {
   if (!dateString) return '';
-  
+
   try {
     const [year, month, day] = dateString.split('-');
     if (year && month && day) {
@@ -110,7 +116,7 @@ export class AdminNewsComponent implements OnInit {
     if (dateString.includes('.')) {
       return dateString;
     }
-    
+
     return dateString;
   } catch (error) {
     console.warn('Ошибка форматирования даты:', error);
@@ -189,7 +195,9 @@ export class AdminNewsComponent implements OnInit {
   cancelDelete(): void {
     this.showDeleteModal = false;
   }
-
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
   private toIsoDate(d: string): string {
     const [dd, mm, yyyy] = d.split('.');
     if (!yyyy) return d;
@@ -204,9 +212,9 @@ export class AdminNewsComponent implements OnInit {
 
   tableData: any[] = [];
 
-  ngAfterViewInit(): void {
-    this.loadList();
-  }
+  // ngAfterViewInit(): void {
+  //   this.loadList();
+  // }
 
   private loadList(): void {
     this.newsService.getList({ page: 0, limit: 25, categoryId: undefined as any, year: undefined as any } as any)

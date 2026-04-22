@@ -1,195 +1,179 @@
 <div>
-  <h2>Новости</h2>
-  <div class="actions">
-    <button class="btn btn-add" title="Добавить" aria-label="Добавить" (click)="onAdd()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/>
-      </svg>
-    </button>
-    <button class="btn btn-edit" title="Редактировать" aria-label="Редактировать" (click)="onEdit()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/>
-      </svg>
-    </button>
-    <button class="btn btn-delete" title="Удалить" aria-label="Удалить" (click)="onDelete()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/>
-      </svg>
-    </button>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+    <h2 style="margin: 0;">{{ 'admin.sections.news' | translate }}</h2>
+    <div class="actions">
+      <button class="btn btn-add" [title]="'action.add' | translate" (click)="onAdd()">
+        <svg viewBox="0 0 24 24"><path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z"/></svg>
+      </button>
+      <button class="btn btn-edit" [title]="'action.update' | translate" (click)="onEdit()">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75L21 5.75z"/></svg>
+      </button>
+      <button class="btn btn-delete" [title]="'action.delete' | translate" (click)="onDelete()">
+        <svg viewBox="0 0 24 24"><path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1h3a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3l1-1zm0 6a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1zm6 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V10a1 1 0 0 0-1-1z"/></svg>
+      </button>
+    </div>
   </div>
-  <table class="styled-table">
-    <thead>
-    <tr>
-      <th>{{ 'news.number' | translate }}</th>
-      <th>{{ 'news.category' | translate }}</th>
-      <th>{{ 'news.date' | translate }}</th>
-      <th>{{ 'news.locale' | translate }}</th>
-      <th>{{ 'news.title' | translate }}</th>
-      <th>{{ 'news.short_description' | translate }}</th>
-      <th>{{ 'news.main_text' | translate }}</th>
-      <th>{{ 'news.hide' | translate }}</th>
-      <th>{{ 'news.updated_at' | translate }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of tableData; let i = index" (click)="onRowSelect(i)" [class.row-selected]="i === selectedIndex">
-      <td>{{ i + 1 }}</td>
-      <td>{{ item.category }}</td>
-      <td>{{ item.date }}</td>
-      <td>{{ item.locale }}</td>
-      <td>{{ item.title }}</td>
-      <td>{{ item.shortDescription }}</td>
-      <td>{{ item.mainText }}</td>
-      <td>
-        <span *ngIf="item.hidden">
-          <i class="fa fa-eye-slash"></i>
-        </span>
-        <span *ngIf="!item.hidden">
-          <i class="fa fa-eye"></i>
-        </span>
-      </td>
-      <td>{{ item.updatedAt }}</td>
-    </tr>
-    </tbody>
-  </table>
- </div>
 
+  <div class="accordion">
+    <div class="accordion-item"
+         *ngFor="let item of tableData; let i = index"
+         [class.selected]="i === selectedIndex"
+         [class.open]="openIndex === i">
+
+      <div class="accordion-header" (click)="onRowSelect(i); toggleAccordion(i)">
+        <div class="acc-number">{{ i + 1 }}</div>
+        <span class="acc-category">{{ item.category }}</span>
+        <span class="acc-title">{{ item.title }}</span>
+        <span class="acc-date">{{ item.date }}</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+
+      <div class="accordion-content" [class.open]="openIndex === i">
+        <div class="content-inner">
+          <div>
+            <div class="info-label">{{ 'news.short_description' | translate }}</div>
+            <div class="info-value">{{ item.shortDescription || '—' }}</div>
+          </div>
+          <div>
+            <div class="info-label">{{ 'news.main_text' | translate }}</div>
+            <div class="info-value">{{ item.mainText || '—' }}</div>
+          </div>
+          <div>
+            <div class="info-label">{{ 'news.updated_at' | translate }}</div>
+            <div class="info-value">{{ item.updatedAt }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка добавления -->
 <div *ngIf="showAddModal" class="modal-overlay" (click)="onCancelAdd()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Добавить Новость</h3>
+      <h3>{{ 'action.add' | translate }} — {{ 'admin.sections.news' | translate }}</h3>
     </div>
     <form [formGroup]="addForm" class="modal-body" (ngSubmit)="onSaveAdd()">
       <div class="form-field">
-        <label>Категория</label>
+        <label>{{ 'news.category' | translate }}</label>
         <select formControlName="category">
-          <option value="" disabled>Выберите</option>
+          <option value="" disabled>{{ 'field.select_list_option' | translate }}</option>
           <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name?.ru }}</option>
         </select>
       </div>
-
       <div class="form-field">
-        <label>Дата</label>
+        <label>{{ 'news.date' | translate }}</label>
         <input type="date" formControlName="date" />
       </div>
-
       <div class="form-field">
-        <label>Локализация</label>
+        <label>{{ 'news.locale' | translate }}</label>
         <select formControlName="locale">
-          <option value="kz">kz</option>
-          <option value="ru">ru</option>
+          <option value="kz">{{ 'kz' | translate }}</option>
+          <option value="ru">{{ 'ru' | translate }}</option>
         </select>
       </div>
-
       <div class="form-field">
-        <label>Заголовок</label>
-        <input type="text" formControlName="title" placeholder="Введите" />
+        <label>{{ 'news.title' | translate }}</label>
+        <input type="text" formControlName="title" [placeholder]="'field.enter_name' | translate" />
       </div>
-
       <div class="form-field">
-        <label>Краткое описание</label>
-        <input type="text" formControlName="shortDescription" placeholder="Введите" />
+        <label>{{ 'news.short_description' | translate }}</label>
+        <input type="text" formControlName="shortDescription" [placeholder]="'field.enter_name' | translate" />
       </div>
-
       <div class="form-field">
-        <label>Основной текст</label>
-        <textarea formControlName="mainText" placeholder="Введите"></textarea>
+        <label>{{ 'news.main_text' | translate }}</label>
+        <textarea formControlName="mainText" [placeholder]="'field.enter_name' | translate"></textarea>
       </div>
-
       <div class="form-field">
-        <label>Загрузить файл каз</label>
+        <label>{{ 'modal.kazakh' | translate }}</label>
         <div class="file-row">
-          <label class="btn btn-secondary">
+          <label class="btn-secondary">
             <input type="file" (change)="onKazFileChange($event)" hidden />
-            Загрузить файл
+            {{ 'common.download' | translate }}
           </label>
           <span class="file-name" *ngIf="uploadedKazFileName">{{ uploadedKazFileName }}</span>
-          <button type="button" class="icon-button" *ngIf="uploadedKazFileName" (click)="removeKazFile()" aria-label="Удалить файл">✕</button>
+          <button type="button" class="icon-button" *ngIf="uploadedKazFileName" (click)="removeKazFile()">✕</button>
         </div>
       </div>
-
       <div class="form-field">
-        <label>Загрузить файл рус</label>
+        <label>{{ 'modal.russian' | translate }}</label>
         <div class="file-row">
-          <label class="btn btn-secondary">
+          <label class="btn-secondary">
             <input type="file" (change)="onRusFileChange($event)" hidden />
-            Загрузить файл
+            {{ 'common.download' | translate }}
           </label>
           <span class="file-name" *ngIf="uploadedRusFileName">{{ uploadedRusFileName }}</span>
-          <button type="button" class="icon-button" *ngIf="uploadedRusFileName" (click)="removeRusFile()" aria-label="Удалить файл">✕</button>
+          <button type="button" class="icon-button" *ngIf="uploadedRusFileName" (click)="removeRusFile()">✕</button>
         </div>
       </div>
-
       <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="onCancelAdd()">Отменить</button>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn-light" (click)="onCancelAdd()">{{ 'action.cancel' | translate }}</button>
+        <button type="submit" class="btn-primary">{{ 'action.save' | translate }}</button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Модалка редактирования -->
 <div *ngIf="showEditModal" class="modal-overlay" (click)="onCancelEdit()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Редактировать Новость</h3>
+      <h3>{{ 'action.update' | translate }} — {{ 'admin.sections.news' | translate }}</h3>
     </div>
     <form [formGroup]="editForm" class="modal-body" (ngSubmit)="onSaveEdit()">
       <div class="form-field">
-        <label>Категория</label>
+        <label>{{ 'news.category' | translate }}</label>
         <select formControlName="category">
-          <option value="" disabled>Выберите</option>
+          <option value="" disabled>{{ 'field.select_list_option' | translate }}</option>
           <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name?.ru }}</option>
         </select>
       </div>
-
       <div class="form-field">
-        <label>Дата</label>
+        <label>{{ 'news.date' | translate }}</label>
         <input type="date" formControlName="date" />
       </div>
-
       <div class="form-field">
-        <label>Локализация</label>
+        <label>{{ 'news.locale' | translate }}</label>
         <select formControlName="locale">
-          <option value="kz">kz</option>
-          <option value="ru">ru</option>
+          <option value="kz">{{ 'kz' | translate }}</option>
+          <option value="ru">{{ 'ru' | translate }}</option>
         </select>
       </div>
-
       <div class="form-field">
-        <label>Заголовок</label>
+        <label>{{ 'news.title' | translate }}</label>
         <input type="text" formControlName="title" />
       </div>
-
       <div class="form-field">
-        <label>Краткое описание</label>
+        <label>{{ 'news.short_description' | translate }}</label>
         <input type="text" formControlName="shortDescription" />
       </div>
-
       <div class="form-field">
-        <label>Основной текст</label>
+        <label>{{ 'news.main_text' | translate }}</label>
         <textarea formControlName="mainText"></textarea>
       </div>
-
       <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="onCancelEdit()">Отменить</button>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn-light" (click)="onCancelEdit()">{{ 'action.cancel' | translate }}</button>
+        <button type="submit" class="btn-primary">{{ 'action.save' | translate }}</button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Модалка удаления -->
 <div *ngIf="showDeleteModal" class="modal-overlay" (click)="cancelDelete()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Удалить запись?</h3>
+      <h3>{{ 'action.delete' | translate }}</h3>
     </div>
     <div class="modal-body">
-      <p>Вы действительно хотите удалить выбранную новость?<br>
-      Номер: {{ selectedIndex !== null ? (selectedIndex + 1) : '-' }}</p>
+      <p style="margin: 0; color: #666;">
+        {{ 'confirm.delete_application' | translate }} №{{ selectedIndex !== null ? (selectedIndex + 1) : '-' }}
+      </p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-light" (click)="cancelDelete()">Отменить</button>
-      <button type="button" class="btn btn-primary" (click)="confirmDelete()">Удалить</button>
+      <button type="button" class="btn-light" (click)="cancelDelete()">{{ 'action.cancel' | translate }}</button>
+      <button type="button" class="btn-primary" (click)="confirmDelete()">{{ 'action.delete' | translate }}</button>
     </div>
   </div>
 </div>

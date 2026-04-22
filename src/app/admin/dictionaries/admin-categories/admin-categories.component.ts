@@ -6,11 +6,12 @@ import {NewsCategory} from '../../../shared/models/news.model';
 import { finalize, switchMap, of } from 'rxjs';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
 import { SystemsService } from '../../../shared/services/systems.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [NgForOf, NgIf, ReactiveFormsModule],
+  imports: [NgForOf, NgIf, ReactiveFormsModule,TranslatePipe],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.css'
 })
@@ -37,12 +38,16 @@ export class AdminCategoriesComponent implements OnInit {
   editFile: File | null = null;
 
   adminUsername: string | null = null;
+  openIndex: number | null = null;
+
 
   constructor(private readonly formBuilder: FormBuilder,
               private readonly service: AdminCategoriesService,
               private readonly currentUser: CurrentUserService,
               private readonly systemsService: SystemsService) {}
-
+  toggleAccordion(index: number): void {
+    this.openIndex = this.openIndex === index ? null : index;
+  }
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
       nameRu: ['', Validators.required],

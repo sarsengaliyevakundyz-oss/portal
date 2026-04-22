@@ -1,31 +1,88 @@
 @import url('../admin-news/admin-news.component.css');
 
-.styled-table {
+.categories-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 8px;
 }
 
-.styled-table thead th {
+.categories-table th {
+  padding: 10px 12px;
   text-align: left;
-  font-weight: 600;
-  color: #6b7280;
+  background: none;
+  border: none;
+  color: #999;
   font-size: 12px;
-  padding: 0 12px 8px 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.styled-table tbody td {
+.categories-table td {
+  padding: 12px;
   background: #fff;
-  padding: 14px 12px;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  border: none;
+  font-size: 14px;
+  color: #333;
+  vertical-align: middle;
 }
 
-.styled-table tbody tr td:first-child { border-left: 1px solid #e5e7eb; border-radius: 8px 0 0 8px; }
-.styled-table tbody tr td:last-child  { border-right: 1px solid #e5e7eb; border-radius: 0 8px 8px 0; }
+.categories-table tbody tr td:first-child {
+  border-radius: 10px 0 0 10px;
+}
 
+.categories-table tbody tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
 
-.icon-preview {
-  width: 100%;
-  height: 50%;
+.categories-table tbody tr {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  opacity: 0;
+  animation: itemAppear 0.3s ease forwards;
+}
+
+.categories-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+.categories-table tbody tr:nth-child(2) { animation-delay: 0.06s; }
+.categories-table tbody tr:nth-child(3) { animation-delay: 0.10s; }
+.categories-table tbody tr:nth-child(4) { animation-delay: 0.14s; }
+.categories-table tbody tr:nth-child(5) { animation-delay: 0.18s; }
+.categories-table tbody tr:nth-child(6) { animation-delay: 0.22s; }
+
+@keyframes itemAppear {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.categories-table tbody tr:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.categories-table tbody tr.selected td {
+  background: #f0f5ff;
+}
+
+.cat-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f5f8ff;
+  padding: 4px;
+}
+
+.cat-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #fee2e2;
+  color: #e74c3c;
+}
+
+.cat-badge.active {
+  background: #d1fae5;
+  color: #059669;
 }
