@@ -86,11 +86,16 @@ export class BaseApi {
 
   window.open(this.buildSsoRedirectUrl(), '_blank');
 }
-
+  // private buildSsoRedirectUrl(): string {
+  //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
+  // }
   private buildSsoRedirectUrl(): string {
     const { protocol, hostname, port, origin } = window.location;
     const effectivePort = port || '9999';
 
+    if (hostname === 'test.new.e.stat.gov.kz') {
+      return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;
+    }
     // PROD: frontend и SSO на разных host
     if (hostname === 'new.e.stat.gov.kz') {
       const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
