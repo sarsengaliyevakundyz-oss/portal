@@ -111,6 +111,9 @@ export class JwtInterceptor implements HttpInterceptor {
     const {protocol, hostname, port, origin} = window.location;
     const effectivePort = port || '9999';
 
+    if (hostname === 'test.new.e.stat.gov.kz') {
+      return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;  // ✅ добавь
+    }
     if (hostname === 'new.e.stat.gov.kz') {
       return `${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew?client-id=2`;
     }
