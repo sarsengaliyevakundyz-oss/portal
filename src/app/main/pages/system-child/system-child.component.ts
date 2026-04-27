@@ -39,9 +39,10 @@ export class SystemChildComponent implements OnInit{
   }
 
   openModule(module: SystemChildModel) {
-    if (!this.info) return;
+    if (!this.info) return; // ✅ защита от null
 
     this.umami.trackButtonClick(
+
       module.name.ru,
       this.info.systemInfo.name.ru,
       this.currentUser.getCurrentUser()?.full_name
@@ -62,25 +63,24 @@ export class SystemChildComponent implements OnInit{
       return;
     }
 
-    // ✅ setTimeout вместо load события
-    const message = {
-      type: 'AUTH_SECRET_CODE',
-      secretCode: this.currentUser.getSecretCode(),
-      lang
-    };
-    const targetOrigin = new URL(url).origin;
-
-    // Пробуем несколько раз
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      console.log('PostMessage attempt:', attempts, message);
+    newWin.addEventListener('load', () => {
+      const message = {
+        type: 'AUTH_SECRET_CODE',
+        secretCode: this.currentUser.getSecretCode(),
+        lang
+      };
+      const targetOrigin = new URL(url).origin;
+      console.log('PostMessage data:', {
+        message: message,
+        targetOrigin: targetOrigin
+      });
       newWin.postMessage(message, targetOrigin);
-      if (attempts >= 5) {
-        clearInterval(interval);
-      }
-    }, 1000);
+      setTimeout(() => newWin.postMessage(message, targetOrigin), 1000);
+      setTimeout(() => newWin.postMessage(message, targetOrigin), 2000);
+      setTimeout(() => newWin.postMessage(message, targetOrigin), 3000);
+    });
   }
+
   goBack(): void {
     this.location.back();
   }
