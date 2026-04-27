@@ -142,7 +142,9 @@ export class CurrentUserService {
 
     const allowedOrigins = [
       'http://172.16.18.182:9999',
-      'http://172.16.0.182:9999',  'http://test.new.e.stat.gov.kz',
+      'http://172.16.0.182:9999',
+      'http://test.new.e.stat.gov.kz',
+      'http://new.e.stat.gov.kz',
       window.location.origin
     ];
 
@@ -185,6 +187,7 @@ export class CurrentUserService {
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
           this.isLogoutInProgress = false;
+          sessionStorage.removeItem('sso_opening'); // ✅ убираем флаг
           this.router.navigate(['/']);
         });
 
@@ -211,8 +214,19 @@ export class CurrentUserService {
 
   isAuthenticated(): boolean { return this.isAuthenticatedSubject.value; }
 
-
   private redirectToSSO(): void {
+    // ✅ Не открывать SSO если уже на странице SSO
+    if (window.location.href.includes('ssointernalfrontnew')) {
+      return;
+    }
+
+    // ✅ Не открывать если SSO уже открыт (проверяем флаг)
+    if (sessionStorage.getItem('sso_opening')) {
+      return;
+    }
+
+    sessionStorage.setItem('sso_opening', 'true');
+
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
 
@@ -223,7 +237,7 @@ export class CurrentUserService {
 
     setTimeout(() => {
       this.zone.run(() => {
-        this.router.navigate(['/']); // ✅ было /login
+        this.router.navigate(['/']);
       });
     }, 100);
   }

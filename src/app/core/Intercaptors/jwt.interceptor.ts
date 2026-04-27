@@ -115,7 +115,7 @@ export class JwtInterceptor implements HttpInterceptor {
       return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;  // ✅ добавь
     }
     if (hostname === 'new.e.stat.gov.kz') {
-      return `${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew?client-id=2`;
+      return `${protocol}//${hostname}/ssointernalfrontnew?client-id=2`;
     }
     if (hostname === '172.16.18.182') {
       return `${protocol}//172.16.18.182:${effectivePort}/ssointernalfrontnew?client-id=2`;
