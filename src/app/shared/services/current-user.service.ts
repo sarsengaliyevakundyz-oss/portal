@@ -187,7 +187,7 @@ export class CurrentUserService {
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
           this.isLogoutInProgress = false;
-          sessionStorage.removeItem('sso_opening'); // ✅ убираем флаг
+          // sessionStorage.removeItem('sso_opening'); // ✅ убираем флаг
           this.router.navigate(['/']);
         });
 
@@ -215,17 +215,16 @@ export class CurrentUserService {
   isAuthenticated(): boolean { return this.isAuthenticatedSubject.value; }
 
   private redirectToSSO(): void {
-    // ✅ Не открывать SSO если уже на странице SSO
     if (window.location.href.includes('ssointernalfrontnew')) {
       return;
     }
 
-    // ✅ Не открывать если SSO уже открыт (проверяем флаг)
-    if (sessionStorage.getItem('sso_opening')) {
+    // ✅ Если уже идёт logout — не открываем SSO повторно
+    if (this.isLogoutInProgress) {
       return;
     }
 
-    sessionStorage.setItem('sso_opening', 'true');
+    this.isLogoutInProgress = true;
 
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
@@ -237,6 +236,7 @@ export class CurrentUserService {
 
     setTimeout(() => {
       this.zone.run(() => {
+        this.isLogoutInProgress = false;
         this.router.navigate(['/']);
       });
     }, 100);
