@@ -187,7 +187,7 @@ export class CurrentUserService {
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
           this.isLogoutInProgress = false;
-          // sessionStorage.removeItem('sso_opening'); // ✅ убираем флаг
+          localStorage.removeItem('sso_redirect_time'); // ✅ убираем флаг
           this.router.navigate(['/']);
         });
 
@@ -197,8 +197,6 @@ export class CurrentUserService {
     }
   }
 
-  public getAuthResponseKey(): string { return this.authResponseKey; }
-  public getSecretCodeKey(): string { return this.secretCodeKey; }
   public getSecretCode(): string | undefined {
     return this.secretCode ?? localStorage.getItem(this.secretCodeKey) ?? undefined;
   }
@@ -219,12 +217,18 @@ export class CurrentUserService {
       return;
     }
 
-    // ✅ Если уже идёт logout — не открываем SSO повторно
     if (this.isLogoutInProgress) {
       return;
     }
 
+    // ✅ Проверяем через localStorage — работает между обновлениями
+    const lastRedirect = localStorage.getItem('sso_redirect_time');
+    if (lastRedirect && Date.now() - Number(lastRedirect) < 3000) {
+      return;
+    }
+
     this.isLogoutInProgress = true;
+    localStorage.setItem('sso_redirect_time', Date.now().toString());
 
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
@@ -271,11 +275,6 @@ export class CurrentUserService {
   async logout() {
     await this.deactivateToken();
   }
-
-  checkPermissions(...permissions: RoleEnum[]): boolean {
-    return permissions.some(permission => this.permissions.includes(permission));
-  }
-
   setUser(token: string, refresh: string, updateAuthStatus: boolean = true): void {
     try {
       const isJwt = token && token.split('.').length === 3;
@@ -303,11 +302,6 @@ export class CurrentUserService {
       console.error("Error setting user:", error);
       this.redirectToSSO();
     }
-  }
-
-  isExpired(token: string): boolean {
-    const payload = jwtDecode(token);
-    return payload.exp! < Math.floor(Date.now() / 1000);
   }
 
   minutesToExpire(): number {
