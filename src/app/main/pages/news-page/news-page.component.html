@@ -1,7 +1,7 @@
 <div class="container">
   <!-- Фильтр -->
   <div class="filter">
-    <h4>Тема</h4>
+    <h4>{{ 'news.category' | translate }}</h4>
     <div *ngFor="let cat of categories">
       <label>
         <input type="radio" name="category" [value]="cat.id" [(ngModel)]="query.categoryId" (ngModelChange)="loadData()">
@@ -9,7 +9,7 @@
       </label>
     </div>
 
-    <h4>Период</h4>
+    <h4>{{ 'news.date' | translate }}</h4>
     <div *ngFor="let year of years">
       <label>
         <input type="radio" name="year" [value]="year" [(ngModel)]="query.year" (ngModelChange)="loadData()">
@@ -20,20 +20,23 @@
 
   <!-- Список новостей -->
   <div class="news-list">
-    <a *ngFor="let news_item of news" class="news-item" [routerLink]="'/news/'+ news_item.id">
-      <img [src]="environment.storageUrl + news_item.imageDescription" alt="News Image">
+    <a *ngFor="let news_item of news" class="news-item" [routerLink]="'/news/' + news_item.id">
+      <img [src]="environment.storageUrl + news_item.imageDescription" alt="News">
       <div class="news-content">
+        <span class="tag">{{ news_item.vipCategory }}</span>
         <h5>{{ news_item.title }}</h5>
         <p>{{ news_item.description }}</p>
-        <small>
-          <!-- Используем ручное форматирование -->
-          {{ formatDate(news_item.publishDate) }} | <span class="tag">{{ news_item.vipCategory }}</span>
-        </small>
+        <div class="news-meta">
+          <span class="news-date">{{ formatDate(news_item.publishDate) }}</span>
+        </div>
       </div>
     </a>
-    <nz-pagination [nzPageSize]="query.limit"
-                   [nzTotal]="total"
-                   [nzPageIndex]="query.page + 1"
-                   (nzPageIndexChange)="query.page = $event - 1; loadData()"></nz-pagination>
+
+    <nz-pagination
+      [nzPageSize]="query.limit"
+      [nzTotal]="total"
+      [nzPageIndex]="query.page + 1"
+      (nzPageIndexChange)="query.page = $event - 1; loadData()">
+    </nz-pagination>
   </div>
 </div>

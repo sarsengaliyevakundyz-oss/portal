@@ -7,7 +7,7 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {SharedModule} from '../../../shared/shared.module';
 import {environment} from "../../../../environments/environment";
-import {TranslateService} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -19,7 +19,8 @@ import {Subscription} from 'rxjs';
     // DatePipe - удаляем, так как не используем
     NzPaginationComponent,
     SharedModule,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './news-page.component.html',
   styleUrl: './news-page.component.css'
