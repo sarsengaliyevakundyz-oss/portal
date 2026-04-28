@@ -68,8 +68,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
     // Подписываемся на смену языка
     this.langChangeSubscription = this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      console.log('Language changed to:', event.lang);
-      console.log('Translations:', event.translations);
+      // console.log('Language changed to:', event.lang);
+      // console.log('Translations:', event.translations);
       // Полностью перезагружаем все данные
       this.refreshAllData();
     });
@@ -158,8 +158,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         this.columns = [];
       }
     }
-
-    console.log('Обновленные columns:', this.columns);
     this.cdr.detectChanges();
   }
 
@@ -235,9 +233,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
     this.loadingDocuments = true;
     const lang = this.translate.currentLang === 'kz' ? 'kk' : 'ru';
-
-    console.log('Loading documents with lang:', lang, 'category:', this.selectedCategory.id);
-
     this.documentsService.getDocumentsByCategory(
       this.selectedCategory.id,
       lang,
@@ -250,7 +245,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
         this.loadingDocuments = false;
-        console.log('documents loaded:', this.documents);
         this.cdr.detectChanges();
       },
       error: (err) => {
