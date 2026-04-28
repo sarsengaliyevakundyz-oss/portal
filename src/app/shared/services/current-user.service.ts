@@ -187,7 +187,7 @@ export class CurrentUserService {
         this.zone.run(() => {
           this.setUser(response.access_token, response.refresh_token);
           this.isLogoutInProgress = false;
-          localStorage.removeItem('sso_redirect_time'); // ✅ убираем флаг
+          // localStorage.removeItem('sso_redirect_time'); // ✅ убираем флаг
           this.router.navigate(['/']);
         });
 
@@ -217,18 +217,11 @@ export class CurrentUserService {
       return;
     }
 
-    if (this.isLogoutInProgress) {
+    // ✅ Глобальный флаг через window — работает для всех сервисов
+    if ((window as any).__ssoRedirecting) {
       return;
     }
-
-    // ✅ Проверяем через localStorage — работает между обновлениями
-    const lastRedirect = localStorage.getItem('sso_redirect_time');
-    if (lastRedirect && Date.now() - Number(lastRedirect) < 3000) {
-      return;
-    }
-
-    this.isLogoutInProgress = true;
-    localStorage.setItem('sso_redirect_time', Date.now().toString());
+    (window as any).__ssoRedirecting = true;
 
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
@@ -240,7 +233,7 @@ export class CurrentUserService {
 
     setTimeout(() => {
       this.zone.run(() => {
-        this.isLogoutInProgress = false;
+        (window as any).__ssoRedirecting = false;
         this.router.navigate(['/']);
       });
     }, 100);

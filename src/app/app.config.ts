@@ -9,7 +9,6 @@ import {
 } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { PoweroffOutline } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
 import { CoreModule } from './core/core.module';
@@ -28,11 +27,16 @@ import {
   DownOutline,
   RightOutline,
   FolderOpenOutline,
+  PoweroffOutline,
   PlusOutline,
   EditOutline,
   EyeOutline,
   EyeInvisibleOutline,
-  DeleteOutline,  TeamOutline
+  DeleteOutline,
+  TeamOutline,
+  SearchOutline,    // ✅ добавь
+  FileOutline,      // ✅ добавь
+  DownloadOutline   // ✅ добавь
 } from '@ant-design/icons-angular/icons';
 registerLocaleData(ru);
 
@@ -66,7 +70,11 @@ const antDesignIcons: IconDefinition[] = [
   EditOutline,
   EyeOutline,
   EyeInvisibleOutline,
-  DeleteOutline,TeamOutline
+  DeleteOutline,
+  TeamOutline,
+  SearchOutline,    // ✅
+  FileOutline,      // ✅
+  DownloadOutline   // ✅
 ];
 
 export const appConfig: ApplicationConfig = {

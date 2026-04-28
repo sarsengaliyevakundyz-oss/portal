@@ -91,10 +91,16 @@ export class JwtInterceptor implements HttpInterceptor {
 
   // ✅ Чистим всё напрямую без HTTP запросов — исключаем зацикливание
   private clearAndRedirect(): void {
-    // ✅ Не открываем SSO если уже нет токена — значит currentUser.service уже открыл
+    // ✅ Проверяем глобальный флаг
+    if ((window as any).__ssoRedirecting) {
+      return;
+    }
+
     if (!localStorage.getItem('authResponse')) {
       return;
     }
+
+    (window as any).__ssoRedirecting = true;
 
     localStorage.removeItem('authResponse');
     localStorage.removeItem('secretCode');
@@ -106,6 +112,7 @@ export class JwtInterceptor implements HttpInterceptor {
     window.open(ssoUrl, '_blank');
 
     setTimeout(() => {
+      (window as any).__ssoRedirecting = false;
       window.location.href = window.location.origin + '/internalportalfront/';
     }, 100);
   }
