@@ -1,0 +1,29 @@
+<div class="analytics-wrapper">
+  <div class="analytics-header">
+    <div class="analytics-title">
+      <span class="umami-icon">📊</span>
+      <h2>Umami Analytics</h2>
+    </div>
+    <span class="analytics-badge">Live</span>
+  </div>
+
+  <div class="iframe-container" [class.has-error]="iframeError">
+    <div class="iframe-error" *ngIf="iframeError">
+      <span>⚠️</span>
+      <p>Не удалось загрузить аналитику</p>
+      <a href="http://172.16.18.233:3000/share/zqXMATFd/internalportalfront"
+         target="_blank" class="open-link">
+        Открыть в новой вкладке →
+      </a>
+    </div>
+
+    <iframe
+      *ngIf="!iframeError"
+      src="http://172.16.18.233:3000/share/zqXMATFd/internalportalfront"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      (error)="iframeError = true">
+    </iframe>
+  </div>
+</div>

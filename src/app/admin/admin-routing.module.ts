@@ -13,12 +13,15 @@ import {AdminCategoriesComponent} from './dictionaries/admin-categories/admin-ca
 import {AdminLocalizatorComponent} from './dictionaries/admin-localizator/admin-localizator.component';
 import {AdminRolesComponent} from './dictionaries/roles/admin-roles.component';
 import {AdminSystemsComponent} from './dictionaries/systems/admin-systems.component';
+import {AnalyticsComponent} from './analytics/analytics.component';
 
 const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
       {path: '', component: AdminLayoutComponent, children: [
           {path: '', redirectTo: 'profile', pathMatch: 'full'},
           {path: 'profile', component: ProfileComponent},
+          { path: 'analytics', component: AnalyticsComponent }, // 👈 новый
+
           {path: 'dic', component: DictionariesComponent, children: [
             {path: '', redirectTo: 'systems', pathMatch: 'full'},
               {path: 'news', component: AdminNewsComponent},
