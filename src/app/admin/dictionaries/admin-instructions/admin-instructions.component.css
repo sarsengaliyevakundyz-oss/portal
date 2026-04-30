@@ -1,0 +1,289 @@
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+:host {
+  display: block;
+  animation: tabFadeIn 0.2s ease both;
+}
+
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ====== КАТЕГОРИИ ====== */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.cat-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  height: 90px;
+  padding: 0 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid #eef2f6;
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease;
+}
+
+.cat-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.13);
+}
+
+.cat-card:active { transform: scale(0.97); }
+
+.cat-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0575DA;
+  text-transform: uppercase;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.cat-icon img { width: 56px; height: 56px; object-fit: contain; }
+
+.animate-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.25s ease-out forwards;
+}
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+/* ====== КНОПКИ ====== */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #0575DA, #0099ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(5,117,218,0.3);
+}
+
+.add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(5,117,218,0.4);
+}
+
+.back-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.back-btn:hover { border-color: #aaa; color: #333; }
+
+/* ====== ПОИСК ====== */
+.search-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.search-input { flex: 1; max-width: 500px; }
+
+/* ====== АККОРДИОН ====== */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.accordion-item {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #eef2f6;
+  opacity: 0;
+  animation: accordionAppear 0.3s ease forwards;
+}
+
+.accordion-item:nth-child(1)  { animation-delay: 0.02s; }
+.accordion-item:nth-child(2)  { animation-delay: 0.06s; }
+.accordion-item:nth-child(3)  { animation-delay: 0.10s; }
+.accordion-item:nth-child(4)  { animation-delay: 0.14s; }
+.accordion-item:nth-child(5)  { animation-delay: 0.18s; }
+.accordion-item:nth-child(6)  { animation-delay: 0.22s; }
+.accordion-item:nth-child(7)  { animation-delay: 0.26s; }
+.accordion-item:nth-child(8)  { animation-delay: 0.30s; }
+.accordion-item:nth-child(9)  { animation-delay: 0.34s; }
+.accordion-item:nth-child(10) { animation-delay: 0.38s; }
+
+@keyframes accordionAppear {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.accordion-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.accordion-header:hover { background: #f8fafd; }
+
+.accordion-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.accordion-number {
+  width: 36px;
+  height: 36px;
+  background: #e8f0fe;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0575DA;
+  flex-shrink: 0;
+}
+
+.accordion-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  flex: 1;
+}
+
+.accordion-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  transition: all 0.15s;
+}
+
+.action-btn.edit     { color: #6c757d; }
+.action-btn.edit:hover     { background: #f0f0f0; color: #333; }
+.action-btn.download { color: #0575DA; }
+.action-btn.download:hover { background: #eef4fd; }
+.action-btn.delete   { color: #dc3545; }
+.action-btn.delete:hover   { background: #fdf0f0; }
+
+.accordion-icon { color: #8e9aaf; font-size: 14px; margin-left: 4px; }
+
+/* Контент аккордиона */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.accordion-content.open { max-height: 600px; }
+
+.content-inner {
+  padding: 0 20px 20px;
+  border-top: 1px solid #eef2f6;
+  background: #fefefe;
+}
+
+.info-row { margin-bottom: 16px; }
+
+.info-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #8e9aaf;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.info-value { font-size: 14px; color: #1a2a3a; line-height: 1.5; }
+
+.file-link {
+  color: #0575DA;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.file-link:hover { text-decoration: underline; }
+
+.accordion-actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eef2f6;
+  text-align: right;
+}
+
+.edit-btn {
+  background: #f0f5ff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #0575DA;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.edit-btn:hover { background: #0575DA; color: #fff; }
+
+/* Форма модалки */
+.form-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Общее */
+.loading-spinner { display: flex; justify-content: center; padding: 40px; }
+.empty-state { text-align: center; padding: 48px; color: #aaa; font-size: 14px; }
+
+nz-pagination { margin-top: 16px; display: flex; justify-content: flex-end; }

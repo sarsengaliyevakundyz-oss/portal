@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {LayoutComponent} from '../main/layout/layout.component';
-import {MainPageComponent} from '../main/pages/main-page/main-page.component';
-import {SystemsComponent} from '../main/pages/systems/systems.component';
-import {SystemChildComponent} from '../main/pages/system-child/system-child.component';
-import {NewsPageComponent} from '../main/pages/news-page/news-page.component';
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {DictionariesComponent} from './dictionaries/dictionaries/dictionaries.component';
@@ -13,6 +9,7 @@ import {AdminCategoriesComponent} from './dictionaries/admin-categories/admin-ca
 import {AdminLocalizatorComponent} from './dictionaries/admin-localizator/admin-localizator.component';
 import {AdminRolesComponent} from './dictionaries/roles/admin-roles.component';
 import {AdminSystemsComponent} from './dictionaries/systems/admin-systems.component';
+import {AdminInstructionsComponent} from './dictionaries/admin-instructions/admin-instructions.component';
 import {AnalyticsComponent} from './analytics/analytics.component';
 
 const routes: Routes = [
@@ -20,20 +17,20 @@ const routes: Routes = [
       {path: '', component: AdminLayoutComponent, children: [
           {path: '', redirectTo: 'profile', pathMatch: 'full'},
           {path: 'profile', component: ProfileComponent},
-          { path: 'analytics', component: AnalyticsComponent }, // 👈 новый
+          {path: 'analytics', component: AnalyticsComponent},
 
           {path: 'dic', component: DictionariesComponent, children: [
-            {path: '', redirectTo: 'systems', pathMatch: 'full'},
-              {path: 'news', component: AdminNewsComponent},
-              {path: 'categories', component: AdminCategoriesComponent},
-              {path: 'trans', component: AdminLocalizatorComponent},
-              {path: 'roles', component: AdminRolesComponent},
-              {path: 'systems', component: AdminSystemsComponent},
+              {path: '', redirectTo: 'systems', pathMatch: 'full'},
+              {path: 'news',         component: AdminNewsComponent},
+              {path: 'categories',   component: AdminCategoriesComponent},
+              {path: 'trans',        component: AdminLocalizatorComponent},
+              {path: 'roles',        component: AdminRolesComponent},
+              {path: 'systems',      component: AdminSystemsComponent},
+              {path: 'instructions', component: AdminInstructionsComponent},
             ]}
         ]}
     ]
   }
-
 ];
 
 @NgModule({

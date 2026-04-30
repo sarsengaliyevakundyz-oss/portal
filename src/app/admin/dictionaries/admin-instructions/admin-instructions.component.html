@@ -1,0 +1,175 @@
+<div>
+
+  <!-- ====== СПИСОК КАТЕГОРИЙ ====== -->
+  <div *ngIf="viewMode === 'menu'">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <h2 style="margin: 0;">{{ 'admin.sections.instructions' | translate }}</h2>
+      <button class="add-btn" (click)="editingCat = null; catForm.reset(); isCatModalVisible = true">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+        {{ 'action.add' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="loadingCategories" class="loading-spinner"><nz-spin nzSimple></nz-spin></div>
+
+    <div class="accordion" *ngIf="!loadingCategories">
+      <div
+        class="accordion-item"
+        *ngFor="let cat of categories; let i = index"
+        (click)="openCategory(cat)"
+      >
+        <div class="accordion-header">
+          <div class="accordion-left">
+            <div class="accordion-number">{{ i + 1 }}</div>
+            <div class="accordion-title">{{ cat.name }}</div>
+          </div>
+          <div class="accordion-right">
+            <button class="action-btn edit" (click)="openEditCatModal(cat, $event)" title="{{ 'action.update' | translate }}">
+              <i nz-icon nzType="edit" nzTheme="outline"></i>
+            </button>
+            <div class="accordion-icon">
+              <i nz-icon nzType="right" nzTheme="outline"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="categories.length === 0" class="empty-state">Категории не найдены</div>
+    </div>
+  </div>
+
+  <!-- ====== ДОКУМЕНТЫ ВНУТРИ КАТЕГОРИИ ====== -->
+  <div *ngIf="viewMode === 'documents'">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="back-btn" (click)="goBack()">
+          <i nz-icon nzType="left" nzTheme="outline"></i>
+        </button>
+        <h2 style="margin: 0;">{{ selectedCategory?.name }}</h2>
+      </div>
+      <button class="add-btn" (click)="openAddDocModal()">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+        {{ 'action.add' | translate }}
+      </button>
+    </div>
+
+    <nz-spin [nzSpinning]="loadingDocuments">
+      <div class="accordion">
+        <div class="accordion-item" *ngFor="let doc of documents; let i = index">
+          <div class="accordion-header" (click)="toggleAccordion(i)">
+            <div class="accordion-left">
+              <div class="accordion-number">{{ (currentPage - 1) * pageSize + i + 1 }}</div>
+              <div class="accordion-title">{{ getDocName(doc) }}</div>
+            </div>
+            <div class="accordion-right">
+              <button class="action-btn edit" (click)="openEditDocModal(doc, $event)">
+                <i nz-icon nzType="edit" nzTheme="outline"></i>
+              </button>
+              <button class="action-btn download" (click)="download(doc, $event)">
+                <i nz-icon nzType="download" nzTheme="outline"></i>
+              </button>
+              <button class="action-btn delete" (click)="deleteDoc(doc, $event)">
+                <i nz-icon nzType="delete" nzTheme="outline"></i>
+              </button>
+              <div class="accordion-icon">
+                <i nz-icon [nzType]="openIndex === i ? 'up' : 'down'" nzTheme="outline"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-content" [class.open]="openIndex === i">
+            <div class="content-inner">
+              <div class="info-row" *ngFor="let col of columns">
+                <div class="info-label">{{ col.title }}</div>
+                <div class="info-value">{{ getDynamicValue(doc, col.key) }}</div>
+              </div>
+              <div class="info-row" *ngIf="doc.downloadUrl">
+                <div class="info-label">Файл</div>
+                <div class="info-value">
+                  <a [href]="doc.downloadUrl" target="_blank" class="file-link">
+                    <i nz-icon nzType="paper-clip" nzTheme="outline"></i>
+                    Открыть файл
+                  </a>
+                </div>
+              </div>
+              <div class="accordion-actions">
+                <button class="edit-btn" (click)="openEditDocModal(doc, $event)">
+                  <i nz-icon nzType="edit" nzTheme="outline"></i>
+                  {{ 'action.update' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="documents.length === 0 && !loadingDocuments" class="empty-state">
+        Документы не найдены
+      </div>
+    </nz-spin>
+
+    <nz-pagination
+      *ngIf="totalElements > pageSize"
+      [nzPageSize]="pageSize"
+      [nzTotal]="totalElements"
+      [(nzPageIndex)]="currentPage"
+      (nzPageIndexChange)="onPageChange($event)">
+    </nz-pagination>
+  </div>
+</div>
+
+<!-- Модалка документа -->
+<nz-modal
+  [(nzVisible)]="isDocModalVisible"
+  [nzTitle]="editingDoc ? ('action.update' | translate) : ('action.add' | translate)"
+  [nzOkText]="'action.save' | translate"
+  [nzCancelText]="'action.cancel' | translate"
+  [nzOkLoading]="isSaving"
+  (nzOnCancel)="handleDocModalCancel()"
+  (nzOnOk)="handleDocModalSubmit()"
+  [nzWidth]="600"
+  [nzContent]="docModalContent"
+>
+  <ng-template #docModalContent>
+    <form [formGroup]="docForm">
+      <div style="margin-bottom: 16px;">
+        <span class="form-label">{{ 'label.name' | translate }} *</span>
+        <input nz-input formControlName="title" />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <span class="form-label">{{ 'documents.fileName' | translate }}</span>
+        <input nz-input formControlName="originalFileName" />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <span class="form-label">URL файла</span>
+        <input nz-input formControlName="fileUrl" placeholder="https://..." />
+      </div>
+    </form>
+  </ng-template>
+</nz-modal>
+
+<!-- Модалка категории -->
+<nz-modal
+  [(nzVisible)]="isCatModalVisible"
+  [nzTitle]="editingCat ? ('action.update' | translate) : ('action.add' | translate)"
+  [nzOkText]="'action.save' | translate"
+  [nzCancelText]="'action.cancel' | translate"
+  [nzOkLoading]="isCatSaving"
+  (nzOnCancel)="handleCatModalCancel()"
+  (nzOnOk)="handleCatModalSubmit()"
+  [nzWidth]="500"
+  [nzContent]="catModalContent"
+>
+  <ng-template #catModalContent>
+    <form [formGroup]="catForm">
+      <div style="margin-bottom: 16px;">
+        <span class="form-label">{{ 'modal.russian' | translate }}</span>
+        <input nz-input formControlName="nameRu" />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <span class="form-label">{{ 'modal.kazakh' | translate }}</span>
+        <input nz-input formControlName="nameKz" />
+      </div>
+    </form>
+  </ng-template>
+</nz-modal>

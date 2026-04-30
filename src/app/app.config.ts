@@ -4,7 +4,7 @@ import {
   withInMemoryScrolling,
   withComponentInputBinding,
   DefaultUrlSerializer,
-  UrlSerializer,  // ✅ добавили
+  UrlSerializer,
   UrlTree
 } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -26,6 +26,7 @@ import {
   UserOutline,
   DownOutline,
   RightOutline,
+  LeftOutline,
   FolderOpenOutline,
   PoweroffOutline,
   PlusOutline,
@@ -34,10 +35,15 @@ import {
   EyeInvisibleOutline,
   DeleteOutline,
   TeamOutline,
-  SearchOutline,    // ✅ добавь
-  FileOutline,      // ✅ добавь
-  DownloadOutline   // ✅ добавь
+  SearchOutline,
+  FileOutline,
+  DownloadOutline,
+  UpOutline,
+  PaperClipOutline,
+  CheckCircleFill,
+  CloseCircleFill,
 } from '@ant-design/icons-angular/icons';
+
 registerLocaleData(ru);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -63,7 +69,9 @@ export class TrailingSlashUrlSerializer extends DefaultUrlSerializer {
 const antDesignIcons: IconDefinition[] = [
   UserOutline,
   DownOutline,
+  UpOutline,
   RightOutline,
+  LeftOutline,
   FolderOpenOutline,
   PoweroffOutline,
   PlusOutline,
@@ -72,9 +80,12 @@ const antDesignIcons: IconDefinition[] = [
   EyeInvisibleOutline,
   DeleteOutline,
   TeamOutline,
-  SearchOutline,    // ✅
-  FileOutline,      // ✅
-  DownloadOutline   // ✅
+  SearchOutline,
+  FileOutline,
+  DownloadOutline,
+  PaperClipOutline,
+  CheckCircleFill,
+  CloseCircleFill,
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -88,7 +99,6 @@ export const appConfig: ApplicationConfig = {
       }),
       withComponentInputBinding()
     ),
-    // ✅ Убираем trailing slash глобально
     { provide: UrlSerializer, useClass: TrailingSlashUrlSerializer },
     importProvidersFrom(CoreModule),
     provideAnimations(),

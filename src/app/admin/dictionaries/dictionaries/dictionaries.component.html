@@ -2,7 +2,7 @@
   <button
     *ngFor="let section of allowedSections"
     class="nav-tab"
-    [class.active]="router.url.includes(section.route)"
+    [class.active]="isActive(section)"
     (click)="router.navigate([section.route])">
     {{ section.labelKey | translate }}
   </button>
