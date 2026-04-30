@@ -3,10 +3,11 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 interface Breadcrumb {
   label: string;
+  labelKey: string;  // ключ для translate pipe
   url: string;
 }
 
@@ -16,13 +17,12 @@ interface Breadcrumb {
   imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
     <nav class="breadcrumb" *ngIf="breadcrumbs.length > 1">
-      <ng-container *ngFor="let crumb of breadcrumbs; let last = last; let first = first">
+      <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
         <a *ngIf="!last" [routerLink]="crumb.url" class="crumb-link">
-          <span *ngIf="first"></span>
-          {{ crumb.label }}
+          {{ crumb.labelKey | translate }}
         </a>
         <span *ngIf="!last" class="crumb-separator">›</span>
-        <span *ngIf="last" class="crumb-current">{{ crumb.label }}</span>
+        <span *ngIf="last" class="crumb-current">{{ crumb.labelKey | translate }}</span>
       </ng-container>
     </nav>
   `,
@@ -34,7 +34,6 @@ interface Breadcrumb {
       padding: 8px 0 16px 0;
       font-size: 13px;
     }
-
     .crumb-link {
       color: #0575DA;
       text-decoration: none;
@@ -43,17 +42,14 @@ interface Breadcrumb {
       align-items: center;
       gap: 4px;
     }
-
     .crumb-link:hover {
       color: #0099ff;
       text-decoration: underline;
     }
-
     .crumb-separator {
       color: #ccc;
       font-size: 16px;
     }
-
     .crumb-current {
       color: #999;
       font-weight: 500;
@@ -63,19 +59,20 @@ interface Breadcrumb {
 export class BreadcrumbComponent implements OnInit {
   breadcrumbs: Breadcrumb[] = [];
 
+  // ключи из твоего JSON
   private readonly LABELS: Record<string, string> = {
-    '': 'Главная',
-    'systems': 'Системы',
-    'documentation': 'Документация',
-    'news': 'Новости',
-    'admin': 'Личный кабинет',
-    'profile': 'Профиль',
-    'dic': 'Администрирование',
-    'systems-admin': 'Системы',
-    'news-admin': 'Новости',
-    'categories': 'Категории',
-    'trans': 'Локализация',
-    'roles': 'Роли',
+    '':             'title.home',
+    'systems':      'main.system',
+    'documentation':'main.document',
+    'news':         'title.news',
+    'admin':        'main.personal_cabinet',
+    'profile':      'navigation.profile',
+    'dic':          'administrations.admin',
+    'systems-admin':'main.system',
+    'news-admin':   'title.news',
+    'categories':   'admin.sections.categories',
+    'trans':        'admin.sections.localization',
+    'roles':        'admin.sections.roles',
   };
 
   constructor(private router: Router, private route: ActivatedRoute) {}
@@ -91,14 +88,16 @@ export class BreadcrumbComponent implements OnInit {
     const url = this.router.url.split('?')[0];
     const segments = url.split('/').filter(s => s);
 
-    const crumbs: Breadcrumb[] = [{ label: 'Главная', url: '/' }];
+    const crumbs: Breadcrumb[] = [
+      { label: 'title.home', labelKey: 'title.home', url: '/' }
+    ];
 
     let currentUrl = '';
     for (const segment of segments) {
       currentUrl += `/${segment}`;
       const isId = /^\d+$/.test(segment);
-      const label = isId ? `#${segment}` : (this.LABELS[segment] || segment);
-      crumbs.push({ label, url: currentUrl });
+      const labelKey = isId ? `#${segment}` : (this.LABELS[segment] || segment);
+      crumbs.push({ label: labelKey, labelKey, url: currentUrl });
     }
 
     this.breadcrumbs = crumbs;

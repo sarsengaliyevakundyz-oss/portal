@@ -1,1 +1,100 @@
-<p>admin-localizator works!</p>
+<div class="loc-wrap">
+
+  <!-- Статистика -->
+  <div class="stats-row" *ngIf="!loading && !error">
+    <div class="stat-card">
+      <span class="stat-num">{{ totalCount }}</span>
+      <span class="stat-label">Всего ключей</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-num">{{ translatedCount }}</span>
+      <span class="stat-label">Переведено</span>
+    </div>
+    <div class="stat-card warn">
+      <span class="stat-num">{{ emptyCount }}</span>
+      <span class="stat-label">Не переведено</span>
+    </div>
+    <div class="stat-card progress-card">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="percent"></div>
+      </div>
+      <span class="stat-label">{{ percent }}% завершено</span>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="loc-toolbar">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input [(ngModel)]="search" placeholder="Поиск по ключу или тексту..." class="search-input"/>
+      <button *ngIf="search" class="clear-btn" (click)="search = ''">×</button>
+    </div>
+
+    <div class="tabs">
+      <button [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">
+        Все <span class="badge">{{ totalCount }}</span>
+      </button>
+      <button [class.active]="activeTab === 'translated'" (click)="activeTab = 'translated'">
+        Переведено <span class="badge green">{{ translatedCount }}</span>
+      </button>
+      <button [class.active]="activeTab === 'empty'" (click)="activeTab = 'empty'">
+        Не переведено <span class="badge warn">{{ emptyCount }}</span>
+      </button>
+    </div>
+
+    <div class="actions">
+      <button class="btn-export" (click)="exportJson('ru')">↓ ru.json</button>
+      <button class="btn-export kz" (click)="exportJson('kz')">↓ kz.json</button>
+    </div>
+  </div>
+
+  <!-- Ошибка — ручная загрузка -->
+  <div *ngIf="error" class="error-block">
+    <p>{{ error }}</p>
+    <div class="file-upload-row">
+      <label class="file-label">
+        Загрузить ru.json
+        <input type="file" accept=".json" (change)="loadFromFile($event, 'ru')" hidden/>
+      </label>
+      <label class="file-label kz">
+        Загрузить kz.json
+        <input type="file" accept=".json" (change)="loadFromFile($event, 'kz')" hidden/>
+      </label>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading && !error" class="loading-state">Загрузка...</div>
+
+  <!-- Таблица только для чтения -->
+  <div class="loc-table-wrap" *ngIf="!loading && !error">
+    <table class="loc-table">
+      <thead>
+      <tr>
+        <th class="col-key">Ключ</th>
+        <th class="col-ru">Русский</th>
+        <th class="col-kz">Казахский</th>
+        <th class="col-status"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of filtered" [class.row-empty]="!item.kz || item.kz === item.ru">
+        <td class="col-key"><code class="key-code">{{ item.key }}</code></td>
+        <td class="col-ru"><span class="cell-text">{{ item.ru }}</span></td>
+        <td class="col-kz">
+            <span class="cell-text" [class.text-empty]="!item.kz || item.kz === item.ru">
+              {{ item.kz || '—' }}
+            </span>
+        </td>
+        <td class="col-status">
+          <span class="dot" [class.ok]="item.kz && item.kz !== item.ru" [class.warn]="!item.kz || item.kz === item.ru"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="filtered.length === 0" class="empty-state">Ничего не найдено</div>
+  </div>
+
+</div>
