@@ -1,8 +1,8 @@
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { formatDate } from '@angular/common';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {formatDate} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +17,11 @@ export class BaseApi {
     params = this.normalBody(params);
     const pars = this.getUrlParams(params);
     const options = headers !== undefined
-      ? { params: pars, headers }
-      : { params: pars };
+      ? {params: pars, headers}
+      : {params: pars};
 
     const request$ = this.haveOtherBaseUrl(uri)
-      ? this.http.get<T>(uri, { params: pars })
+      ? this.http.get<T>(uri, {params: pars})
       : this.http.get<T>(uri, options);
 
     return request$.pipe(
@@ -32,7 +32,7 @@ export class BaseApi {
   }
 
   protected postData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.post<T>(uri, body, { headers }).pipe(
+    return this.http.post<T>(uri, body, {headers}).pipe(
       catchError((err: HttpErrorResponse) => {
         return this.handleAuthError(err);
       })
@@ -40,7 +40,7 @@ export class BaseApi {
   }
 
   protected putData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.put<T>(uri, body, { headers }).pipe(
+    return this.http.put<T>(uri, body, {headers}).pipe(
       catchError((err: HttpErrorResponse) => {
         return this.handleAuthError(err);
       })
@@ -48,7 +48,7 @@ export class BaseApi {
   }
 
   protected removeData<T>(uri: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.delete<T>(uri, { params: body, headers }).pipe(
+    return this.http.delete<T>(uri, {params: body, headers}).pipe(
       catchError((err: HttpErrorResponse) => {
         return this.handleAuthError(err);
       })
@@ -80,17 +80,35 @@ export class BaseApi {
   }
 
   private redirectToSSO(): void {
-  if (window.location.href.includes('ssointernalfrontnew')) {
-    return;
+    if (window.location.href.includes('ssointernalfrontnew')) {
+      return;
+    }
+
+    // ✅ BaseApi вообще не проверял флаг — добавляем
+    if ((window as any).__ssoRedirecting) {
+      return;
+    }
+
+    if (sessionStorage.getItem('sso_redirecting')) {
+      return;
+    }
+
+    (window as any).__ssoRedirecting = true;
+    sessionStorage.setItem('sso_redirecting', '1');
+
+    window.open(this.buildSsoRedirectUrl(), '_blank');
+
+    setTimeout(() => {
+      sessionStorage.removeItem('sso_redirecting');
+      (window as any).__ssoRedirecting = false;
+    }, 3000);
   }
 
-  window.open(this.buildSsoRedirectUrl(), '_blank');
-}
   // private buildSsoRedirectUrl(): string {
   //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
   // }
   private buildSsoRedirectUrl(): string {
-    const { protocol, hostname, port, origin } = window.location;
+    const {protocol, hostname, port, origin} = window.location;
     const effectivePort = port || '9999';
 
     if (hostname === 'test.new.e.stat.gov.kz') {
@@ -161,7 +179,7 @@ export class BaseApi {
         if (!Array.isArray) {
           // @ts-ignore
           // tslint:disable-next-line:only-arrow-functions
-          Array.isArray = function(arg): boolean {
+          Array.isArray = function (arg): boolean {
             return Object.prototype.toString.call(arg) === '[object Array]';
           };
         }

@@ -185,9 +185,12 @@ export class CurrentUserService {
         );
 
         this.zone.run(() => {
+          // ✅ Чистим флаги при успешном входе
+          sessionStorage.removeItem('sso_redirecting');
+          (window as any).__ssoRedirecting = false;
+
           this.setUser(response.access_token, response.refresh_token);
           this.isLogoutInProgress = false;
-          // localStorage.removeItem('sso_redirect_time'); // ✅ убираем флаг
           this.router.navigate(['/']);
         });
 
@@ -217,11 +220,17 @@ export class CurrentUserService {
       return;
     }
 
-    // ✅ Глобальный флаг через window — работает для всех сервисов
     if ((window as any).__ssoRedirecting) {
       return;
     }
+
+    // ✅ Проверяем sessionStorage — переживает reload
+    if (sessionStorage.getItem('sso_redirecting')) {
+      return;
+    }
+
     (window as any).__ssoRedirecting = true;
+    sessionStorage.setItem('sso_redirecting', '1');
 
     localStorage.removeItem(this.authResponseKey);
     localStorage.removeItem(this.secretCodeKey);
@@ -233,10 +242,11 @@ export class CurrentUserService {
 
     setTimeout(() => {
       this.zone.run(() => {
+        sessionStorage.removeItem('sso_redirecting');
         (window as any).__ssoRedirecting = false;
         this.router.navigate(['/']);
       });
-    }, 100);
+    }, 3000); // ✅ было 100мс
   }
   // private buildSsoRedirectUrl(): string {
   //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
@@ -245,6 +255,9 @@ export class CurrentUserService {
     const { protocol, hostname, port, origin } = window.location;
     const effectivePort = port || '9999';
 
+    // if (hostname === 'localhost') {
+    //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
+    // }
     if (hostname === 'test.new.e.stat.gov.kz') {
       return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;
     }

@@ -32,7 +32,7 @@ export class JwtInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    const isTokenExpired = this.currentUserService.minutesToExpire() < 15;
+    const isTokenExpired = this.currentUserService.minutesToExpire() < 1;
 
     if (isTokenExpired && !this.isRefreshing) {
       this.isRefreshing = true;
@@ -91,8 +91,12 @@ export class JwtInterceptor implements HttpInterceptor {
 
   // ✅ Чистим всё напрямую без HTTP запросов — исключаем зацикливание
   private clearAndRedirect(): void {
-    // ✅ Проверяем глобальный флаг
     if ((window as any).__ssoRedirecting) {
+      return;
+    }
+
+    // ✅ Проверяем sessionStorage
+    if (sessionStorage.getItem('sso_redirecting')) {
       return;
     }
 
@@ -101,6 +105,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     (window as any).__ssoRedirecting = true;
+    sessionStorage.setItem('sso_redirecting', '1'); // ✅ переживает reload
 
     localStorage.removeItem('authResponse');
     localStorage.removeItem('secretCode');
@@ -112,9 +117,10 @@ export class JwtInterceptor implements HttpInterceptor {
     window.open(ssoUrl, '_blank');
 
     setTimeout(() => {
+      sessionStorage.removeItem('sso_redirecting');
       (window as any).__ssoRedirecting = false;
       window.location.href = window.location.origin + '/internalportalfront/';
-    }, 100);
+    }, 3000); // ✅ было 100мс
   }
 
   private buildSsoUrl(): string {
