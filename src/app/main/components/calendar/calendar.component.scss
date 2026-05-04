@@ -70,7 +70,6 @@
 
   .custom-select {
     width: 145px;
-    transition: all 0.3s ease;
     font-size: 14px;
   }
 
@@ -85,12 +84,62 @@
   transform: rotate(180deg);
 }
 
-::ng-deep .ant-select-selector {
-  transition: all 0.3s ease !important;
+::ng-deep .region-selector {
+  .ant-select-selector {
+    border-radius: 20px !important;
+    border: 1.5px solid #d0d9f0 !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(5, 117, 218, 0.1) !important;
+    padding: 0 14px !important;
+    height: 36px !important;
+    transition: all 0.25s ease !important;
+
+    .ant-select-selection-item {
+      line-height: 34px !important;
+      color: #2B2E35;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .ant-select:not(.ant-select-open) .ant-select-selector:hover {
+    border-color: #0575DA !important;
+    box-shadow: 0 3px 12px rgba(5, 117, 218, 0.2) !important;
+  }
+
+  .ant-select-open .ant-select-selector {
+    border-color: #0575DA !important;
+    box-shadow: 0 3px 12px rgba(5, 117, 218, 0.2) !important;
+  }
+
+  .ant-select-arrow {
+    right: 14px;
+  }
 }
 
 ::ng-deep .ant-select-dropdown {
+  border-radius: 16px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1) !important;
+  padding: 6px !important;
+  overflow: hidden;
   animation: slideDown 0.2s ease-out !important;
+
+  .ant-select-item {
+    border-radius: 10px !important;
+    font-size: 14px;
+    color: #2B2E35;
+    transition: background 0.15s ease;
+  }
+
+  .ant-select-item-option-selected {
+    background: linear-gradient(135deg, #72a2cf 0%, #0575DA 100%) !important;
+    color: white !important;
+    font-weight: 500 !important;
+  }
+
+  .ant-select-item-option-active:not(.ant-select-item-option-selected) {
+    background: #f0f5ff !important;
+  }
 }
 
 @keyframes slideDown {
@@ -106,46 +155,8 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 14px;
   position: relative;
-  min-height: 220px; // ✅ уменьшили — не белый огромный блок
+  min-height: 360px;
   transition: all 0.3s ease;
-}
-
-// ✅ ОДИН блок loading-overlay — полупрозрачный поверх календаря
-.loading-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(1px);
-  z-index: 10;
-  border-radius: 10px;
-}
-
-// ✅ При загрузке ячейки мигают
-.calendar-grid:has(.loading-overlay) .day-item {
-  animation: skeleton-pulse 1.4s ease infinite;
-}
-
-.calendar-grid:has(.loading-overlay) .day-item.holiday-region,
-.calendar-grid:has(.loading-overlay) .day-item.holiday-respondent,
-.calendar-grid:has(.loading-overlay) .day-item.current-day {
-  background: #e0e8f5;
-  box-shadow: none;
-  animation: skeleton-pulse 1.4s ease infinite;
-}
-
-.calendar-grid:has(.loading-overlay) .day-content,
-.calendar-grid:has(.loading-overlay) .day-number {
-  color: #ccc;
-}
-
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .week-header {
@@ -169,7 +180,6 @@
   gap: 8px;
 }
 
-// Day items
 // Day items
 .day-item {
   position: relative;
@@ -202,7 +212,6 @@
     .day-number { opacity: 0.65; }
   }
 
-  // ✅ ИСПРАВЛЕНО: current-day должен быть выше по специфичности
   &.current-day {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white !important;
@@ -214,13 +223,11 @@
     }
   }
 
-  // ✅ Добавлено: для holiday + current (если одновременно)
   &.current-day.holiday-region,
   &.current-day.holiday-respondent {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     position: relative;
 
-    // Можно добавить маленький индикатор праздника
     &::after {
       position: absolute;
       top: 4px;
@@ -249,6 +256,7 @@
     .day-number { opacity: 0.45; }
   }
 }
+
 // Tooltip
 .day-events {
   position: absolute;
@@ -306,6 +314,8 @@
 // Event list
 .event-list {
   margin-top: 22px;
+  min-height: 200px;
+  transition: opacity 0.3s ease;
 
   .event-item {
     display: flex;
@@ -402,6 +412,7 @@
   .event-date .event-day { font-size: 20px; }
   .event-details p { font-size: 12px; }
 }
+
 ::ng-deep .ant-modal-content {
   border-radius: 12px;
   overflow: hidden;

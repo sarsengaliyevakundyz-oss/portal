@@ -120,14 +120,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   generateCalendar(): void {
-    this.allEvents = [];
-    this.nextEvents = [];
+    // ❌ Убрать эти две строки — они вызывают прыжок
+    // this.allEvents = [];
+    // this.nextEvents = [];
+
     this.isLoading = true;
 
-    // ✅ Генерируем пустой календарь сразу — чтобы не было белого экрана
-    if (this.calendarDays.length === 0) {
-      this.printCalendar([]);
-    }
+    // ✅ Всегда рисуем пустой календарь сразу
+    this.printCalendar([]);
+
     if (!this.currentUser.isAuthenticated()) {
       this.isLoading = false;
       return;
@@ -136,15 +137,18 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.service.getList(this.query).subscribe({
       next: (res: any) => {
         if (!res) {
+          this.allEvents = [];
+          this.nextEvents = [];
           this.isLoading = false;
           return;
         }
-
         this.processCalendarData(res.data);
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading calendar data:', err);
+        this.allEvents = [];
+        this.nextEvents = [];
         this.isLoading = false;
       }
     });
