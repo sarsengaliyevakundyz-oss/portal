@@ -449,3 +449,63 @@
   font-size: 13px;
   color: #444;
 }
+
+// =============================================
+// 🌗 ТЁМНАЯ ТЕМА
+// =============================================
+:host-context([data-theme="dark"]) {
+
+  .year-selector .year { color: #94a3b8; }
+  .year-selector .current-year { color: #e2e8f0; }
+  .week-header .day { color: #64748b; }
+
+  // Сетка календаря
+  .calendar-grid {
+    background-color: #1a2235;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+
+  // Дни — базовый
+  .day-item {
+    background-color: #1e2a3f;
+    color: #e2e8f0;
+    .day-number { color: #e2e8f0; }
+
+    &:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.4); }
+
+    // Прошедшие дни
+    &.past-day {
+      background-color: #161e2e;
+      color: #4b5563;
+    }
+
+    // Дни другого месяца
+    &.next-month-day,
+    &.prev-month-day {
+      background-color: #161e2e;
+      color: #374151;
+    }
+  }
+
+  // Карточки событий под календарём
+  .event-list .event-item {
+    background: #1e2a3f;
+    color: #e2e8f0;
+
+    p, strong { color: #e2e8f0 !important; }
+    .event-day { color: #60a5fa !important; }
+    .event-month { color: #64748b !important; }
+  }
+
+  .event-list .event-list-more button { color: #60a5fa; }
+
+  // Селект региона
+  ::ng-deep .region-selector {
+    .ant-select-selector {
+      background: #1e2a3f !important;
+      border-color: #2d3f5e !important;
+    }
+    .ant-select-selection-item { color: #e2e8f0 !important; }
+    .ant-select-arrow { color: #64748b !important; }
+  }
+}
