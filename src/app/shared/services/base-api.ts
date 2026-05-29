@@ -116,9 +116,8 @@ export class BaseApi {
     }
     // PROD: frontend и SSO на разных host
     if (hostname === 'new.e.stat.gov.kz') {
-      const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
-      url.searchParams.set('client-id', '2');
-      return url.toString();
+      return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;
+
     }
 
     // TEST: frontend и SSO на одном host

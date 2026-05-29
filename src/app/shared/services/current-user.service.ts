@@ -255,16 +255,14 @@ export class CurrentUserService {
     const { protocol, hostname, port, origin } = window.location;
     const effectivePort = port || '9999';
 
-    // if (hostname === 'localhost') {
-    //   return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
-    // }
+    if (hostname === 'localhost') {
+      return 'http://172.16.18.182:9999/ssointernalfrontnew/?client-id=2';
+    }
     if (hostname === 'test.new.e.stat.gov.kz') {
       return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;
     }
     if (hostname === 'new.e.stat.gov.kz') {
-      const url = new URL(`${protocol}//172.16.0.182:${effectivePort}/ssointernalfrontnew`);
-      url.searchParams.set('client-id', '2');
-      return url.toString();
+      return `${protocol}//${hostname}/ssointernalfrontnew/?client-id=2`;
     }
 
     if (hostname === '172.16.18.182') {
