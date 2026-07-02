@@ -8,7 +8,7 @@
     <div class="header-right">
       <span class="analytics-badge">Live</span>
       <a class="open-btn"
-         href="http://172.16.18.233:3000/share/zqXMATFd/internalportalfront"
+         href="http://172.16.0.46:3000/share/WHgIYAb3/internalportafront"
          target="_blank">
         Открыть <span class="arrow">→</span>
       </a>
@@ -18,7 +18,7 @@
   <div class="iframe-container">
     <div class="iframe-overlay-error" *ngIf="iframeError">
       <p>⚠️ Не удалось загрузить аналитику</p>
-      <a href="http://172.16.18.233:3000/share/zqXMATFd/internalportalfront"
+      <a href="http://172.16.0.46:3000/share/WHgIYAb3/internalportafront"
          target="_blank">
         Открыть Umami напрямую →
       </a>
@@ -26,7 +26,7 @@
 
     <iframe
       *ngIf="!iframeError"
-      src="http://172.16.18.233:3000/share/zqXMATFd/internalportalfront"
+      src="http://172.16.0.46:3000/share/WHgIYAb3/internalportafront"
       frameborder="0"
       (error)="iframeError = true">
     </iframe>
