@@ -434,6 +434,171 @@
   color: white;
 }
 
+// Панель фильтров в модалке
+.events-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+
+  .toolbar-select {
+    width: 150px;
+
+    &--sm { width: 120px; }
+  }
+
+  .toolbar-search {
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+  }
+}
+
+::ng-deep .events-toolbar {
+  .ant-select .ant-select-selector,
+  .ant-input-affix-wrapper {
+    border-radius: 10px !important;
+    border: 1px solid #e2e8f0 !important;
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.events-table {
+  ::ng-deep {
+    .ant-table {
+      border: none;
+      background: transparent;
+    }
+
+    .ant-table-cell { vertical-align: middle; }
+
+    // отступ между строками и горизонтальным скроллбаром + последняя строка без линии
+    .ant-table-body { padding-bottom: 8px; }
+    .ant-table-tbody > tr:last-child > td { border-bottom: none !important; }
+
+    // обрезка через span фикс. ширины — работает всегда
+    .ell {
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+
+    // заголовки без overflow, иначе обрежется ручка ресайза
+    .ant-table-thead > tr > th {
+      white-space: nowrap;
+    }
+
+    // аккуратный горизонтальный скроллбар
+    .ant-table-body,
+    .ant-table-content {
+      &::-webkit-scrollbar { height: 8px; }
+      &::-webkit-scrollbar-thumb {
+        background: #d5dbe6;
+        border-radius: 4px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+      &::-webkit-scrollbar-thumb:hover { background: #bcc5d6; }
+      &::-webkit-scrollbar-track { background: transparent; margin: 0 4px; }
+    }
+
+    // лёгкие вертикальные разделители между колонками
+    .ant-table-tbody > tr > td:not(:last-child),
+    .ant-table-thead > tr > th:not(:last-child) {
+      border-right: 1px solid #eef0f4 !important;
+    }
+
+    // убрать некрасивую тень ng-zorro при горизонтальном скролле
+    .ant-table-ping-right:not(.ant-table-has-fix-right) .ant-table-container::after,
+    .ant-table-ping-left:not(.ant-table-has-fix-left) .ant-table-container::before {
+      box-shadow: none !important;
+    }
+    .ant-table-cell-fix-right,
+    .ant-table-cell-fix-left {
+      box-shadow: none !important;
+    }
+
+    // ручка изменения ширины колонки — видимая полоска при наведении
+    th.nz-resizable {
+      position: relative;
+
+      .col-resize-line {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8px;
+        height: 100%;
+        cursor: col-resize;
+        z-index: 2;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: 3px;
+          top: 20%;
+          height: 60%;
+          width: 2px;
+          background: transparent;
+          transition: background 0.15s ease;
+        }
+      }
+
+      &:hover .col-resize-line::after {
+        background: #b8c2d4;
+      }
+    }
+    .nz-resizable-resizing .col-resize-line::after {
+      background: #0575DA !important;
+    }
+
+    .nz-resizable-preview {
+      border-width: 1px;
+    }
+
+    // Заголовки
+    .ant-table-thead > tr > th {
+      background: transparent;
+      color: #8a94a6;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: none;
+      border-bottom: 1px solid #e2e6ec !important;
+      padding: 14px 16px;
+      white-space: nowrap;
+    }
+    // убрать вертикальные разделители ng-zorro
+    .ant-table-thead > tr > th::before,
+    .ant-table-thead > tr > th::after {
+      display: none !important;
+    }
+
+    // Линия-разделитель под КАЖДОЙ строкой
+    .ant-table-tbody > tr > td {
+      background: #fff;
+      border-bottom: 1px solid #e6e9ef !important;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #2b2e35;
+    }
+    .ant-table-tbody > tr:hover > td {
+      background: #f7f9fc !important;
+    }
+  }
+}
+
+::ng-deep .events-modal {
+  .ant-modal-body { padding: 20px 24px 8px; }
+
+  // пагинация ближе к таблице, без лишней пустоты
+  .ant-table-wrapper { margin-bottom: 0; }
+  .ant-pagination { margin: 14px 0 4px; }
+}
+
 ::ng-deep .ant-table-thead > tr > th {
   background: #f0f4ff;
   font-weight: 600;
@@ -508,4 +673,8 @@
     .ant-select-selection-item { color: #e2e8f0 !important; }
     .ant-select-arrow { color: #64748b !important; }
   }
+}
+.events-table ::ng-deep .ant-table table {
+  border-collapse: separate;
+  border-spacing: 0;
 }

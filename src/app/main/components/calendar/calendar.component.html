@@ -81,7 +81,7 @@
       </div>
     </div>
     <div class="event-list-more">
-      <button *ngIf="nextEvents.length>3" (click)="isShowAllEvents=true">{{'action.more' | translate}}...</button>
+      <button *ngIf="nextEvents.length>3" (click)="openEventsModal()">{{'action.more' | translate}}...</button>
     </div>
   </div>
 </div>
@@ -92,28 +92,83 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="isShowAllEvents=false"
-  nzWidth="1000px"
+  [nzWidth]="1150"
+  nzClassName="events-modal"
+  [nzCentered]="true"
 >
   <ng-template #modalTitle>
     {{ 'calendar.upcomingEvents' | translate }}
   </ng-template>
 
   <ng-template #modalContent>
-    <nz-table #basicTable [nzData]="nextEvents">
+    <!-- Панель фильтров -->
+    <div class="events-toolbar">
+      <nz-select
+        class="toolbar-select"
+        [(ngModel)]="modalQuery.type"
+        (ngModelChange)="loadModalEvents()"
+      >
+        <nz-option [nzValue]="CalendarTypeEnum.Respondent" [nzLabel]="'calendar.respondent' | translate"></nz-option>
+        <nz-option [nzValue]="CalendarTypeEnum.Region" [nzLabel]="'calendar.region' | translate"></nz-option>
+      </nz-select>
+
+      <nz-select
+        class="toolbar-select toolbar-select--sm"
+        [(ngModel)]="modalQuery.year"
+        (ngModelChange)="loadModalEvents()"
+      >
+        <nz-option *ngFor="let y of yearOptions" [nzValue]="y" [nzLabel]="y.toString()"></nz-option>
+      </nz-select>
+
+      <nz-select
+        class="toolbar-select toolbar-select--sm"
+        [(ngModel)]="modalQuery.month"
+        (ngModelChange)="loadModalEvents()"
+      >
+        <nz-option *ngFor="let m of months; let i = index" [nzValue]="i + 1" [nzLabel]="m | translate"></nz-option>
+      </nz-select>
+
+      <nz-input-group class="toolbar-search" [nzPrefixIcon]="'search'">
+        <input nz-input
+               [(ngModel)]="searchText"
+               [placeholder]="'calendar.searchByForm' | translate" />
+      </nz-input-group>
+    </div>
+
+    <nz-table
+      #basicTable
+      class="events-table"
+      [nzData]="filteredModalEvents"
+      [nzLoading]="isModalLoading"
+      [nzFrontPagination]="true"
+      [nzPageSize]="10"
+      nzTableLayout="fixed"
+      nzSize="middle"
+    >
       <thead>
       <tr>
-        <th width="100px">{{ 'calendar.date' | translate }}</th>
-        <th>{{ 'calendar.sector' | translate }}</th>
-        <th>{{ 'calendar.form' | translate }}</th>
-        <th>{{ 'calendar.reportingPeriod' | translate }}</th>
+        <th *ngFor="let col of cols"
+            nz-resizable
+            [nzMinWidth]="80"
+            [nzMaxWidth]="600"
+            [style.width.px]="col.width"
+            (nzResize)="onResize($event, col)">
+          {{ col.title | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="col-resize-line"></div>
+          </nz-resize-handle>
+        </th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let data of basicTable.data">
-        <td>{{ data.date | date: 'dd.MM.yyyy' }}</td>
-        <td>{{ data.sectorName }}</td>
-        <td>{{ data.formName }}</td>
-        <td>{{ data.periodKindlistName }}</td>
+        <td><span class="ell" [style.width.px]="cols[0].width - 32" [title]="data.sectorName">{{ data.sectorName || '—' }}</span></td>
+        <td><span class="ell" [style.width.px]="cols[1].width - 32" [title]="data.formName">{{ data.formName || '—' }}</span></td>
+        <td><span class="ell" [style.width.px]="cols[2].width - 32" [title]="data.periodKindlistName">{{ data.periodKindlistName || '—' }}</span></td>
+        <td>{{ data.dateBeg || '—' }}</td>
+        <td>{{ data.dateResp || '—' }}</td>
+        <td>{{ data.dateObl || '—' }}</td>
+        <td>{{ data.dateFinal || '—' }}</td>
       </tr>
       </tbody>
     </nz-table>
