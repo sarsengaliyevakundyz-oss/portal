@@ -33,7 +33,6 @@
     "document": "Документация",
     "personal_cabinet": "Личный кабинет"
   },
-
   "Month": {
     "January": "Январь",
     "February": "Февраль",
@@ -168,7 +167,17 @@
     "reportingPeriod": "Отчётный период",
     "region": "Регион",
     "respondent": "Респондент",
-    "upcomingEvents": "Предстоящие события"
+    "upcomingEvents": "Предстоящие события",
+    "year": "Год",
+    "month": "Месяц",
+    "searchByForm": "Поиск по объекту",
+    "submissionStart": "Начало сдачи",
+    "respondentDeadline": "Срок сдачи респондента",
+    "regionDeadline": "Срок сдачи региона",
+    "republicDeadline": "Срок сдачи республики",
+    "completionDate": "Дата завершения",
+    "entryStatus": "Статус ввода",
+    "user": "Пользователь"
   },
   "link": {
     "all_materials": "Все материалы",
@@ -482,9 +491,6 @@
     "link_hint": "Переходите по ссылке",
     "form_hint": "Заполните форму"
   },
-
-
-
   "news": {
     "number": "№",
     "category": "Категория",
@@ -496,7 +502,6 @@
     "hide": "Скрыть",
     "updated_at": "Дата изменения"
   },
-
   "documents": {
     "title": "Документы",
     "fileName": "Имя файла",

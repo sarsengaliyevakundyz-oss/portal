@@ -167,7 +167,17 @@
     "reportingPeriod": "Есепті кезең",
     "region": "Өңір",
     "respondent": "Респондент",
-    "upcomingEvents": "Алдағы оқиғалар"
+    "upcomingEvents": "Алдағы оқиғалар",
+    "year": "Жыл",
+    "month": "Ай",
+    "searchByForm": "Нысан бойынша іздеу",
+    "submissionStart": "Тапсырудың басталуы",
+    "respondentDeadline": "Респонденттің тапсыру мерзімі",
+    "regionDeadline": "Өңірдің тапсыру мерзімі",
+    "republicDeadline": "Республиканың тапсыру мерзімі",
+    "completionDate": "Жете есептеу күні",
+    "entryStatus": "Енгізу мәртебесі",
+    "user": "Пайдаланушы"
   },
   "link": {
     "all_materials": "Барлық материалдар",
