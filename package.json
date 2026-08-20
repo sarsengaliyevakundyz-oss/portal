@@ -23,6 +23,7 @@
     "@types/crypto-js": "^4.2.2",
     "crypto-js": "^4.2.0",
     "jwt-decode": "^4.0.0",
+    "mermaid": "^11.15.0",
     "ng-zorro-antd": "^18.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -39,6 +40,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "marked": "^18.0.3",
     "typescript": "~5.4"
   }
 }
