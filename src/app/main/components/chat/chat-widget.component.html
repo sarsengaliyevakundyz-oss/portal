@@ -1,0 +1,268 @@
+<div class="robot-scene" *ngIf="!isOpen"
+     #robotScene
+     (click)="toggle()"
+     (mouseenter)="onRobotEnter()"
+     (mouseleave)="onRobotLeave()">
+
+  <!-- слой для сердечек -->
+
+  <div class="bubble-wrap">
+    <div class="bubble" #robotBubble>
+      <div class="bubble-title">
+        <span class="live-dot"></span>StatIQ
+      </div>
+      <div class="bubble-sub">AI-методолог БНС</div>
+      <div class="dots">
+        <div class="d"></div>
+        <div class="d d2"></div>
+        <div class="d d3"></div>
+      </div>
+    </div>
+    <div class="bubble-tail"></div>
+  </div>
+
+  <div class="robot-halo"></div>
+
+  <div class="robot-wrap" #robotWrap>
+    <svg width="80" height="112" viewBox="0 0 72 100">
+      <defs>
+        <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7eb3f5"/>
+          <stop offset="100%" stop-color="#4a7fde"/>
+        </linearGradient>
+        <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#5a9af0"/>
+          <stop offset="100%" stop-color="#2d5cb8"/>
+        </linearGradient>
+        <linearGradient id="sc" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e8f3ff"/>
+          <stop offset="100%" stop-color="#b8d8ff"/>
+        </linearGradient>
+        <radialGradient id="visor" cx="40%" cy="35%" r="75%">
+          <stop offset="0%" stop-color="#0a2a52"/>
+          <stop offset="100%" stop-color="#1e3a6e"/>
+        </radialGradient>
+        <filter id="blur"><feGaussianBlur stdDeviation="1.2"/></filter>
+      </defs>
+
+      <ellipse cx="36" cy="99" rx="22" ry="3" fill="rgba(45,92,184,0.25)"/>
+
+      <line x1="36" y1="2" x2="36" y2="11" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="36" cy="2" r="3.5" fill="#fbbf24"/>
+      <circle class="dot-pulse" cx="36" cy="2" r="2" fill="#fde68a"/>
+      <circle class="ant-ring" cx="36" cy="2" r="3.5" fill="none" stroke="#fbbf24" stroke-width="1"/>
+
+      <rect x="12" y="11" width="48" height="36" rx="14" fill="url(#hg)"/>
+      <rect x="14" y="13" width="44" height="16" rx="9" fill="rgba(255,255,255,0.12)"/>
+
+      <rect x="4" y="20" width="10" height="15" rx="5" fill="url(#bg2)"/>
+      <rect x="58" y="20" width="10" height="15" rx="5" fill="url(#bg2)"/>
+
+      <g class="blink">
+        <circle cx="25" cy="28" r="7.5" fill="white"/>
+        <circle #irisL cx="25" cy="28" r="4.5" fill="url(#visor)"/>
+        <circle #glintL cx="27" cy="26" r="1.8" fill="white"/>
+      </g>
+      <g class="blink2">
+        <circle cx="47" cy="28" r="7.5" fill="white"/>
+        <circle #irisR cx="47" cy="28" r="4.5" fill="url(#visor)"/>
+        <circle #glintR cx="49" cy="26" r="1.8" fill="white"/>
+      </g>
+
+      <circle class="cheek" cx="15" cy="37" r="5" fill="#fba4c0" filter="url(#blur)"/>
+      <circle class="cheek" cx="57" cy="37" r="5" fill="#fba4c0" filter="url(#blur)"/>
+      <path #mouth d="M28 40 Q36 46 44 40" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="46" width="12" height="6" rx="3" fill="rgba(255,255,255,0.7)"/>
+
+      <rect x="10" y="52" width="52" height="36" rx="12" fill="url(#bg2)"/>
+      <rect x="13" y="55" width="46" height="18" rx="8" fill="url(#sc)"/>
+
+      <rect class="wave w1" x="22" y="59" width="5" height="10" rx="2.5" fill="#4a7fde"/>
+      <rect class="wave w2" x="31" y="59" width="5" height="10" rx="2.5" fill="#4a7fde"/>
+      <rect class="wave w3" x="40" y="59" width="5" height="10" rx="2.5" fill="#4a7fde"/>
+
+      <circle cx="24" cy="79" r="3" fill="rgba(255,255,255,0.35)"/>
+      <circle cx="36" cy="79" r="3" fill="rgba(255,255,255,0.2)"/>
+      <circle cx="48" cy="79" r="3" fill="rgba(255,255,255,0.35)"/>
+
+      <g class="arm-l">
+        <rect x="2" y="56" width="10" height="22" rx="5" fill="url(#hg)"/>
+        <circle cx="7" cy="78" r="4" fill="url(#bg2)"/>
+      </g>
+      <g class="arm-r">
+        <rect x="60" y="56" width="10" height="22" rx="5" fill="url(#hg)"/>
+        <circle cx="65" cy="78" r="4" fill="url(#bg2)"/>
+      </g>
+
+      <rect x="18" y="88" width="13" height="12" rx="5" fill="url(#hg)"/>
+      <rect x="41" y="88" width="13" height="12" rx="5" fill="url(#hg)"/>
+      <rect x="16" y="96" width="17" height="4" rx="2" fill="url(#bg2)"/>
+      <rect x="39" y="96" width="17" height="4" rx="2" fill="url(#bg2)"/>
+    </svg>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="isOpen" (click)="toggle()"></div>
+<div class="chat-sidebar" [class.open]="isOpen">
+
+  <div class="sidebar-header">
+    <div class="header-content">
+      <h2 class="header-title">StatIQ</h2>
+      <p class="header-subtitle">AI-методолог ИИС Е-Статистика БНС</p>
+    </div>
+    <button class="close-btn" (click)="toggle()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-body">
+
+    <div class="sidebar-left">
+      <button class="new-chat-btn" (click)="newChat()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Новый чат
+      </button>
+
+      <div class="quick-label" style="margin-top:4px">Режим</div>
+      <div class="mode-switch">
+        <button class="mode-btn" [class.active]="mode === 'user'" (click)="setMode('user')">
+          👤 Методолог
+        </button>
+        <button class="mode-btn" [class.active]="mode === 'analyst'" (click)="setMode('analyst')">
+          🔧 Аналитик
+        </button>
+      </div>
+      <div class="mode-hint">{{ mode === 'user' ? 'Простые объяснения' : 'API и технические детали' }}</div>
+
+      <div class="quick-label">Примеры вопросов</div>
+
+      <button class="quick-btn" (click)="askQuick('Что такое КСП и как показатели связаны с формами?')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 7v4h8V7H3zm10 0v4h8V7h-8zM3 15h8v-2H3v2zm10 0h8v-2h-8v2z"/>
+        </svg>
+        Что такое КСП?
+      </button>
+      <button class="quick-btn" (click)="askQuick('Что такое разрезность и акроним в системе метаданных?')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9h-6V3z"/>
+        </svg>
+        Разрезности и акронимы
+      </button>
+      <button class="quick-btn" (click)="askQuick('Как работает календарь сбора данных и его жизненный цикл?')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+        </svg>
+        Календарь сбора данных
+      </button>
+    </div>
+
+    <div class="sidebar-chat">
+      <div class="chat-label">Чат</div>
+
+      <div class="chat-messages" #chatBody>
+
+        <div class="welcome" *ngIf="messages.length === 1">
+          <div class="welcome-icon">👋</div>
+          <div class="welcome-title">Привет, я StatIQ!</div>
+          <div class="welcome-sub">Я помогу разобраться в ИИС Е-Статистике БНС. Задайте любой вопрос!</div>
+        </div>
+
+        <div *ngFor="let msg of messages"
+             class="msg"
+             [class.user]="msg.role === 'user'"
+             [class.bot]="msg.role === 'bot'">
+
+          <!-- Аватар бота -->
+          <div class="msg-avatar bot-avatar" *ngIf="msg.role === 'bot'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+          </div>
+
+          <!-- Бот: bubble + время + кнопка копирования -->
+          <div class="msg-bot-wrap" *ngIf="msg.role === 'bot'">
+            <div class="msg-bubble"
+                 [innerHTML]="msg.html || msg.text"
+                 *ngIf="!msg.displayText"></div>
+            <!-- Печатающий эффект -->
+            <div class="msg-bubble typing-text"
+                 *ngIf="msg.displayText"
+                 [innerHTML]="highlightKeywords(msg.displayText)">
+            </div>
+            <div class="msg-meta">
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+              <button
+                class="copy-btn"
+                [class.copied]="msg.copied"
+                (click)="copyMessage(msg)"
+                *ngIf="!msg.typing"
+                title="Скопировать">
+                <svg *ngIf="!msg.copied" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <svg *ngIf="msg.copied" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ msg.copied ? 'Скопировано' : 'Копировать' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Пользователь -->
+          <div class="msg-user-wrap" *ngIf="msg.role === 'user'">
+            <div class="msg-bubble">{{ msg.text }}</div>
+            <div class="msg-meta msg-meta-right">
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+            </div>
+          </div>
+
+          <!-- Аватар пользователя с инициалами -->
+          <div class="msg-avatar user-av" *ngIf="msg.role === 'user'">
+            {{ userInitials }}
+          </div>
+        </div>
+
+        <!-- Shimmer загрузка -->
+        <div class="msg bot" *ngIf="loading">
+          <div class="msg-avatar bot-avatar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+          </div>
+          <div class="msg-bot-wrap">
+            <div class="shimmer-wrap">
+              <div class="shimmer-line"></div>
+              <div class="shimmer-line short"></div>
+            </div>
+            <div class="thinking-label">StatIQ думает...</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="chat-input-wrap">
+        <textarea
+          [(ngModel)]="question"
+          (keydown)="onKey($event)"
+          placeholder="Задайте вопрос по системе Метаданных БНС..."
+          rows="1"
+          class="chat-input"
+          #inputEl
+        ></textarea>
+        <button class="chat-send" (click)="send()" [disabled]="loading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-hint">Enter — отправить · Shift+Enter — перенос строки</div>
+
+    </div>
+  </div>
+</div>
