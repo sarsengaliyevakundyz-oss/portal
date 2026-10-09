@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, NavigationError, Route, Router, RouterOutlet} from '@angular/router';
 import {CurrentUserService} from './shared/services/current-user.service';
 import {UmamiService} from './core/services/Umami.service';
+import { ChatWidgetComponent } from './main/components/chat/chat-widget.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ChatWidgetComponent],
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

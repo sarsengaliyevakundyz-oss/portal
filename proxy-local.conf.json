@@ -56,6 +56,13 @@
     "target": "http://172.16.18.47:8282",
     "secure": false,
     "changeOrigin": true
-  }
+  },
+
+    "/internalportal/api": {
+      "target": "http://172.16.9.52:7777",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
 
 }

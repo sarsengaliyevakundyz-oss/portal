@@ -1,28 +1,21 @@
 import { NgModule } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-import { MainRoutingModule } from './main-routing.module';
-import {NzSelectComponent} from 'ng-zorro-antd/select';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {FormsModule} from '@angular/forms';
 
+import { MainRoutingModule } from './main-routing.module';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { ChatWidgetComponent } from './components/chat/chat-widget.component';
 
 @NgModule({
-  declarations: [
-
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     MainRoutingModule,
-    NzSelectComponent,
-    NzButtonComponent,
-    NzIconDirective,
-    FormsModule,
-
+    MainPageComponent,
+    ChatWidgetComponent
   ],
-  exports:[
-
+  exports: [
+    MainPageComponent,
+    ChatWidgetComponent
   ]
 })
-export class MainModule { }
+export class MainModule {}
